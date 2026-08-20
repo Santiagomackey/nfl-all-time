@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -5369,6 +5369,406 @@ html.preload-team-route #teamRouteView {
   box-shadow: 0 10px 24px rgba(255,122,24,0.5);
 }
 
+
+/* ============================================================
+   NFL ALL TIME — TEAM ROUTE LOADER + 2026 SEASON CENTER POLISH
+   ============================================================ */
+
+/* Team page loader: nothing but the selected team identity */
+.team-route-loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(32, 74, 126, 0.20), transparent 24%),
+    radial-gradient(circle at 50% 55%, rgba(213, 10, 10, 0.055), transparent 34%),
+    linear-gradient(180deg, #07101e 0%, #091425 52%, #070e1a 100%);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .38s ease, visibility .38s ease;
+}
+.team-route-loading-screen::before {
+  content: '';
+  position: absolute;
+  width: min(70vw, 720px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.026), transparent 66%);
+  filter: blur(8px);
+  animation: nflLoaderHalo 2.8s ease-in-out infinite;
+}
+.team-route-loading-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255,255,255,.018) 50%, transparent 100%),
+    repeating-linear-gradient(180deg, transparent 0 119px, rgba(255,255,255,.009) 120px, transparent 121px 240px);
+  opacity: .7;
+  pointer-events: none;
+}
+.team-route-loading-screen.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.team-route-loading-mark {
+  position: relative;
+  z-index: 2;
+  width: 174px;
+  height: 174px;
+  display: grid;
+  place-items: center;
+}
+.team-route-loading-ring,
+.team-route-loading-ring::before,
+.team-route-loading-ring::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  content: '';
+}
+.team-route-loading-ring {
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.015) inset,
+    0 28px 80px rgba(0,0,0,.38);
+}
+.team-route-loading-ring::before {
+  inset: 10px;
+  border: 1px solid transparent;
+  border-top-color: rgba(255,255,255,.72);
+  border-right-color: rgba(213,10,10,.38);
+  animation: nflLoaderSpin 1.35s linear infinite;
+}
+.team-route-loading-ring::after {
+  inset: 22px;
+  border: 1px solid rgba(255,255,255,.055);
+  animation: nflLoaderPulse 1.8s ease-in-out infinite;
+}
+.team-route-loading-logo-shell {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 34% 22%, rgba(255,255,255,.10), transparent 42%),
+    rgba(8,17,31,.76);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 20px 50px rgba(0,0,0,.30);
+  backdrop-filter: blur(16px);
+}
+.team-route-loading-logo {
+  width: 82px;
+  height: 82px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,.34));
+  animation: nflLoaderLogo 1.9s ease-in-out infinite;
+}
+.team-route-frame-wrap {
+  position: relative;
+}
+.team-route-frame-wrap .legacy-team-frame {
+  opacity: 0;
+  transition: opacity .34s ease;
+}
+.team-route-frame-wrap .legacy-team-frame.is-ready {
+  opacity: 1;
+}
+@keyframes nflLoaderSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes nflLoaderPulse {
+  0%,100% { transform: scale(.96); opacity: .45; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+@keyframes nflLoaderLogo {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.025); }
+}
+@keyframes nflLoaderHalo {
+  0%,100% { transform: scale(.94); opacity: .55; }
+  50% { transform: scale(1.08); opacity: .9; }
+}
+
+/* 2026 Live Season Center — cleaner, richer, less "boxy" */
+.season-2026-section {
+  padding-top: 26px;
+  padding-bottom: 58px;
+}
+.season-2026-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(203,213,225,.13);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(1,51,105,.24), transparent 29%),
+    radial-gradient(circle at 92% 5%, rgba(213,10,10,.12), transparent 24%),
+    linear-gradient(145deg, rgba(17,28,47,.97), rgba(7,14,26,.98) 58%, rgba(10,20,35,.98));
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.055);
+}
+.season-2026-shell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(213,10,10,.75), rgba(216,176,62,.64), transparent);
+  opacity: .8;
+}
+.season-2026-shell::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  top: -250px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.035);
+  box-shadow: 0 0 0 54px rgba(255,255,255,.012), 0 0 0 108px rgba(255,255,255,.007);
+  pointer-events: none;
+}
+.season-2026-top {
+  position: relative;
+  z-index: 1;
+  padding: 30px 32px 26px;
+  border-bottom: 1px solid rgba(203,213,225,.09);
+  background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0));
+}
+.season-center-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+.season-center-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+.season-center-shield {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.035);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 14px 34px rgba(0,0,0,.20);
+}
+.season-center-shield img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,.25));
+}
+.season-2026-kicker {
+  margin-bottom: 7px;
+  color: #d8b03e;
+  font-size: 9px;
+  letter-spacing: 3.2px;
+}
+.season-2026-title {
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: 2.4px;
+  line-height: .96;
+  background: linear-gradient(110deg, #fff 0%, #e8eef8 46%, #9ab7da 78%, #d8b03e 116%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.season-2026-subtitle {
+  max-width: 720px;
+  margin-top: 10px;
+  color: #aebfd4;
+  font-size: 11px;
+  line-height: 1.65;
+}
+.season-center-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.season-center-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(203,213,225,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.035);
+  color: #c5d2e3;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+.season-center-pill.live {
+  border-color: rgba(40,199,111,.22);
+  background: rgba(40,199,111,.065);
+  color: #70e1a1;
+}
+.season-center-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #28c76f;
+  box-shadow: 0 0 0 5px rgba(40,199,111,.08);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+.season-2026-body {
+  position: relative;
+  z-index: 1;
+  padding: 20px 22px 24px;
+}
+.season-2026-grid {
+  grid-template-columns: minmax(315px, .43fr) minmax(0, .57fr);
+  gap: 16px;
+}
+.season-2026-card {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(203,213,225,.10);
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.025), transparent 34%),
+    linear-gradient(180deg, rgba(17,29,49,.82), rgba(8,16,29,.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 16px 34px rgba(0,0,0,.15);
+}
+.season-2026-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(216,176,62,.46), transparent);
+}
+.season-2026-card-head {
+  min-height: 78px;
+  padding: 17px 18px 15px;
+  border-bottom-color: rgba(203,213,225,.08);
+}
+.season-2026-card-title {
+  font-size: 17px;
+  letter-spacing: 1.5px;
+}
+.season-2026-card-note {
+  margin-top: 4px;
+  color: #8498b1;
+  font-size: 9px;
+}
+.season-2026-select,
+.season-2026-search {
+  min-height: 36px;
+  border-radius: 10px;
+  border-color: rgba(203,213,225,.13);
+  background: rgba(5,12,23,.48);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+.season-2026-search {
+  padding-left: 12px;
+}
+.season-2026-select:focus,
+.season-2026-search:focus {
+  border-color: rgba(216,176,62,.38);
+  box-shadow: 0 0 0 3px rgba(216,176,62,.055);
+}
+.season-2026-standings-row {
+  padding: 12px 16px;
+  border-bottom-color: rgba(255,255,255,.045);
+  transition: background .16s ease, transform .16s ease;
+}
+.season-2026-standings-row:hover {
+  background: rgba(255,255,255,.025);
+}
+.season-2026-standings-row img {
+  width: 27px;
+  height: 27px;
+}
+.season-2026-standings-record {
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+.season-2026-week {
+  padding: 14px 16px 16px;
+}
+.season-2026-day-title {
+  color: #d8b03e;
+}
+.season-2026-matchup {
+  grid-template-columns: 88px minmax(125px, 1fr) 28px minmax(125px, 1fr) 104px;
+  margin-top: 9px;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border-color: rgba(203,213,225,.075);
+  background: linear-gradient(90deg, rgba(255,255,255,.027), rgba(255,255,255,.015));
+}
+.season-2026-matchup:hover {
+  transform: translateY(-2px);
+  border-color: rgba(216,176,62,.22);
+  background: linear-gradient(90deg, rgba(216,176,62,.045), rgba(255,255,255,.022));
+  box-shadow: 0 12px 25px rgba(0,0,0,.16);
+}
+.season-2026-team img {
+  width: 34px;
+  height: 34px;
+}
+.season-2026-team strong {
+  font-size: 12px;
+}
+.season-2026-vs {
+  color: #64758d;
+}
+.season-2026-status {
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+}
+.season-2026-source {
+  margin-top: 14px;
+  padding: 11px 13px;
+  border: 1px solid rgba(203,213,225,.075);
+  border-radius: 12px;
+  background: rgba(255,255,255,.018);
+}
+.season-2026-source:empty {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .season-center-heading { align-items: flex-start; }
+  .season-center-status { justify-content: flex-start; }
+  .season-2026-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .team-route-loading-mark { width: 144px; height: 144px; }
+  .team-route-loading-logo-shell { width: 94px; height: 94px; border-radius: 26px; }
+  .team-route-loading-logo { width: 68px; height: 68px; }
+  .season-2026-top { padding: 24px 18px 20px; }
+  .season-center-heading,
+  .season-center-brand { align-items: flex-start; }
+  .season-center-heading { flex-direction: column; gap: 18px; }
+  .season-center-shield { width: 52px; height: 52px; border-radius: 15px; }
+  .season-center-shield img { width: 35px; height: 35px; }
+  .season-2026-body { padding: 14px; }
+}
+
 </style>
 </head>
 <body>
@@ -5684,11 +6084,22 @@ html.preload-team-route #teamRouteView {
   <div class="container">
     <div class="season-2026-shell">
       <div class="season-2026-top">
-        <div>
-          <div class="season-2026-kicker">2026 Season</div>
-          <div class="season-2026-title">Live Season Center</div>
-          <div class="season-2026-subtitle">
-            Projected standings and the 2026 fixture board update as official feeds publish.
+        <div class="season-center-heading">
+          <div class="season-center-brand">
+            <div class="season-center-shield" aria-hidden="true">
+              <img src="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png" alt="">
+            </div>
+            <div>
+              <div class="season-2026-kicker">2026 · League Command Center</div>
+              <div class="season-2026-title">Live Season Center</div>
+              <div class="season-2026-subtitle">
+                One live board for projected standings, every matchup, and the latest 2026 schedule updates.
+              </div>
+            </div>
+          </div>
+          <div class="season-center-status" aria-label="Season center status">
+            <span class="season-center-pill live"><span class="season-center-pill-dot"></span> Live data</span>
+            <span class="season-center-pill">2026 season</span>
           </div>
         </div>
       </div>
@@ -7116,17 +7527,18 @@ function renderTeamLoadingState(slug) {
   const view = getTeamRouteView();
   if (!view) return;
   const team = TEAMS.find(entry => entry.slug === slug);
+  const logo = team?.logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png';
   view.dataset.loadedSlug = slug;
   view.dataset.renderMode = 'loading';
   view.innerHTML = `
-    <section class="team-route-shell">
-      <div class="container">
-        <div class="team-route-error">
-          <strong>Loading ${escapeHtml(team?.name || slug)} database...</strong>
-          <p>Preparing the franchise page and 2026 season data.</p>
+    <div class="team-route-loading-screen" aria-label="Loading ${escapeHtml(team?.name || slug)}">
+      <div class="team-route-loading-mark">
+        <div class="team-route-loading-ring"></div>
+        <div class="team-route-loading-logo-shell">
+          <img class="team-route-loading-logo" src="${escapeHtml(logo)}" alt="">
         </div>
       </div>
-    </section>
+    </div>
   `;
 }
 
@@ -7960,8 +8372,17 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
       .replace(/(\d{4}) through 2025/g, '$1 through 2026')
       .replace(/(\d+) seasons archived/g, (_match, count) => `${Number(count) + 1} seasons archived`);
   }
+  const routeLogo = team?.logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png';
   view.innerHTML = `
     <div class="team-route-frame-wrap">
+      <div class="team-route-loading-screen" id="teamRouteFrameLoader" aria-label="Loading ${escapeHtml(team?.name || slug)}">
+        <div class="team-route-loading-mark">
+          <div class="team-route-loading-ring"></div>
+          <div class="team-route-loading-logo-shell">
+            <img class="team-route-loading-logo" src="${escapeHtml(routeLogo)}" alt="">
+          </div>
+        </div>
+      </div>
       <iframe id="legacyTeamFrame" class="legacy-team-frame" title="${escapeHtml(team?.name || slug)} franchise database"></iframe>
     </div>
   `;
@@ -7969,6 +8390,12 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
   if (!frame) return;
 
   frame.addEventListener('load', () => {
+    const routeLoader = document.getElementById('teamRouteFrameLoader');
+    frame.classList.add('is-ready');
+    if (routeLoader) {
+      routeLoader.classList.add('is-done');
+      window.setTimeout(() => routeLoader.remove(), 420);
+    }
     try {
       ensureLegacyFrame2026Season(frame, teamData);
       installLegacyTeamClock(frame);
