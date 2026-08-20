@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1171,32 +1171,36 @@ body::after {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  padding: 0 0 14px;
-  margin: 0 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(213,10,10,.05), transparent 36%),
+    rgba(255,255,255,.022);
 }
 .season-2026-schedule-banner strong,
 .season-2026-schedule-banner span {
   display: block;
-  text-transform: none;
+  text-transform: uppercase;
 }
 .season-2026-schedule-banner strong {
   color: var(--text-1);
-  font-size: 13px;
-  letter-spacing: 0.2px;
+  font-size: 10px;
+  letter-spacing: 1.3px;
 }
 .season-2026-schedule-banner span {
   color: var(--text-3);
-  font-size: 10px;
-  letter-spacing: 0.35px;
+  font-size: 8px;
+  letter-spacing: 1.1px;
   margin-top: 3px;
 }
 .season-2026-schedule-banner-mark {
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -1294,8 +1298,7 @@ body::after {
   max-height: 430px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 0 8px 4px;
-  scrollbar-gutter: stable;
+  padding-right: 6px;
 }
 .season-2026-schedule::-webkit-scrollbar,
 .season-2026-standings-wrap::-webkit-scrollbar {
@@ -1312,7 +1315,7 @@ body::after {
   border-radius: 999px;
 }
 .season-2026-week {
-  padding: 18px 0 12px;
+  padding: 13px;
 }
 .season-2026-week:last-child { border-bottom: 0; }
 .season-2026-week-title {
@@ -1321,12 +1324,12 @@ body::after {
   gap: 12px;
   color: var(--text-1);
   font-family: 'Oswald', sans-serif;
-  font-size: 15px;
-  letter-spacing: 0.7px;
+  font-size: 16px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 11px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .season-2026-week-rail {
   display: grid;
@@ -1662,115 +1665,106 @@ body::after {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.season-2026-day { margin-top: 16px; }
+.season-2026-day { margin-top: 12px; }
 .season-2026-day-title {
-  color: rgba(255,255,255,0.56);
-  font-size: 10px;
+  color: var(--nfl-red);
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .season-2026-matchup {
-  position: relative;
-  overflow: hidden;
   display: grid;
-  grid-template-columns: 96px minmax(160px, 1fr) 52px minmax(160px, 1fr) 96px;
-  gap: 16px;
+  grid-template-columns: 96px minmax(170px, 1fr) 42px minmax(170px, 1fr) 112px;
+  gap: 12px;
   align-items: center;
-  padding: 15px 18px;
-  margin-top: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.024);
-  transition: border-color .18s ease, background-color .18s ease;
-}
-.season-2026-matchup::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 12px;
-  bottom: 12px;
-  width: 3px;
-  border-radius: 0 999px 999px 0;
-  background: color-mix(in srgb, var(--match-accent, var(--accent)) 72%, rgba(255,255,255,0.12));
-  opacity: 0.9;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid color-mix(in srgb, var(--match-accent, var(--nfl-red)) 34%, rgba(255,255,255,0.08));
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--match-accent, var(--nfl-red)) 14%, transparent), transparent 58%),
+    linear-gradient(180deg, rgba(255,255,255,0.034), rgba(255,255,255,0.012));
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
 }
 .season-2026-matchup:hover {
-  border-color: rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.032);
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--match-accent, var(--nfl-red)) 52%, rgba(255,255,255,0.12));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--match-accent, var(--nfl-red)) 18%, transparent), transparent 58%),
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
 }
 .season-2026-matchup[data-placeholder="true"] {
-  border-color: rgba(216,176,62,0.18);
-  background: rgba(255,255,255,0.02);
-}
-.season-2026-matchup[data-placeholder="true"]::before {
-  background: rgba(216,176,62,0.68);
+  border-color: color-mix(in srgb, var(--match-accent, var(--accent)) 38%, rgba(255,255,255,0.08));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--match-accent, var(--accent)) 16%, transparent), transparent 58%),
+    rgba(255,255,255,0.028);
 }
 .season-2026-matchup[data-placeholder="true"] .season-2026-kick strong,
 .season-2026-matchup[data-placeholder="true"] .season-2026-vs {
   color: var(--accent);
 }
 .season-2026-matchup[data-placeholder="true"] .season-2026-status {
-  border: 0;
-  background: none;
-  color: var(--accent);
+  border-color: rgba(216,176,62,0.22);
+  background: rgba(216,176,62,0.07);
 }
 .season-2026-kick {
   color: var(--text-3);
-  font-size: 10px;
-  letter-spacing: 0.85px;
+  font-size: 9px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  padding: 0;
-  border: 0;
-  background: none;
-  min-height: 0;
+  padding: 9px 10px;
+  border-radius: 11px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018)),
+    rgba(255,255,255,.02);
+  min-height: 52px;
   display: grid;
   align-content: center;
-  gap: 4px;
 }
 .season-2026-kick strong {
   display: block;
-  color: var(--text-2);
-  font-size: 11px;
-  margin-bottom: 0;
-  letter-spacing: 0.95px;
+  color: color-mix(in srgb, var(--accent) 82%, white 10%);
+  font-size: 10px;
+  margin-bottom: 3px;
+  letter-spacing: 1.35px;
 }
 .season-2026-kick span {
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 11px;
-  letter-spacing: 0.2px;
-  text-transform: none;
+  font-size: 8px;
+  letter-spacing: 1.15px;
 }
 .season-2026-window-note {
-  margin-top: 0;
+  margin-top: 4px;
   color: var(--accent);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
 }
 .season-2026-team {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
   padding: 2px 0;
 }
 .season-2026-team img {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
   flex-shrink: 0;
-  filter: none;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
   transform-origin: center;
-  opacity: 0.98;
 }
 .season-2026-matchup:hover .season-2026-team img {
-  animation: none;
+  animation: matchupLogoStep 1.35s ease-in-out infinite;
 }
 @keyframes matchupLogoStep {
   0%, 100% { transform: translateX(0); }
@@ -1781,16 +1775,16 @@ body::after {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-1);
-  line-height: 1.12;
+  line-height: 1.05;
 }
 .season-2026-team span {
   display: block;
   color: var(--text-3);
-  font-size: 9px;
-  margin-top: 2px;
-  letter-spacing: 0.9px;
+  font-size: 8px;
+  margin-top: 3px;
+  letter-spacing: 1.15px;
   text-transform: uppercase;
 }
 .season-2026-meta {
@@ -1804,37 +1798,38 @@ body::after {
   font-size: 10px;
 }
 .season-2026-vs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: auto;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
   margin: 0 auto;
-  border: 0;
-  background: none;
-  color: rgba(255,255,255,0.38);
-  font-size: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.026);
+  color: var(--nfl-red);
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
-  white-space: nowrap;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
-  text-shadow: none;
-  box-shadow: none;
+  text-shadow: 0 0 18px rgba(213,10,10,0.16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
 }
 .season-2026-status {
   justify-self: end;
-  text-align: right;
-  min-width: 90px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
+  text-align: center;
+  min-width: 98px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.09);
   color: var(--text-2);
-  background: none;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.35px;
-  text-transform: none;
-  box-shadow: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0.028)),
+    rgba(255,255,255,0.03);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
 }
 .season-2026-status strong,
 .season-2026-status span {
@@ -1845,33 +1840,32 @@ body::after {
 }
 .season-2026-status strong {
   color: var(--text-1);
-  font-size: 12px;
-  margin-bottom: 3px;
+  font-size: 9px;
+  margin-bottom: 2px;
 }
 .season-2026-status span {
   color: var(--text-3);
-  font-size: 10px;
-  letter-spacing: 0.45px;
-  text-transform: uppercase;
+  font-size: 8px;
+  letter-spacing: 1px;
 }
 .season-2026-status.live {
   color: var(--green);
-  border: 0;
-  background: none;
-  box-shadow: none;
+  border-color: rgba(40,199,111,0.32);
+  background: rgba(40,199,111,0.08);
+  box-shadow: 0 0 18px rgba(40,199,111,0.10), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 .season-2026-status.live strong {
-  animation: none;
+  animation: season2026LivePulse 1.9s ease-in-out infinite;
 }
 .season-2026-status.final {
   color: var(--accent);
-  border: 0;
-  background: none;
+  border-color: rgba(216,176,62,0.22);
+  background: rgba(216,176,62,0.06);
 }
 .season-2026-status.upcoming {
   color: var(--accent);
-  border: 0;
-  background: none;
+  border-color: rgba(216,176,62,0.24);
+  background: rgba(216,176,62,0.08);
 }
 @keyframes season2026LivePulse {
   0%, 100% { opacity: 1; }
@@ -3584,561 +3578,6 @@ body::after {
 }
 
 /* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ DISCOVERY CATEGORIES Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
-body.game-memory-capsule-open {
-  overflow: hidden;
-}
-
-.game-memory-capsule {
-  position: fixed;
-  inset: 0;
-  z-index: 1800;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  padding: 16px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .24s ease;
-}
-.game-memory-capsule.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-.game-memory-capsule-backdrop {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.07), transparent 26%),
-    linear-gradient(180deg, rgba(3, 8, 20, 0.78), rgba(3, 8, 20, 0.9));
-  backdrop-filter: blur(16px);
-}
-.game-memory-capsule-panel {
-  position: relative;
-  width: min(1320px, 100%);
-  max-height: calc(100vh - 32px);
-  border-radius: 30px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: linear-gradient(180deg, rgba(10,18,32,0.98), rgba(8,14,26,0.99));
-  box-shadow: 0 36px 90px rgba(0,0,0,0.48);
-  overflow: hidden;
-  transform: translateY(20px) scale(0.985);
-  transition: transform .28s ease;
-}
-.game-memory-capsule.open .game-memory-capsule-panel {
-  transform: translateY(0) scale(1);
-}
-.game-memory-capsule-scroll {
-  position: relative;
-  max-height: inherit;
-  overflow: auto;
-}
-.game-memory-capsule-scroll::-webkit-scrollbar {
-  width: 10px;
-}
-.game-memory-capsule-scroll::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.04);
-}
-.game-memory-capsule-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.16);
-  border-radius: 999px;
-}
-.game-memory-capsule-frame {
-  position: relative;
-  background:
-    radial-gradient(circle at 14% 6%, color-mix(in srgb, var(--capsule-primary, #013369) 28%, transparent), transparent 34%),
-    radial-gradient(circle at 86% 0%, color-mix(in srgb, var(--capsule-secondary, #d50a0a) 22%, transparent), transparent 32%),
-    linear-gradient(180deg, rgba(255,255,255,0.02), transparent 18%);
-}
-.game-memory-capsule-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
-  opacity: .16;
-}
-.game-memory-capsule-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 24px;
-  background: linear-gradient(180deg, rgba(5,11,22,0.94), rgba(5,11,22,0.78));
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.game-memory-capsule-back,
-.game-memory-capsule-close,
-.game-memory-capsule-link,
-.team-route-capsule-launch,
-.codex-memory-capsule-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05);
-  color: var(--text-1);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-}
-.game-memory-capsule-back:hover,
-.game-memory-capsule-close:hover,
-.game-memory-capsule-link:hover,
-.team-route-capsule-launch:hover,
-.codex-memory-capsule-btn:hover {
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,0.24);
-  background: rgba(255,255,255,0.09);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.18);
-}
-.game-memory-capsule-close {
-  min-width: 40px;
-  padding-inline: 12px;
-  font-size: 16px;
-}
-.game-memory-capsule-topmeta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-3);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-content {
-  position: relative;
-  z-index: 1;
-  padding: 0 0 34px;
-}
-.game-memory-capsule-hero {
-  padding: 30px 34px 22px;
-}
-.game-memory-capsule-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05);
-  color: var(--text-2);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-rank {
-  color: var(--capsule-secondary, #d50a0a);
-}
-.game-memory-capsule-scoreboard {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 22px;
-  align-items: center;
-  margin-top: 22px;
-}
-.game-memory-capsule-team {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-.game-memory-capsule-team.away {
-  justify-items: start;
-}
-.game-memory-capsule-team.home {
-  justify-items: end;
-}
-.game-memory-capsule-logo {
-  width: 76px;
-  height: 76px;
-  object-fit: contain;
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.28));
-}
-.game-memory-capsule-team-name {
-  font-family: 'Oswald', sans-serif;
-  font-size: clamp(26px, 3vw, 42px);
-  line-height: 0.96;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-team-meta {
-  color: var(--text-3);
-  font-size: 11px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-scorecore {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-  text-align: center;
-}
-.game-memory-capsule-scoreline {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-family: 'Oswald', sans-serif;
-  line-height: 0.9;
-}
-.game-memory-capsule-scoreline strong {
-  font-size: clamp(54px, 8vw, 110px);
-  color: #fff8e8;
-  text-shadow: 0 0 28px color-mix(in srgb, var(--capsule-secondary, #d50a0a) 28%, transparent);
-}
-.game-memory-capsule-scoreline span {
-  font-size: clamp(22px, 3vw, 42px);
-  color: var(--text-3);
-}
-.game-memory-capsule-status {
-  color: var(--capsule-secondary, #d50a0a);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-hero-note {
-  margin-top: 12px;
-  max-width: 900px;
-  color: #e8eef8;
-  font-size: 15px;
-  line-height: 1.8;
-}
-.game-memory-capsule-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
-}
-.game-memory-capsule-meta-card,
-.game-memory-capsule-stat,
-.game-memory-capsule-section,
-.game-memory-capsule-context-card,
-.game-memory-capsule-uniform-card,
-.game-memory-capsule-broadcast-card {
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  border-radius: 18px;
-}
-.game-memory-capsule-meta-card {
-  padding: 14px;
-  min-height: 88px;
-}
-.game-memory-capsule-label {
-  display: block;
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-value {
-  display: block;
-  margin-top: 8px;
-  font-family: 'Oswald', sans-serif;
-  font-size: 22px;
-  line-height: 1.05;
-  color: #fff5d8;
-}
-.game-memory-capsule-subvalue {
-  display: block;
-  margin-top: 6px;
-  color: var(--text-2);
-  font-size: 11px;
-  line-height: 1.55;
-}
-.game-memory-capsule-body {
-  display: grid;
-  gap: 18px;
-  padding: 0 34px;
-}
-.game-memory-capsule-section {
-  padding: 22px 22px 20px;
-}
-.game-memory-capsule-section-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.game-memory-capsule-section-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: clamp(24px, 3vw, 34px);
-  line-height: 0.96;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-section-subtitle {
-  color: var(--text-3);
-  font-size: 11px;
-  line-height: 1.6;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.game-memory-capsule-copy {
-  color: #e8edf6;
-  font-size: 14px;
-  line-height: 1.85;
-}
-.game-memory-capsule-note {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.03);
-  color: var(--text-3);
-  font-size: 11px;
-  line-height: 1.7;
-}
-.game-memory-capsule-grid {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 18px;
-}
-.game-memory-capsule-chip-row,
-.game-memory-capsule-link-row,
-.game-memory-capsule-impact-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.game-memory-capsule-chip,
-.game-memory-capsule-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.04);
-  color: #f4f6fb;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-pill {
-  color: var(--capsule-secondary, #d50a0a);
-}
-.game-memory-capsule-timeline {
-  position: relative;
-  display: grid;
-  gap: 14px;
-  padding-left: 18px;
-}
-.game-memory-capsule-timeline::before {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--capsule-secondary, #d50a0a) 55%, transparent), rgba(255,255,255,0.12));
-}
-.game-memory-capsule-timeline-entry {
-  position: relative;
-  padding: 14px 16px 14px 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-}
-.game-memory-capsule-timeline-entry::before {
-  content: '';
-  position: absolute;
-  left: -18px;
-  top: 20px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.12);
-  background: color-mix(in srgb, var(--capsule-secondary, #d50a0a) 70%, #ffffff 10%);
-  box-shadow: 0 0 0 6px rgba(255,255,255,0.02);
-}
-.game-memory-capsule-timeline-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.game-memory-capsule-timeline-meta {
-  color: var(--text-3);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-timeline-team {
-  font-family: 'Oswald', sans-serif;
-  font-size: 18px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-timeline-desc {
-  color: #eff3f9;
-  font-size: 13px;
-  line-height: 1.75;
-}
-.game-memory-capsule-timeline-foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-  color: var(--text-2);
-  font-size: 11px;
-}
-.game-memory-capsule-chart {
-  padding: 16px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-}
-.game-memory-capsule-chart svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.game-memory-capsule-chart-legend {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 12px;
-  color: var(--text-3);
-  font-size: 10px;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-context-grid,
-.game-memory-capsule-uniform-grid,
-.game-memory-capsule-broadcast-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-.game-memory-capsule-context-card,
-.game-memory-capsule-uniform-card,
-.game-memory-capsule-broadcast-card {
-  padding: 14px;
-}
-.game-memory-capsule-uniform-swatch-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-.game-memory-capsule-uniform-swatch {
-  flex: 1;
-  min-height: 58px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  display: grid;
-  place-items: end start;
-  padding: 8px;
-  color: rgba(255,255,255,0.88);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.game-memory-capsule-footer {
-  padding: 0 34px 0;
-}
-.team-route-game-row,
-.team-route-game-card {
-  cursor: pointer;
-}
-.team-route-game-row:hover td {
-  background: rgba(255,255,255,0.03);
-}
-.team-route-games-hint {
-  margin: 10px 0 0;
-  color: rgba(244,247,251,0.64);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.team-route-capsule-launch {
-  min-height: 34px;
-  padding: 8px 12px;
-  margin-top: 12px;
-  font-size: 10px;
-}
-.codex-memory-capsule-action-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0 0 18px;
-}
-.codex-memory-capsule-btn {
-  min-height: 36px;
-  font-size: 10px;
-  color: #fff5d8;
-}
-@media (max-width: 1100px) {
-  .game-memory-capsule-meta-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .game-memory-capsule-grid,
-  .game-memory-capsule-context-grid,
-  .game-memory-capsule-uniform-grid,
-  .game-memory-capsule-broadcast-grid {
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 820px) {
-  .game-memory-capsule {
-    padding: 10px;
-  }
-  .game-memory-capsule-panel {
-    max-height: calc(100vh - 20px);
-    border-radius: 24px;
-  }
-  .game-memory-capsule-topbar,
-  .game-memory-capsule-hero,
-  .game-memory-capsule-body,
-  .game-memory-capsule-footer {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-  .game-memory-capsule-scoreboard {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .game-memory-capsule-team.away,
-  .game-memory-capsule-team.home {
-    justify-items: center;
-  }
-  .game-memory-capsule-meta-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 560px) {
-  .game-memory-capsule-topbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .game-memory-capsule-meta-grid {
-    grid-template-columns: 1fr;
-  }
-  .game-memory-capsule-scoreline strong {
-    font-size: 58px;
-  }
-}
-
-/* â”€â”€â”€ DISCOVERY CATEGORIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-
 .discovery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -5945,6 +5384,8 @@ html.preload-team-route #teamRouteView {
       <a href="#divisions" class="nav-link">Divisions</a>
       <a href="#live" class="nav-link">Live Center</a>
       <a href="#universe" class="nav-link">Universe</a>
+      <a href="#records" class="nav-link">Records Board</a>
+  
     </div>
     <div class="nav-right">
       <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
@@ -5962,6 +5403,8 @@ html.preload-team-route #teamRouteView {
     <a href="#divisions" class="mobile-nav-link">Divisions</a>
     <a href="#live" class="mobile-nav-link">Live Center</a>
     <a href="#universe" class="mobile-nav-link">Universe</a>
+    <a href="#records" class="mobile-nav-link">Records Board</a>
+    <a href="#discover" class="mobile-nav-link">Discover</a>
     <a href="#footer" class="mobile-nav-link">Project</a>
   </div>
 </div>
@@ -5987,6 +5430,7 @@ html.preload-team-route #teamRouteView {
       <a class="hero-btn primary" href="#teams">Browse All Teams &rarr;</a>
       <a class="hero-btn" href="#live">Open Live Center</a>
       <a class="hero-btn" href="#universe">Open Universe Mode</a>
+      <a class="hero-btn" href="#records">Open Records Board</a>
     </div>
 
   </div>
@@ -6302,6 +5746,7 @@ html.preload-team-route #teamRouteView {
 <!--  DISCOVERY                                                  -->
 <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 
+
 <!--  FOOTER                                                     -->
 <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <footer class="footer" id="footer">
@@ -6327,6 +5772,8 @@ html.preload-team-route #teamRouteView {
           <a href="#divisions" class="footer-link">Divisions</a>
           <a href="#live" class="footer-link">Live Center</a>
           <a href="#universe" class="footer-link">Universe Mode</a>
+          <a href="#records" class="footer-link">League History</a>
+          <a href="#discover" class="footer-link">Discovery</a>
         </div>
       </div>
       <div>
@@ -6365,24 +5812,6 @@ html.preload-team-route #teamRouteView {
     <div class="explore-modal-body">
       <p class="explore-modal-desc" id="exploreModalDesc">Every Super Bowl from I to LVIX. Scores, MVPs, storylines, and the complete historical record of the biggest game in American sports.</p>
       <div class="explore-modal-tag" id="exploreModalTag">58 Games &middot; 1967&ndash;2025</div>
-    </div>
-  </div>
-</div>
-<div class="game-memory-capsule" id="gameMemoryCapsule" aria-hidden="true">
-  <div class="game-memory-capsule-backdrop" data-capsule-close="true"></div>
-  <div class="game-memory-capsule-panel" role="dialog" aria-modal="true" aria-labelledby="gameMemoryCapsuleTitle">
-    <div class="game-memory-capsule-scroll">
-      <div class="game-memory-capsule-frame">
-        <div class="game-memory-capsule-topbar">
-          <button type="button" class="game-memory-capsule-back" id="gameMemoryCapsuleBack">Back to archive</button>
-          <div class="game-memory-capsule-topmeta">
-            <span>Game Memory Capsule</span>
-            <span id="gameMemoryCapsuleStatus">Historical archive view</span>
-          </div>
-          <button type="button" class="game-memory-capsule-close" id="gameMemoryCapsuleClose" aria-label="Close Game Memory Capsule">&times;</button>
-        </div>
-        <div class="game-memory-capsule-content" id="gameMemoryCapsuleContent"></div>
-      </div>
     </div>
   </div>
 </div>
@@ -6536,12 +5965,10 @@ TEAMS.forEach(team => {
   team.slug = normalizedSlug;
   team.dataFiles = assetCandidates(`data/${normalizedSlug}.json`);
   team.browserDataFiles = assetCandidates(`data/browser/${normalizedSlug}.js`);
-  // On hosted deployments, build team pages directly from JSON to avoid shipping
-  // a second ~100 MB copy of the same franchise data as rendered JS bundles.
-  team.renderedPageFiles = [];
+  team.renderedPageFiles = assetCandidates(`data/browser-pages/${normalizedSlug}.js`);
   team.dataFile = team.dataFiles[0];
   team.browserDataFile = team.browserDataFiles[0];
-  team.renderedPageFile = null;
+  team.renderedPageFile = team.renderedPageFiles[0];
   team.route = `#team=${encodeURIComponent(normalizedSlug)}`;
   team.url = null;
 });
@@ -6763,6 +6190,14 @@ function getHomeShell() {
 
 function getTeamRouteView() {
   return document.getElementById('teamRouteView');
+}
+
+function getAtlasView() {
+  return document.getElementById('explore');
+}
+
+function isAtlasHash(hashValue = window.location.hash || '') {
+  return false;
 }
 
 function normalizeTeamSlug(slug) {
@@ -7189,41 +6624,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       doc.__nflLegacyStatRepairTimer = targetWindow.setTimeout(() => {
         doc.__nflLegacyStatRepairTimer = null;
         repairLegacyMatchStats();
-        injectLegacyMemoryCapsuleTrigger();
       }, 0);
-    };
-
-    const injectLegacyMemoryCapsuleTrigger = () => {
-      const modal = doc.querySelector('#matchModal.open');
-      const modalBody = doc.getElementById('modalBody') || modal?.querySelector('.modal-body');
-      if (!modal || !modalBody) return;
-      let actionStrip = modalBody.querySelector('.codex-memory-capsule-action-strip');
-      if (!actionStrip) {
-        actionStrip = doc.createElement('div');
-        actionStrip.className = 'codex-memory-capsule-action-strip';
-        modalBody.insertBefore(actionStrip, modalBody.firstChild);
-      }
-      let button = actionStrip.querySelector('.codex-memory-capsule-btn');
-      if (!button) {
-        button = doc.createElement('button');
-        button.type = 'button';
-        button.className = 'codex-memory-capsule-btn';
-        actionStrip.appendChild(button);
-      }
-
-      const games = getLegacyGames();
-      const index = getCurrentGameIndex();
-      const legacyGame = games && Number.isFinite(index) ? games[index] : null;
-      const matchedGame = activeTeamData && legacyGame ? findTeamGameMatch(activeTeamData, legacyGame) : null;
-      button.textContent = matchedGame ? 'Open Game Memory Capsule' : 'Game Memory Capsule unavailable';
-      button.disabled = !matchedGame;
-      button.setAttribute('aria-disabled', matchedGame ? 'false' : 'true');
-      button.onclick = event => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        if (!matchedGame || !activeTeamData) return false;
-        return openGameMemoryCapsule(matchedGame, activeTeamData, { source: 'legacy-modal' });
-      };
     };
 
     if (!targetWindow.__nflOpenMatchWrapped && typeof targetWindow.openMatch === 'function') {
@@ -7232,7 +6633,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       targetWindow.openMatch = function wrappedOpenMatch(...args) {
         const result = originalOpenMatch.apply(this, args);
         resetLegacyMatchScroll();
-        scheduleLegacyMatchStatRepair();
+        repairLegacyMatchStats();
         return result;
       };
     }
@@ -7287,7 +6688,6 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
     if (!doc.__nflRouteObserver && targetWindow.MutationObserver && doc.body) {
       doc.__nflRouteObserver = new targetWindow.MutationObserver(mutations => {
         let needsOpponentWire = false;
-        let needsModalRefresh = false;
 
         for (const mutation of mutations) {
           for (const node of mutation.addedNodes) {
@@ -7298,26 +6698,15 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
             ) {
               needsOpponentWire = true;
             }
-            if (
-              node.matches?.('#matchModal, #modalBody, .mini-panel, .modal-card, .match-row.selected') ||
-              node.querySelector?.('#matchModal, #modalBody, .mini-panel, .modal-card, .match-row.selected')
-            ) {
-              needsModalRefresh = true;
-            }
           }
         }
 
         if (needsOpponentWire) {
           wireOpponentButtons();
         }
-        if (needsModalRefresh) {
-          scheduleLegacyMatchStatRepair();
-        }
       });
       doc.__nflRouteObserver.observe(doc.body, { childList: true, subtree: true });
     }
-
-    scheduleLegacyMatchStatRepair();
   } catch (error) {
     console.warn('Could not bind route delegation inside legacy team frame.', error);
   }
@@ -7326,7 +6715,6 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
 function routeToTeam(slug) {
   const normalized = resolveTeamSlug(slug);
   if (!normalized) return false;
-  closeGameMemoryCapsule();
   if (routeHome._transitionTimer) {
     window.clearTimeout(routeHome._transitionTimer);
     routeHome._transitionTimer = null;
@@ -7353,7 +6741,6 @@ function routeToTeam(slug) {
 }
 
 function routeHome(targetHash = '') {
-  closeGameMemoryCapsule();
   setAppFavicon();
   const homeShell = getHomeShell();
   const teamView = getTeamRouteView();
@@ -7405,6 +6792,8 @@ function openAtlasView(updateHash = true) {
 }
 
 function closeAtlasView(updateHash = true) {
+  const atlasView = getAtlasView();
+  if (atlasView) atlasView.hidden = true;
   document.body.classList.remove('atlas-open');
   return false;
 }
@@ -7722,1099 +7111,6 @@ function normalizeAchievementItems(teamData) {
 
   return items;
 }
-
-let activeGameMemoryCapsuleContext = null;
-
-function clampNumber(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function capsuleText(value, fallback = 'Not available yet') {
-  const text = String(value ?? '').trim();
-  if (!text || /^(n\/a|null|undefined|unavailable|not tracked)$/i.test(text)) return fallback;
-  return text;
-}
-
-function capsuleNumber(value) {
-  if (value === null || value === undefined || value === '') return null;
-  const normalized = String(value).replace(/[^0-9.-]/g, '');
-  const parsed = Number(normalized);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function formatCapsuleDate(game) {
-  if (game?.displayDate && !/^(tbd|date not available yet)$/i.test(String(game.displayDate))) return String(game.displayDate);
-  if (game?.date) {
-    const parsed = new Date(game.date);
-    if (!Number.isNaN(parsed.getTime())) {
-      return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    }
-  }
-  return 'Date not available yet';
-}
-
-function resolveActiveTeamSlugFromData(teamData) {
-  return resolveTeamSlug(teamData?.slug || teamData?.identity?.shortName || teamData?.identity?.teamName || '');
-}
-
-function buildGameMemoryKey(game) {
-  const normalized = normalizeGameForCapsule(game);
-  return [
-    normalized.id || '',
-    normalized.season || normalized.year || '',
-    normalized.date || '',
-    normalized.round || '',
-    normalized.opponentSlug || normalized.opponent || '',
-    normalized.location || '',
-    normalized.teamScore ?? '',
-    normalized.opponentScore ?? ''
-  ].map(value => String(value).trim().toLowerCase()).join('|');
-}
-
-function normalizeGameForCapsule(rawGame) {
-  const game = rawGame || {};
-  const stats = game.stats || {};
-  const detail = game.detail || {};
-  const links = game.links || {};
-  const teamScore = game.teamScore ?? game.ravensScore ?? game.pointsFor ?? null;
-  const opponentScore = game.opponentScore ?? game.oppScore ?? game.pointsAgainst ?? null;
-  const competition = game.competition || game.type || (game.isPlayoff ? 'Playoffs' : 'Regular Season');
-  return {
-    ...game,
-    id: game.id || null,
-    season: Number(game.season ?? game.year ?? 0) || null,
-    year: Number(game.year ?? game.season ?? 0) || null,
-    date: game.date || null,
-    displayDate: game.displayDate || game.date || '',
-    round: game.round || game.week || '',
-    competition,
-    opponent: game.opponent || game.opponentName || 'Opponent',
-    opponentSlug: game.opponentSlug || game.opponentCode || resolveTeamSlug(game.opponent || game.opponentName || ''),
-    location: game.location || (String(game.homeAway || '').toLowerCase() === 'away' ? 'Away' : String(game.homeAway || '').toLowerCase() === 'home' ? 'Home' : ''),
-    homeAway: game.homeAway || game.location || '',
-    result: String(game.result || '').trim(),
-    teamScore: capsuleNumber(teamScore),
-    opponentScore: capsuleNumber(opponentScore),
-    overtime: Boolean(game.overtime || game.isOvertime),
-    isPlayoff: Boolean(game.isPlayoff || /playoff|wild card|divisional|conference|championship|super bowl/i.test(`${competition} ${game.round || ''}`)),
-    stadium: game.stadium || game.venue || game.site || detail.stadium || '',
-    attendance: game.attendance || detail.attendance || '',
-    weather: game.weather || detail.weather || '',
-    temperature: game.temperature || game.temp || detail.temperature || '',
-    wind: game.wind || detail.wind || '',
-    surface: game.surface || detail.surface || '',
-    city: game.city || detail.city || '',
-    leadChanges: capsuleNumber(game.leadChanges || detail.leadChanges),
-    broadcast: game.broadcast || game.tv || detail.broadcast || detail.tv || '',
-    radio: game.radio || detail.radio || '',
-    announcers: game.announcers || detail.announcers || detail.announceTeam || '',
-    hallOfFame: game.hallOfFame || detail.hallOfFame || null,
-    uniform: game.uniform || detail.uniform || null,
-    summary: game.summary || detail.summary || detail.whyItMattered || '',
-    detail,
-    links: {
-      youtubeSummary: links.youtubeSummary || game.youtubeSummaryUrl || '',
-      boxscore: links.boxscore || game.boxscoreUrl || ''
-    },
-    stats: {
-      totalYards: stats.totalYards ?? game.totalYards ?? '',
-      passingYards: stats.passingYards ?? game.passingYards ?? '',
-      rushingYards: stats.rushingYards ?? game.rushingYards ?? '',
-      turnovers: stats.turnovers ?? game.turnovers ?? '',
-      firstDowns: stats.firstDowns ?? game.firstDowns ?? '',
-      possession: stats.timeOfPossession ?? stats.possession ?? game.possession ?? '',
-      opponentTotalYards: stats.opponentTotalYards ?? game.opponentTotalYards ?? '',
-      opponentPassingYards: stats.opponentPassingYards ?? game.opponentPassingYards ?? '',
-      opponentRushingYards: stats.opponentRushingYards ?? game.opponentRushingYards ?? '',
-      opponentTurnovers: stats.opponentTurnovers ?? game.opponentTurnovers ?? '',
-      opponentFirstDowns: stats.opponentFirstDowns ?? game.opponentFirstDowns ?? '',
-      opponentPossession: stats.opponentPossession ?? game.opponentPossession ?? ''
-    }
-  };
-}
-
-function getCapsuleTeamMeta(slug) {
-  return TEAMS.find(team => team.slug === slug) || null;
-}
-
-function getCapsuleHistoricalProfile(slug) {
-  const stats = TEAM_PORTABLE_ALL_TIME_STATS?.[slug] || TEAM_COMPACT_FALLBACK?.[slug] || {};
-  const wins = Number(stats.w || stats.wins || 0);
-  const losses = Number(stats.l || stats.losses || 0);
-  const ties = Number(stats.t || stats.ties || 0);
-  const total = wins + losses + ties;
-  return {
-    wins,
-    losses,
-    ties,
-    titles: Number(stats.sb || stats.superBowls || 0),
-    playoffAppearances: Number(stats.po || stats.playoffAppearances || 0),
-    pct: total ? (wins + (ties * 0.5)) / total : 0
-  };
-}
-
-function getOpponentCityFromMeta(meta) {
-  if (!meta?.name) return '';
-  const label = String(meta.name);
-  if (!meta.short) return label;
-  return label.replace(new RegExp(`${meta.short}$`, 'i'), '').trim();
-}
-
-function parseEraBounds(value) {
-  const numbers = String(value || '').match(/\d{4}/g) || [];
-  if (!numbers.length) return null;
-  const start = Number(numbers[0]);
-  const end = Number(numbers[1] || numbers[0]);
-  return { start, end };
-}
-
-function findEraEntryForYear(teamData, year) {
-  return asArray(teamData?.franchiseSummary?.notableEras).find(entry => {
-    const bounds = parseEraBounds(entry?.years);
-    if (!bounds || !year) return false;
-    return year >= bounds.start && year <= bounds.end;
-  }) || null;
-}
-
-function findMilestoneEntryForGame(teamData, game) {
-  const entries = [
-    ...asArray(teamData?.timeline),
-    ...asArray(teamData?.achievements?.milestones)
-  ].filter(Boolean);
-  const scoreToken = game.teamScore !== null && game.opponentScore !== null ? `${game.teamScore}-${game.opponentScore}` : '';
-  return entries.find(entry => {
-    const haystack = `${entry.year || ''} ${entry.title || ''} ${entry.description || ''}`.toLowerCase();
-    if (game.year && !haystack.includes(String(game.year))) return false;
-    if (game.opponent && haystack.includes(String(game.opponent).toLowerCase())) return true;
-    if (scoreToken && haystack.includes(scoreToken.toLowerCase())) return true;
-    return false;
-  }) || null;
-}
-
-function findRivalryEntryForGame(teamData, game) {
-  const opponentSlug = resolveTeamSlug(game.opponentSlug || game.opponent || '');
-  return asArray(teamData?.rivalries).find(entry => {
-    const entrySlug = resolveTeamSlug(entry?.team || entry?.slug || '');
-    return (entrySlug && opponentSlug && entrySlug === opponentSlug) ||
-      String(entry?.team || '').trim().toLowerCase() === String(game.opponent || '').trim().toLowerCase();
-  }) || null;
-}
-
-function getGameRoundOrder(game) {
-  const roundText = String(game?.round || '').toLowerCase();
-  const gameMatch = roundText.match(/game\s*(\d+)/i);
-  if (gameMatch) return Number(gameMatch[1]);
-  const weekMatch = roundText.match(/week\s*(\d+)/i);
-  if (weekMatch) return Number(weekMatch[1]);
-  if (/wild card/.test(roundText)) return 19;
-  if (/divisional/.test(roundText)) return 20;
-  if (/conference|afc championship|nfc championship/.test(roundText)) return 21;
-  if (/super bowl/.test(roundText)) return 22;
-  return 999;
-}
-
-function sortGamesChronologically(games) {
-  return [...games].sort((left, right) => {
-    const leftGame = normalizeGameForCapsule(left);
-    const rightGame = normalizeGameForCapsule(right);
-    const leftDate = leftGame.date ? new Date(leftGame.date).getTime() : Number.NaN;
-    const rightDate = rightGame.date ? new Date(rightGame.date).getTime() : Number.NaN;
-    if (!Number.isNaN(leftDate) && !Number.isNaN(rightDate) && leftDate !== rightDate) return leftDate - rightDate;
-    const leftSeason = Number(leftGame.season || leftGame.year || 0);
-    const rightSeason = Number(rightGame.season || rightGame.year || 0);
-    if (leftSeason !== rightSeason) return leftSeason - rightSeason;
-    const roundDiff = getGameRoundOrder(leftGame) - getGameRoundOrder(rightGame);
-    if (roundDiff) return roundDiff;
-    return String(leftGame.opponent || '').localeCompare(String(rightGame.opponent || ''));
-  });
-}
-
-function createRecordSummary() {
-  return { wins: 0, losses: 0, ties: 0 };
-}
-
-function incrementRecordSummary(record, result) {
-  const token = String(result || '').toUpperCase();
-  if (token === 'W') record.wins += 1;
-  else if (token === 'L') record.losses += 1;
-  else if (token === 'T') record.ties += 1;
-}
-
-function formatRecordSummary(record) {
-  return `${record.wins}-${record.losses}${record.ties ? `-${record.ties}` : ''}`;
-}
-
-function gamesMatchForCapsule(left, right) {
-  if (!left || !right) return false;
-  const a = normalizeGameForCapsule(left);
-  const b = normalizeGameForCapsule(right);
-  if (a.id && b.id && a.id === b.id) return true;
-  if (buildGameMemoryKey(a) === buildGameMemoryKey(b)) return true;
-  return Number(a.season || a.year || 0) === Number(b.season || b.year || 0) &&
-    String(a.round || '').toLowerCase() === String(b.round || '').toLowerCase() &&
-    String(a.location || '').toLowerCase() === String(b.location || '').toLowerCase() &&
-    resolveTeamSlug(a.opponentSlug || a.opponent || '') === resolveTeamSlug(b.opponentSlug || b.opponent || '') &&
-    (a.teamScore === b.teamScore || (a.teamScore === null && b.teamScore === null)) &&
-    (a.opponentScore === b.opponentScore || (a.opponentScore === null && b.opponentScore === null));
-}
-
-function findTeamGameMatch(teamData, candidateGame) {
-  const candidate = normalizeGameForCapsule(candidateGame);
-  const games = getGameList(teamData).map(game => normalizeGameForCapsule(game));
-  const direct = games.find(game => gamesMatchForCapsule(game, candidate));
-  if (direct) {
-    return {
-      ...direct,
-      ...candidate,
-      stats: { ...direct.stats, ...candidate.stats },
-      links: { ...direct.links, ...candidate.links }
-    };
-  }
-  return candidate;
-}
-
-function snapToFootballScore(value, maxScore) {
-  const likelyScores = [0, 2, 3, 6, 7, 9, 10, 13, 14, 16, 17, 20, 21, 23, 24, 27, 28, 30, 31, 34, 35, 37, 38, 41, 42, 44, 45, 48, 49, 51, 52, 55, 56, 59, 60];
-  const bounded = clampNumber(value, 0, maxScore);
-  return likelyScores
-    .filter(score => score <= maxScore)
-    .reduce((closest, score) => Math.abs(score - bounded) < Math.abs(closest - bounded) ? score : closest, 0);
-}
-
-function buildEstimatedProgression(routeScore, opponentScore, importance) {
-  const margin = Math.abs((routeScore ?? 0) - (opponentScore ?? 0));
-  const routeWin = routeScore > opponentScore;
-  const opponentWin = opponentScore > routeScore;
-  const tieGame = routeScore === opponentScore;
-  const fractions = tieGame
-    ? [
-        { route: 0.25, opponent: 0.25 },
-        { route: 0.55, opponent: 0.55 },
-        { route: 0.78, opponent: 0.78 },
-        { route: 1, opponent: 1 }
-      ]
-    : routeWin
-      ? (margin <= 7
-          ? [
-              { route: 0.2, opponent: 0.3 },
-              { route: 0.48, opponent: 0.55 },
-              { route: 0.72, opponent: 0.74 },
-              { route: 1, opponent: 1 }
-            ]
-          : [
-              { route: 0.32, opponent: 0.14 },
-              { route: 0.58, opponent: 0.36 },
-              { route: 0.82, opponent: 0.58 },
-              { route: 1, opponent: 1 }
-            ])
-      : [
-          { route: 0.18, opponent: 0.3 },
-          { route: 0.42, opponent: 0.58 },
-          { route: 0.7, opponent: 0.82 },
-          { route: 1, opponent: 1 }
-        ];
-  const quarterLabels = importance?.superBowl ? ['Q1', 'Q2', 'Q3', 'Q4'] : importance?.playoffGame ? ['Q1', 'Q2', 'Q3', importance?.score >= 70 ? 'Q4' : 'Final'] : ['Q1', 'Q2', 'Q3', importance?.playoffGame ? 'Q4' : importance?.margin !== null && importance.margin <= 3 ? 'Q4' : 'Final'];
-  const timeLabels = ['Archive estimate', 'Archive estimate', 'Archive estimate', importance?.playoffGame || importance?.margin <= 7 ? 'Final frame' : 'Closing estimate'];
-  return fractions.map((fraction, index) => ({
-    quarter: quarterLabels[index],
-    time: timeLabels[index],
-    routeScore: index === fractions.length - 1 ? routeScore : snapToFootballScore(routeScore * fraction.route, routeScore),
-    opponentScore: index === fractions.length - 1 ? opponentScore : snapToFootballScore(opponentScore * fraction.opponent, opponentScore)
-  }));
-}
-
-function buildDriveStyleText(game, side = 'route') {
-  const routePassing = capsuleNumber(game?.stats?.passingYards);
-  const routeRushing = capsuleNumber(game?.stats?.rushingYards);
-  const opponentPassing = capsuleNumber(game?.stats?.opponentPassingYards);
-  const opponentRushing = capsuleNumber(game?.stats?.opponentRushingYards);
-  const passing = side === 'route' ? routePassing : opponentPassing;
-  const rushing = side === 'route' ? routeRushing : opponentRushing;
-  const routeTurnovers = capsuleNumber(game?.stats?.turnovers);
-  const opponentTurnovers = capsuleNumber(game?.stats?.opponentTurnovers);
-  if (side === 'route' && opponentTurnovers !== null && opponentTurnovers >= 2) return 'short-field pressure after opponent mistakes';
-  if (side === 'opponent' && routeTurnovers !== null && routeTurnovers >= 2) return 'a response built on Baltimore mistakes';
-  if (passing !== null && rushing !== null) {
-    if (passing > rushing * 1.2) return 'the passing game';
-    if (rushing > passing * 1.2) return 'a run-heavy drive';
-    return 'a balanced scoring sequence';
-  }
-  return 'an estimated scoring burst';
-}
-
-function buildEstimatedTimelineEntries(context) {
-  const routeScore = context.game.teamScore;
-  const opponentScore = context.game.opponentScore;
-  if (routeScore === null || opponentScore === null) {
-    return [{
-      quarter: 'Pregame',
-      time: 'Not available yet',
-      team: context.team.shortName,
-      description: 'This matchup exists in the historical archive, but the full scoring story has not been attached yet.',
-      scoreAfter: 'Not available yet',
-      routeScore: null,
-      opponentScore: null,
-      momentum: 'Archive pending',
-      estimated: true
-    }];
-  }
-  const snapshots = buildEstimatedProgression(routeScore, opponentScore, context.importance);
-  const descriptions = [
-    'sets the opening tone through',
-    'answers before halftime with',
-    'creates the middle-act swing through',
-    'lands the closing scoreline with'
-  ];
-  const momentumLabels = ['Opening statement', 'Counterpunch', 'Midgame swing', context.game.overtime ? 'Overtime hinge' : 'Closing punch'];
-  let previousRoute = 0;
-  let previousOpponent = 0;
-  return snapshots.map((snapshot, index) => {
-    const routeDelta = Number(snapshot.routeScore || 0) - previousRoute;
-    const opponentDelta = Number(snapshot.opponentScore || 0) - previousOpponent;
-    previousRoute = Number(snapshot.routeScore || 0);
-    previousOpponent = Number(snapshot.opponentScore || 0);
-    const scoringSide = routeDelta >= opponentDelta ? 'route' : 'opponent';
-    const teamLabel = scoringSide === 'route' ? context.team.shortName : context.opponent.shortName;
-    const style = buildDriveStyleText(context.game, scoringSide === 'route' ? 'route' : 'opponent');
-    return {
-      quarter: snapshot.quarter,
-      time: snapshot.time,
-      team: teamLabel,
-      description: `${teamLabel} ${descriptions[index] || 'moves the game with'} ${style}.`,
-      scoreAfter: `${context.team.shortName} ${snapshot.routeScore} - ${snapshot.opponentScore} ${context.opponent.shortName}`,
-      routeScore: snapshot.routeScore,
-      opponentScore: snapshot.opponentScore,
-      momentum: momentumLabels[index] || 'Archive swing',
-      estimated: true
-    };
-  });
-}
-
-function buildGameTimelineEntries(context) {
-  const rawTimeline = [
-    ...asArray(context.game?.detail?.scoringPlays),
-    ...asArray(context.game?.detail?.timeline),
-    ...asArray(context.game?.scoringPlays),
-    ...asArray(context.game?.moments)
-  ].filter(Boolean);
-  if (!rawTimeline.length) return buildEstimatedTimelineEntries(context);
-  return rawTimeline.map((entry, index) => ({
-    quarter: capsuleText(entry.quarter || entry.period || `Moment ${index + 1}`),
-    time: capsuleText(entry.time || entry.clock || 'Not available yet'),
-    team: capsuleText(entry.team || entry.side || context.team.shortName),
-    description: capsuleText(entry.description || entry.play || entry.text || 'Key archive moment'),
-    scoreAfter: capsuleText(entry.scoreAfter || entry.score || 'Not available yet'),
-    routeScore: capsuleNumber(entry.routeScore),
-    opponentScore: capsuleNumber(entry.opponentScore),
-    momentum: capsuleText(entry.momentum || `Swing ${index + 1}`),
-    estimated: false
-  }));
-}
-
-function buildGameImportanceProfile(game, teamData) {
-  const normalizedGame = normalizeGameForCapsule(game);
-  const routeSlug = resolveActiveTeamSlugFromData(teamData);
-  const opponentSlug = resolveTeamSlug(normalizedGame.opponentSlug || normalizedGame.opponent || '');
-  const routeMeta = getCapsuleTeamMeta(routeSlug);
-  const opponentMeta = getCapsuleTeamMeta(opponentSlug);
-  const routeProfile = getCapsuleHistoricalProfile(routeSlug);
-  const opponentProfile = getCapsuleHistoricalProfile(opponentSlug);
-  const rivalryEntry = findRivalryEntryForGame(teamData, normalizedGame);
-  const milestoneEntry = findMilestoneEntryForGame(teamData, normalizedGame);
-  const margin = normalizedGame.teamScore !== null && normalizedGame.opponentScore !== null
-    ? Math.abs(normalizedGame.teamScore - normalizedGame.opponentScore)
-    : null;
-  const superBowl = /super bowl/i.test(`${normalizedGame.competition} ${normalizedGame.round}`);
-  const playoffGame = Boolean(normalizedGame.isPlayoff || superBowl);
-  const divisionRival = Boolean(routeMeta && opponentMeta && routeMeta.conf === opponentMeta.conf && routeMeta.div === opponentMeta.div);
-  const rivalry = Boolean(rivalryEntry || divisionRival);
-  const upset = Boolean(
-    normalizedGame.result === 'W' &&
-    opponentProfile.pct - routeProfile.pct >= 0.08 &&
-    opponentProfile.titles >= routeProfile.titles
-  );
-  const seasonData = getSeasonList(teamData).find(season => Number(season.year) === Number(normalizedGame.season || normalizedGame.year));
-  const championshipSeason = /champ|super bowl/i.test(`${seasonData?.playoffResult || ''}`);
-  let score = 18;
-  const reasons = [];
-  if (superBowl) {
-    score += 30;
-    reasons.push('Super Bowl stakes');
-  } else if (playoffGame) {
-    score += 22;
-    reasons.push('Postseason stakes');
-  }
-  if (rivalry) {
-    score += 14;
-    reasons.push('Rivalry temperature');
-  }
-  if (normalizedGame.overtime) {
-    score += 8;
-    reasons.push('Overtime finish');
-  }
-  if (margin !== null) {
-    if (margin <= 3) {
-      score += 10;
-      reasons.push('One-score finish');
-    } else if (margin <= 7) {
-      score += 7;
-      reasons.push('Tight fourth-quarter margin');
-    } else if (margin >= 21) {
-      score += 4;
-      reasons.push('Lopsided final margin');
-    }
-  }
-  if (normalizedGame.leadChanges !== null) {
-    score += Math.min(10, normalizedGame.leadChanges * 2);
-    if (normalizedGame.leadChanges >= 2) reasons.push(`${normalizedGame.leadChanges} lead changes`);
-  } else if (normalizedGame.overtime || (margin !== null && margin <= 7)) {
-    score += 3;
-  }
-  const totalYards = capsuleNumber(normalizedGame.stats.totalYards);
-  if (milestoneEntry || (normalizedGame.teamScore !== null && normalizedGame.teamScore >= 45) || (margin !== null && margin >= 28) || (totalYards !== null && totalYards >= 450)) {
-    score += 8;
-    reasons.push('Record-book feel');
-  }
-  if (championshipSeason) {
-    score += 8;
-    reasons.push('Championship-season context');
-  }
-  if (milestoneEntry) {
-    score += 8;
-    reasons.push('Franchise milestone');
-  }
-  if (!playoffGame && /week\s*(1[4-8]|9)/i.test(String(normalizedGame.round || '')) && seasonData?.playoffResult && !/missed/i.test(String(seasonData.playoffResult || ''))) {
-    score += 5;
-    reasons.push('Late-season leverage');
-  }
-  if (/15-1|16-0|17-0|undefeated/i.test(`${seasonData?.record || ''} ${seasonData?.summary || ''}`)) {
-    score += 6;
-    reasons.push('Undefeated-season implications');
-  }
-  if (playoffGame && normalizedGame.result === 'L') {
-    score += 6;
-    reasons.push('Elimination pressure');
-  }
-  const hofCount = asArray(teamData?.honors?.hallOfFamers).length + asArray(teamData?.legends).filter(Boolean).length;
-  if (hofCount) {
-    score += 4;
-    reasons.push('Hall of Fame context');
-  }
-  score = clampNumber(Math.round(score), 0, 100);
-  const tags = [];
-  if (superBowl) tags.push('Super Bowl');
-  else if (playoffGame) tags.push('Playoff Game');
-  else tags.push('Regular Game');
-  if (rivalry) tags.push('Rivalry Game');
-  if (margin !== null && margin >= 21) tags.push('Blowout');
-  if (upset) tags.push('Upset');
-  if (normalizedGame.overtime || (margin !== null && margin <= 3) || score >= 72) tags.push('Classic');
-  if (milestoneEntry || (normalizedGame.teamScore === 0 || normalizedGame.opponentScore === 0) || (normalizedGame.teamScore !== null && normalizedGame.teamScore >= 45)) tags.push('Record Game');
-  if (milestoneEntry && championshipSeason) tags.push('Franchise Turning Point');
-  if ((routeProfile.titles >= 4 || opponentProfile.titles >= 4) && (playoffGame || rivalry)) tags.push('Dynasty Game');
-  return {
-    score,
-    tags: [...new Set(tags)].slice(0, 6),
-    reasons: [...new Set(reasons)].slice(0, 5),
-    headerTag: score >= 80 ? 'Archive Apex' : score >= 65 ? 'Signature Game' : score >= 50 ? 'Historic Swing' : score >= 35 ? 'Season Pivot' : 'Archive Entry',
-    playoffGame,
-    superBowl,
-    rivalry,
-    divisionRival,
-    upset,
-    margin,
-    championshipSeason,
-    milestoneEntry
-  };
-}
-
-function calculateGameImportance(game, teamDataOverride = null) {
-  const teamData = teamDataOverride || activeTeamData;
-  if (!teamData || !game) return 0;
-  return buildGameImportanceProfile(game, teamData).score;
-}
-
-function buildPlayoffRaceText(seasonData, game, importance, seasonContext) {
-  if (importance.superBowl) return 'The season narrowed to the biggest stage in the sport.';
-  if (importance.playoffGame) return 'Single-elimination pressure means every drive had immediate season consequences.';
-  if (seasonContext.totalGames && seasonContext.index >= Math.max(0, seasonContext.totalGames - 4)) {
-    return 'This landed late in the schedule, so playoff positioning and division math were part of the backdrop.';
-  }
-  if (seasonData?.playoffResult && !/missed/i.test(String(seasonData.playoffResult))) {
-    return `This season eventually became a ${seasonData.playoffResult.toLowerCase()} run, which raises the weight of games like this one.`;
-  }
-  if (importance.rivalry) {
-    return 'Division pressure and long-memory rivalry context made the atmosphere heavier than a normal week.';
-  }
-  return 'The full week-by-week playoff race details are not attached yet, but the result still sits inside the season arc.';
-}
-
-function buildGameMemoryCapsuleContext(gameInput, teamDataOverride = null, options = {}) {
-  const teamData = teamDataOverride || activeTeamData;
-  if (!teamData) return null;
-  const matchedGame = findTeamGameMatch(teamData, gameInput);
-  const routeSlug = resolveActiveTeamSlugFromData(teamData);
-  const teamMeta = getCapsuleTeamMeta(routeSlug);
-  const opponentSlug = resolveTeamSlug(matchedGame.opponentSlug || matchedGame.opponent || '');
-  const opponentMeta = getCapsuleTeamMeta(opponentSlug);
-  const teamIdentity = teamData.identity || {};
-  const team = {
-    slug: routeSlug,
-    fullName: teamIdentity.teamName || teamMeta?.name || 'Team',
-    shortName: teamIdentity.shortName || teamMeta?.short || 'Team',
-    city: teamIdentity.city || getOpponentCityFromMeta(teamMeta),
-    logo: teamIdentity.assets?.logo || teamMeta?.logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png',
-    colors: {
-      primary: teamIdentity.colors?.primary || TEAM_COMPACT_FALLBACK?.[routeSlug]?.p || '#013369',
-      secondary: teamIdentity.colors?.secondary || TEAM_COMPACT_FALLBACK?.[routeSlug]?.s || '#d50a0a',
-      tertiary: teamIdentity.colors?.tertiary || '#ffffff',
-      dark: teamIdentity.colors?.darkBgMid || TEAM_COMPACT_FALLBACK?.[routeSlug]?.d || '#08111d'
-    }
-  };
-  const opponent = {
-    slug: opponentSlug,
-    fullName: opponentMeta?.name || matchedGame.opponent || 'Opponent',
-    shortName: opponentMeta?.short || matchedGame.opponent || 'Opponent',
-    city: getOpponentCityFromMeta(opponentMeta),
-    logo: opponentMeta?.logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png',
-    colors: {
-      primary: TEAM_COMPACT_FALLBACK?.[opponentSlug]?.p || '#314055',
-      secondary: TEAM_COMPACT_FALLBACK?.[opponentSlug]?.s || '#d4b064',
-      tertiary: '#ffffff',
-      dark: TEAM_COMPACT_FALLBACK?.[opponentSlug]?.d || '#101b2a'
-    }
-  };
-  const routeIsHome = String(matchedGame.location || matchedGame.homeAway || '').toLowerCase() === 'home';
-  const away = routeIsHome ? opponent : team;
-  const home = routeIsHome ? team : opponent;
-  const awayScore = routeIsHome ? matchedGame.opponentScore : matchedGame.teamScore;
-  const homeScore = routeIsHome ? matchedGame.teamScore : matchedGame.opponentScore;
-  const seasonData = getSeasonList(teamData).find(season => Number(season.year) === Number(matchedGame.season || matchedGame.year)) || null;
-  const seasonGames = sortGamesChronologically(getGameList(teamData).filter(game => Number(game.season || game.year) === Number(matchedGame.season || matchedGame.year)));
-  const seasonIndex = seasonGames.findIndex(game => gamesMatchForCapsule(game, matchedGame));
-  const preRecord = createRecordSummary();
-  const postRecord = createRecordSummary();
-  seasonGames.forEach((game, index) => {
-    if (seasonIndex >= 0 && index < seasonIndex) incrementRecordSummary(preRecord, game.result);
-    if (seasonIndex >= 0 && index <= seasonIndex) incrementRecordSummary(postRecord, game.result);
-  });
-  const eraEntry = findEraEntryForYear(teamData, matchedGame.season || matchedGame.year);
-  const importance = buildGameImportanceProfile(matchedGame, teamData);
-  const rivalryEntry = findRivalryEntryForGame(teamData, matchedGame);
-  const milestoneEntry = importance.milestoneEntry;
-  const seasonContext = {
-    season: seasonData,
-    totalGames: seasonGames.length,
-    index: seasonIndex,
-    preRecord: seasonIndex >= 0 ? formatRecordSummary(preRecord) : 'Not available yet',
-    postRecord: seasonIndex >= 0 ? formatRecordSummary(postRecord) : 'Not available yet'
-  };
-  const timelineEntries = buildGameTimelineEntries({
-    team,
-    opponent,
-    game: matchedGame,
-    importance
-  });
-  const timelineEstimated = timelineEntries.some(entry => entry.estimated);
-  const resultLead = matchedGame.result === 'W'
-    ? `${team.fullName}'s win over the ${opponent.fullName}`
-    : matchedGame.result === 'L'
-      ? `${team.fullName}'s loss to the ${opponent.fullName}`
-      : `${team.fullName}'s tie with the ${opponent.fullName}`;
-  const whyThisGameMattered = [
-    `${resultLead} came in ${capsuleText(matchedGame.round || matchedGame.competition, 'the schedule archive')} and lands at ${importance.score}/100 on the archive importance scale, which puts it in ${importance.headerTag.toLowerCase()} territory for this franchise view.`,
-    importance.rivalry
-      ? `The rivalry context alone lifts the emotional temperature: ${capsuleText(rivalryEntry?.summary, `${opponent.shortName} is one of the recurring pressure points in the franchise archive.`)}`
-      : `Even without a fully attached documentary package, the available archive data says this was more than a generic database row.`,
-    seasonData
-      ? `Within the ${seasonData.year} season, the result moved the club from ${seasonContext.preRecord} to ${seasonContext.postRecord}${seasonData.playoffResult ? ` on the way to a ${seasonData.playoffResult}.` : '.'}`
-      : `The exact pregame and postgame season framing is not available yet, but the matchup still sits inside the team's larger historical arc.`,
-    milestoneEntry
-      ? `It also echoes through the franchise memory layer as ${milestoneEntry.title}.`
-      : importance.margin !== null && importance.margin <= 7
-        ? 'The narrow margin is part of why this reads more like a remembered scene than a routine ledger entry.'
-        : ''
-  ].filter(Boolean).join(' ');
-  const legacyImpact = [
-    importance.playoffGame
-      ? 'Because this game lives in the postseason lane, its impact is direct: it either extended the season or ended it on the spot.'
-      : 'Its legacy sits in how it bent the shape of the season and how supporters remember the matchup in context rather than isolation.',
-    importance.championshipSeason
-      ? `That matters even more because the ${seasonData?.year} club eventually finished with ${seasonData?.playoffResult || 'major postseason significance'}.`
-      : buildPlayoffRaceText(seasonData, matchedGame, importance, seasonContext),
-    milestoneEntry
-      ? `Franchise memory also keeps this date alive through ${milestoneEntry.title}, which gives the game a museum-piece quality beyond the scoreboard.`
-      : importance.upset
-        ? 'The upset profile adds to the afterglow: outcomes like this travel through franchise lore longer than the average Sunday result.'
-        : importance.rivalry
-          ? 'Rivalry games tend to outlive their box scores, and this one fits that pattern even with partial archive detail.'
-          : 'The archive is still missing some micro-history, but the combination of margin, stakes, and season context gives the result durable weight.'
-  ].filter(Boolean).join(' ');
-  const historicalContextCards = [
-    {
-      label: 'Pre-game record',
-      value: seasonContext.preRecord,
-      note: seasonIndex >= 0 ? 'Computed from the season game order inside the franchise file.' : 'Not available yet.'
-    },
-    {
-      label: 'Post-game record',
-      value: seasonContext.postRecord,
-      note: seasonData?.record ? `Final season record: ${seasonData.record}.` : 'Final season record not attached yet.'
-    },
-    {
-      label: 'Division finish',
-      value: capsuleText(seasonData?.finish || seasonData?.division || 'Not available yet'),
-      note: capsuleText(seasonData?.playoffResult || 'Playoff outcome not available yet.')
-    },
-    {
-      label: 'Playoff race',
-      value: importance.playoffGame ? 'Postseason stage' : 'Regular-season leverage',
-      note: buildPlayoffRaceText(seasonData, matchedGame, importance, seasonContext)
-    },
-    {
-      label: 'Era lens',
-      value: capsuleText(eraEntry?.label || `${matchedGame.season || matchedGame.year || 'Archive'} era`),
-      note: capsuleText(eraEntry?.description || 'Era-specific context is not attached yet.')
-    },
-    {
-      label: 'League context',
-      value: importance.superBowl ? 'League championship game' : importance.playoffGame ? capsuleText(matchedGame.round || 'Playoff round') : capsuleText(matchedGame.competition || 'Regular season'),
-      note: importance.playoffGame ? 'Other major games in the same playoff week are not attached yet.' : 'Other important league games from that week are not available yet.'
-    }
-  ];
-  const weatherMood = matchedGame.weather
-    ? `${capsuleText(matchedGame.weather)}${matchedGame.temperature ? ` | ${matchedGame.temperature}` : ''}${matchedGame.wind ? ` | Wind ${matchedGame.wind}` : ''}`
-    : matchedGame.surface
-      ? `${capsuleText(matchedGame.surface)} field mood`
-      : importance.rivalry
-        ? 'High-friction rivalry atmosphere'
-        : importance.playoffGame
-          ? 'Postseason tension in the air'
-          : 'Not available yet';
-  const atmosphereText = matchedGame.attendance
-    ? `Attendance listed at ${matchedGame.attendance}.`
-    : importance.superBowl
-      ? 'League-wide spotlight atmosphere.'
-      : importance.rivalry
-        ? 'Division-rival energy almost certainly amplified the noise floor.'
-        : 'Exact crowd and building atmosphere notes are not attached yet.';
-  const broadcastCards = [
-    { label: 'TV / broadcast', value: capsuleText(matchedGame.broadcast), note: matchedGame.links?.boxscore ? 'External boxscore link available in some archive versions.' : 'Network metadata is still partial in this archive.' },
-    { label: 'Radio', value: capsuleText(matchedGame.radio), note: 'Local radio information is not consistently attached to historical games yet.' },
-    { label: 'Announcers', value: capsuleText(matchedGame.announcers), note: 'Broadcast booth details appear only when the source data includes them.' },
-    { label: 'Weather mood', value: weatherMood, note: matchedGame.surface ? `Surface: ${matchedGame.surface}.` : 'Exact surface and weather details are not available yet.' },
-    { label: 'Stadium atmosphere', value: importance.rivalry ? 'Rivalry-grade intensity' : importance.playoffGame ? 'Playoff-grade tension' : 'Archive atmosphere', note: atmosphereText },
-    { label: 'Era styling', value: capsuleText(eraEntry?.label || 'Historical frame'), note: capsuleText(eraEntry?.description || 'Era-specific styling defaults to the franchise palette and archive texture.') }
-  ];
-  const uniformCards = [
-    {
-      label: team.fullName,
-      note: 'Exact helmet, jersey, and pants combination is not attached yet, so the club palette stands in as a clean archive placeholder.',
-      swatches: [
-        { label: 'Helmet', color: team.colors.primary },
-        { label: 'Jersey', color: team.colors.secondary },
-        { label: 'Pants', color: team.colors.tertiary }
-      ]
-    },
-    {
-      label: opponent.fullName,
-      note: 'Opponent uniform data is also using team-color placeholders until the detailed kit archive is expanded.',
-      swatches: [
-        { label: 'Helmet', color: opponent.colors.primary },
-        { label: 'Jersey', color: opponent.colors.secondary },
-        { label: 'Pants', color: opponent.colors.tertiary }
-      ]
-    }
-  ];
-  const momentum = buildMomentumProfile({
-    team,
-    opponent,
-    game: matchedGame,
-    timelineEntries,
-    timelineEstimated
-  });
-  return {
-    source: options.source || 'archive',
-    teamData,
-    game: matchedGame,
-    team,
-    opponent,
-    home,
-    away,
-    awayScore,
-    homeScore,
-    routeIsHome,
-    importance,
-    seasonData,
-    seasonContext,
-    eraEntry,
-    rivalryEntry,
-    milestoneEntry,
-    whyThisGameMattered,
-    legacyImpact,
-    historicalContextCards,
-    broadcastCards,
-    uniformCards,
-    timelineEntries,
-    timelineEstimated,
-    momentum
-  };
-}
-
-function buildMomentumProfile(context) {
-  const points = [{ label: 'Kickoff', value: 50 }];
-  context.timelineEntries.forEach((entry, index) => {
-    let value = 50;
-    if (entry.routeScore !== null && entry.routeScore !== undefined && entry.opponentScore !== null && entry.opponentScore !== undefined) {
-      const diff = Number(entry.routeScore || 0) - Number(entry.opponentScore || 0);
-      const total = Math.max(14, Number(entry.routeScore || 0) + Number(entry.opponentScore || 0));
-      value = 50 + ((diff / total) * 42) + (Math.sign(diff || 0) * index * 3);
-    } else if (context.game.result === 'W') {
-      value = 58 + (index * 8);
-    } else if (context.game.result === 'L') {
-      value = 42 - (index * 8);
-    }
-    points.push({
-      label: entry.quarter,
-      value: clampNumber(Math.round(value), 5, 95)
-    });
-  });
-  if (context.game.result === 'W') {
-    points[points.length - 1].value = Math.max(points[points.length - 1].value, 74);
-  } else if (context.game.result === 'L') {
-    points[points.length - 1].value = Math.min(points[points.length - 1].value, 26);
-  } else if (context.game.result === 'T') {
-    points[points.length - 1].value = 50;
-  }
-  return {
-    estimated: context.timelineEstimated,
-    points
-  };
-}
-
-function renderMomentumSvg(context) {
-  const chartPoints = context.momentum.points;
-  const width = 620;
-  const height = 220;
-  const chartLeft = 26;
-  const chartRight = width - 26;
-  const chartTop = 18;
-  const chartBottom = height - 28;
-  const xStep = chartPoints.length > 1 ? (chartRight - chartLeft) / (chartPoints.length - 1) : 0;
-  const coordinates = chartPoints.map((point, index) => {
-    const x = chartLeft + (index * xStep);
-    const y = chartBottom - ((point.value / 100) * (chartBottom - chartTop));
-    return { ...point, x, y };
-  });
-  const line = coordinates.map(point => `${point.x},${point.y}`).join(' ');
-  const area = `M ${chartLeft} ${chartBottom} L ${coordinates.map(point => `${point.x} ${point.y}`).join(' L ')} L ${chartRight} ${chartBottom} Z`;
-  const labels = coordinates.map(point => `
-    <text x="${point.x}" y="${height - 8}" text-anchor="middle" fill="rgba(226,232,240,0.62)" font-size="10" letter-spacing="1">${escapeHtml(point.label)}</text>
-  `).join('');
-  return `
-    <svg viewBox="0 0 ${width} ${height}" aria-label="${escapeHtml(context.team.shortName)} estimated momentum chart">
-      <defs>
-        <linearGradient id="capsuleLineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-          <stop offset="0%" stop-color="${escapeHtml(context.team.colors.secondary)}"></stop>
-          <stop offset="100%" stop-color="${escapeHtml(context.team.colors.primary)}"></stop>
-        </linearGradient>
-        <linearGradient id="capsuleAreaGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-          <stop offset="0%" stop-color="${escapeHtml(context.team.colors.secondary)}" stop-opacity="0.34"></stop>
-          <stop offset="100%" stop-color="${escapeHtml(context.team.colors.primary)}" stop-opacity="0.04"></stop>
-        </linearGradient>
-      </defs>
-      <line x1="${chartLeft}" y1="${chartTop}" x2="${chartLeft}" y2="${chartBottom}" stroke="rgba(255,255,255,0.12)"></line>
-      <line x1="${chartLeft}" y1="${chartBottom}" x2="${chartRight}" y2="${chartBottom}" stroke="rgba(255,255,255,0.12)"></line>
-      <line x1="${chartLeft}" y1="${(chartTop + chartBottom) / 2}" x2="${chartRight}" y2="${(chartTop + chartBottom) / 2}" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4 5"></line>
-      <path d="${area}" fill="url(#capsuleAreaGradient)"></path>
-      <polyline points="${line}" fill="none" stroke="url(#capsuleLineGradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
-      ${coordinates.map(point => `<circle cx="${point.x}" cy="${point.y}" r="5" fill="${escapeHtml(context.team.colors.secondary)}" stroke="rgba(255,255,255,0.28)" stroke-width="2"></circle>`).join('')}
-      <text x="${chartLeft}" y="${chartTop - 4}" fill="rgba(226,232,240,0.62)" font-size="10" letter-spacing="1">${escapeHtml(context.team.shortName)} control</text>
-      <text x="${chartLeft}" y="${chartBottom + 16}" fill="rgba(226,232,240,0.62)" font-size="10" letter-spacing="1">${escapeHtml(context.opponent.shortName)} control</text>
-      ${labels}
-    </svg>
-  `;
-}
-
-function renderGameMemoryCapsule(context) {
-  const game = context.game;
-  const seasonMeta = capsuleText(game.round || game.competition || 'Archive game');
-  const venueLine = game.stadium
-    ? `${capsuleText(game.stadium)}${game.city ? ` | ${capsuleText(game.city)}` : ''}`
-    : context.routeIsHome
-      ? `${capsuleText(context.team.city)} | home setting`
-      : `${capsuleText(context.opponent.city)} | road setting`;
-  const weatherLine = [game.weather, game.temperature, game.wind].filter(Boolean).join(' | ') || 'Not available yet';
-  const headerStatus = game.result === 'W' ? `${context.team.shortName} win` : game.result === 'L' ? `${context.team.shortName} loss` : game.result === 'T' ? 'Drawn level' : capsuleText(game.result || 'Archive game');
-  const historicalContextHtml = context.historicalContextCards.map(card => `
-    <div class="game-memory-capsule-context-card">
-      <span class="game-memory-capsule-label">${escapeHtml(card.label)}</span>
-      <strong class="game-memory-capsule-value">${escapeHtml(card.value)}</strong>
-      <span class="game-memory-capsule-subvalue">${escapeHtml(card.note)}</span>
-    </div>
-  `).join('');
-  const broadcastHtml = context.broadcastCards.map(card => `
-    <div class="game-memory-capsule-broadcast-card">
-      <span class="game-memory-capsule-label">${escapeHtml(card.label)}</span>
-      <strong class="game-memory-capsule-value">${escapeHtml(card.value)}</strong>
-      <span class="game-memory-capsule-subvalue">${escapeHtml(card.note)}</span>
-    </div>
-  `).join('');
-  const uniformHtml = context.uniformCards.map(card => `
-    <div class="game-memory-capsule-uniform-card">
-      <span class="game-memory-capsule-label">${escapeHtml(card.label)}</span>
-      <span class="game-memory-capsule-subvalue">${escapeHtml(card.note)}</span>
-      <div class="game-memory-capsule-uniform-swatch-row">
-        ${card.swatches.map(swatch => `
-          <div class="game-memory-capsule-uniform-swatch" style="background:${escapeHtml(swatch.color)};">
-            <span>${escapeHtml(swatch.label)}</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-  const timelineHtml = context.timelineEntries.map(entry => `
-    <div class="game-memory-capsule-timeline-entry">
-      <div class="game-memory-capsule-timeline-head">
-        <div>
-          <div class="game-memory-capsule-timeline-meta">${escapeHtml(entry.quarter)} | ${escapeHtml(entry.time)}</div>
-          <div class="game-memory-capsule-timeline-team">${escapeHtml(entry.team)}</div>
-        </div>
-        <span class="game-memory-capsule-pill">${escapeHtml(entry.momentum)}</span>
-      </div>
-      <div class="game-memory-capsule-timeline-desc">${escapeHtml(entry.description)}</div>
-      <div class="game-memory-capsule-timeline-foot">
-        <span><strong>Score after:</strong> ${escapeHtml(entry.scoreAfter)}</span>
-        <span>${entry.estimated ? 'Archive estimate' : 'Historical detail'}</span>
-      </div>
-    </div>
-  `).join('');
-  const linkRow = [
-    game.links?.youtubeSummary ? `<a class="game-memory-capsule-link" href="${escapeHtml(game.links.youtubeSummary)}" target="_blank" rel="noreferrer">Archive video search</a>` : '',
-    game.links?.boxscore ? `<a class="game-memory-capsule-link" href="${escapeHtml(game.links.boxscore)}" target="_blank" rel="noreferrer">Boxscore source</a>` : ''
-  ].filter(Boolean).join('');
-  return `
-    <div class="game-memory-capsule-hero">
-      <div class="game-memory-capsule-kicker">
-        <span>Historical Memory Capsule</span>
-        <span class="game-memory-capsule-rank">${escapeHtml(context.importance.headerTag)}</span>
-      </div>
-      <div class="game-memory-capsule-scoreboard">
-        <div class="game-memory-capsule-team away">
-          <img class="game-memory-capsule-logo" src="${escapeHtml(context.away.logo)}" alt="${escapeHtml(context.away.fullName)} logo">
-          <div class="game-memory-capsule-team-name" id="gameMemoryCapsuleTitle">${escapeHtml(context.away.fullName)}</div>
-          <div class="game-memory-capsule-team-meta">${escapeHtml(context.away.city || 'Away team')}</div>
-        </div>
-        <div class="game-memory-capsule-scorecore">
-          <div class="game-memory-capsule-scoreline">
-            <strong>${escapeHtml(context.awayScore ?? '-')}</strong>
-            <span>-</span>
-            <strong>${escapeHtml(context.homeScore ?? '-')}</strong>
-          </div>
-          <div class="game-memory-capsule-status">${escapeHtml(headerStatus)}${game.overtime ? ' | OT' : ''}</div>
-          <div class="game-memory-capsule-team-meta">${escapeHtml(formatCapsuleDate(game))} | ${escapeHtml(seasonMeta)}</div>
-        </div>
-        <div class="game-memory-capsule-team home">
-          <img class="game-memory-capsule-logo" src="${escapeHtml(context.home.logo)}" alt="${escapeHtml(context.home.fullName)} logo">
-          <div class="game-memory-capsule-team-name">${escapeHtml(context.home.fullName)}</div>
-          <div class="game-memory-capsule-team-meta">${escapeHtml(context.home.city || 'Home team')}</div>
-        </div>
-      </div>
-      <p class="game-memory-capsule-hero-note">${escapeHtml(context.whyThisGameMattered)}</p>
-      <div class="game-memory-capsule-meta-grid">
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Venue</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(capsuleText(game.stadium, 'Venue not available yet'))}</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(venueLine)}</span>
-        </div>
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Competition / week</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(capsuleText(game.competition || 'Regular Season'))}</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(capsuleText(game.round || 'Round not available yet'))}</span>
-        </div>
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Attendance</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(capsuleText(game.attendance))}</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(game.attendance ? 'Historical gate figure attached.' : 'Attendance detail is still missing from the archive.')}</span>
-        </div>
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Weather / temp / wind</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(capsuleText(game.weather || game.temperature || game.wind))}</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(weatherLine)}</span>
-        </div>
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Surface</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(capsuleText(game.surface))}</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(game.overtime ? 'Overtime marker: yes.' : 'Overtime marker: no.')}</span>
-        </div>
-        <div class="game-memory-capsule-meta-card">
-          <span class="game-memory-capsule-label">Importance</span>
-          <strong class="game-memory-capsule-value">${escapeHtml(String(context.importance.score))} / 100</strong>
-          <span class="game-memory-capsule-subvalue">${escapeHtml(context.importance.reasons.join(' | ') || 'Historical importance signals are still sparse for this game.')}</span>
-        </div>
-      </div>
-    </div>
-    <div class="game-memory-capsule-body">
-      <div class="game-memory-capsule-grid">
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Why This Game Mattered</div>
-              <div class="game-memory-capsule-section-subtitle">Documentary-style context built from season, rivalry, and franchise signals</div>
-            </div>
-          </div>
-          <p class="game-memory-capsule-copy">${escapeHtml(context.whyThisGameMattered)}</p>
-        </section>
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Game Ranking</div>
-              <div class="game-memory-capsule-section-subtitle">Badges driven by the archive importance algorithm</div>
-            </div>
-          </div>
-          <div class="game-memory-capsule-chip-row">
-            ${context.importance.tags.map(tag => `<span class="game-memory-capsule-chip">${escapeHtml(tag)}</span>`).join('')}
-          </div>
-          <div class="game-memory-capsule-note">${escapeHtml(context.importance.reasons.join(' | ') || 'The ranking engine is using the currently attached historical data only.')}</div>
-        </section>
-      </div>
-      <div class="game-memory-capsule-grid">
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Game Story Timeline</div>
-              <div class="game-memory-capsule-section-subtitle">${escapeHtml(context.timelineEstimated ? 'Estimated narrative arc from scoring and final context' : 'Attached historical scoring and key moments')}</div>
-            </div>
-          </div>
-          <div class="game-memory-capsule-timeline">${timelineHtml}</div>
-          <div class="game-memory-capsule-note">${escapeHtml(context.timelineEstimated ? 'Exact scoring plays are not attached for this game yet, so the timeline is a clearly labeled archive estimate built from the final score, stakes, and available stat profile.' : 'Timeline is using the scoring or moment data attached to the archive object.')}</div>
-        </section>
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Momentum / Win Probability</div>
-              <div class="game-memory-capsule-section-subtitle">${escapeHtml(context.momentum.estimated ? 'Estimated leverage line' : 'Attached leverage line')}</div>
-            </div>
-          </div>
-          <div class="game-memory-capsule-chart">${renderMomentumSvg(context)}</div>
-          <div class="game-memory-capsule-chart-legend">
-            <span>${escapeHtml(context.team.shortName)} leverage</span>
-            <span>${escapeHtml(context.opponent.shortName)} leverage</span>
-          </div>
-          <div class="game-memory-capsule-note">${escapeHtml(context.momentum.estimated ? 'No official win probability was attached, so this chart estimates momentum from the score path, lead tension, overtime, and the final margin.' : 'Momentum chart is using the leverage data stored with the game object.')}</div>
-        </section>
-      </div>
-      <section class="game-memory-capsule-section">
-        <div class="game-memory-capsule-section-header">
-          <div>
-            <div class="game-memory-capsule-section-title">Legacy Impact</div>
-            <div class="game-memory-capsule-section-subtitle">Season, franchise, and fan-memory consequences</div>
-          </div>
-        </div>
-        <p class="game-memory-capsule-copy">${escapeHtml(context.legacyImpact)}</p>
-      </section>
-      <section class="game-memory-capsule-section">
-        <div class="game-memory-capsule-section-header">
-          <div>
-            <div class="game-memory-capsule-section-title">Historical Context</div>
-            <div class="game-memory-capsule-section-subtitle">Record before and after, division posture, playoff race, and era frame</div>
-          </div>
-        </div>
-        <div class="game-memory-capsule-context-grid">${historicalContextHtml}</div>
-      </section>
-      <div class="game-memory-capsule-grid">
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Uniform Matchup</div>
-              <div class="game-memory-capsule-section-subtitle">Color-block placeholders until the uniform archive expands</div>
-            </div>
-          </div>
-          <div class="game-memory-capsule-uniform-grid">${uniformHtml}</div>
-        </section>
-        <section class="game-memory-capsule-section">
-          <div class="game-memory-capsule-section-header">
-            <div>
-              <div class="game-memory-capsule-section-title">Broadcast / Atmosphere</div>
-              <div class="game-memory-capsule-section-subtitle">TV, radio, booth, weather mood, and era framing</div>
-            </div>
-          </div>
-          <div class="game-memory-capsule-broadcast-grid">${broadcastHtml}</div>
-        </section>
-      </div>
-      ${linkRow ? `<div class="game-memory-capsule-footer"><div class="game-memory-capsule-link-row">${linkRow}</div></div>` : ''}
-    </div>
-  `;
-}
-
-function ensureGameMemoryCapsuleBindings() {
-  if (window.__NFL_GAME_MEMORY_CAPSULE_BOUND__) return;
-  window.__NFL_GAME_MEMORY_CAPSULE_BOUND__ = true;
-  const host = document.getElementById('gameMemoryCapsule');
-  const closeBtn = document.getElementById('gameMemoryCapsuleClose');
-  const backBtn = document.getElementById('gameMemoryCapsuleBack');
-  const backdrop = host?.querySelector('[data-capsule-close]');
-  closeBtn?.addEventListener('click', () => closeGameMemoryCapsule());
-  backBtn?.addEventListener('click', () => closeGameMemoryCapsule());
-  backdrop?.addEventListener('click', () => closeGameMemoryCapsule());
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && host?.classList.contains('open')) {
-      event.preventDefault();
-      closeGameMemoryCapsule();
-    }
-  });
-}
-
-function openGameMemoryCapsule(gameInput, teamDataOverride = null, options = {}) {
-  const teamData = teamDataOverride || activeTeamData;
-  if (!teamData) return false;
-  const context = buildGameMemoryCapsuleContext(gameInput, teamData, options);
-  if (!context) return false;
-  ensureGameMemoryCapsuleBindings();
-  const host = document.getElementById('gameMemoryCapsule');
-  const content = document.getElementById('gameMemoryCapsuleContent');
-  const status = document.getElementById('gameMemoryCapsuleStatus');
-  if (!host || !content || !status) return false;
-  host.style.setProperty('--capsule-primary', context.team.colors.primary);
-  host.style.setProperty('--capsule-secondary', context.team.colors.secondary);
-  content.innerHTML = renderGameMemoryCapsule(context);
-  status.textContent = options.source === 'legacy-modal'
-    ? 'Opened from legacy game modal'
-    : options.source === 'route-games'
-      ? 'Opened from team archive row'
-      : context.timelineEstimated
-        ? 'Estimated historical narrative'
-        : 'Historical detail attached';
-  document.body.classList.add('game-memory-capsule-open');
-  host.classList.add('open');
-  host.setAttribute('aria-hidden', 'false');
-  activeGameMemoryCapsuleContext = context;
-  host.querySelector('.game-memory-capsule-scroll')?.scrollTo({ top: 0, behavior: 'auto' });
-  return true;
-}
-
-function openGameMemoryCapsuleByKey(memoryKey, teamDataOverride = null, options = {}) {
-  const teamData = teamDataOverride || activeTeamData;
-  if (!teamData || !memoryKey) return false;
-  const match = getGameList(teamData).find(game => buildGameMemoryKey(game) === memoryKey);
-  if (!match) return false;
-  return openGameMemoryCapsule(match, teamData, options);
-}
-
-function closeGameMemoryCapsule() {
-  const host = document.getElementById('gameMemoryCapsule');
-  if (!host) return false;
-  host.classList.remove('open');
-  host.setAttribute('aria-hidden', 'true');
-  document.body.classList.remove('game-memory-capsule-open');
-  activeGameMemoryCapsuleContext = null;
-  return true;
-}
-
-window.calculateGameImportance = calculateGameImportance;
-window.openGameMemoryCapsule = openGameMemoryCapsule;
-window.openGameMemoryCapsuleByKey = openGameMemoryCapsuleByKey;
-window.closeGameMemoryCapsule = closeGameMemoryCapsule;
 
 function renderTeamLoadingState(slug) {
   const view = getTeamRouteView();
@@ -9773,8 +8069,6 @@ function filterGames(teamData, seasonValue, queryValue) {
   return getGameList(teamData).filter(game => {
     if (seasonValue && seasonValue !== 'all' && Number(game.season) !== Number(seasonValue)) return false;
     if (!search) return true;
-    const resultToken = game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : game.result === 'T' ? 'tie' : '';
-    const playoffToken = game.isPlayoff ? 'playoffs postseason' : '';
     const haystack = [
       game.displayDate,
       game.round,
@@ -9782,8 +8076,6 @@ function filterGames(teamData, seasonValue, queryValue) {
       game.opponent,
       game.location,
       game.result,
-      resultToken,
-      playoffToken,
       game.stadium,
       game.teamScore !== null && game.opponentScore !== null ? `${game.teamScore}-${game.opponentScore}` : ''
     ].join(' ').toLowerCase();
@@ -9814,7 +8106,6 @@ function renderGamesPanel(teamData, seasonValue, queryValue) {
       <span>Filtered record <strong>${escapeHtml(filteredRecord)}</strong></span>
       <span>${filteredGames.length > limitedGames.length ? `Showing latest ${limitedGames.length}` : 'Showing all results'}</span>
     </div>
-    <div class="team-route-games-hint">Open the Game Memory Capsule from any row or card for the full historical view.</div>
     <div class="team-route-table-wrap">
       <table class="team-route-table">
         <thead>
@@ -9826,15 +8117,11 @@ function renderGamesPanel(teamData, seasonValue, queryValue) {
             <th>Result</th>
             <th>Score</th>
             <th>Competition</th>
-            <th>Capsule</th>
           </tr>
         </thead>
         <tbody>
-          ${limitedGames.map(game => {
-            const memoryKey = escapeHtml(buildGameMemoryKey(game));
-            const ariaLabel = escapeHtml(`Open Game Memory Capsule for ${game.opponent || 'this opponent'} on ${game.displayDate || game.date || 'this date'}`);
-            return `
-            <tr class="team-route-game-row" tabindex="0" role="button" data-memory-key="${memoryKey}" aria-label="${ariaLabel}">
+          ${limitedGames.map(game => `
+            <tr>
               <td>${escapeHtml(game.displayDate || game.date || 'N/A')}</td>
               <td>${escapeHtml(game.round || 'N/A')}</td>
               <td>${escapeHtml(game.opponent || 'Unknown')}</td>
@@ -9842,28 +8129,21 @@ function renderGamesPanel(teamData, seasonValue, queryValue) {
               <td><span class="team-route-result ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'tie'}">${escapeHtml(game.result || 'N/A')}</span></td>
               <td>${game.teamScore !== null && game.teamScore !== undefined ? `${formatStatValue(game.teamScore)}-${formatStatValue(game.opponentScore)}` : 'N/A'}</td>
               <td>${escapeHtml(game.competition || (game.isPlayoff ? 'Playoffs' : 'Regular Season'))}</td>
-              <td><button class="team-route-capsule-launch" type="button" data-memory-key="${memoryKey}">Open</button></td>
             </tr>
-          `;
-          }).join('')}
+          `).join('')}
         </tbody>
       </table>
     </div>
     <div class="team-route-game-cards">
-      ${limitedGames.map(game => {
-        const memoryKey = escapeHtml(buildGameMemoryKey(game));
-        const ariaLabel = escapeHtml(`Open Game Memory Capsule for ${game.opponent || 'this opponent'} on ${game.displayDate || game.date || 'this date'}`);
-        return `
-        <div class="team-route-game-card" role="button" tabindex="0" data-memory-key="${memoryKey}" aria-label="${ariaLabel}">
+      ${limitedGames.map(game => `
+        <div class="team-route-game-card">
           <div class="team-route-rival-meta">${escapeHtml(game.displayDate || game.date || 'N/A')} | ${escapeHtml(game.round || 'N/A')}</div>
           <strong>${escapeHtml(game.opponent || 'Unknown')}</strong>
           <div>${escapeHtml(game.location || game.homeAway || 'N/A')} | ${escapeHtml(game.competition || 'Regular Season')}</div>
           <div><span class="team-route-result ${game.result === 'W' ? 'win' : game.result === 'L' ? 'loss' : 'tie'}">${escapeHtml(game.result || 'N/A')}</span></div>
           <div>${game.teamScore !== null && game.teamScore !== undefined ? `${formatStatValue(game.teamScore)}-${formatStatValue(game.opponentScore)}` : 'N/A'}</div>
-          <button class="team-route-capsule-launch" type="button" data-memory-key="${memoryKey}">Open Game Memory Capsule</button>
         </div>
-      `;
-      }).join('')}
+      `).join('')}
     </div>
   `;
 }
@@ -10186,26 +8466,8 @@ function bindTeamRouteInteractions(teamData, defaultSeason) {
     const updateGames = () => {
       gamesPanel.innerHTML = renderGamesPanel(teamData, gameSeason.value, gameSearch.value);
     };
-    const openCapsuleFromTrigger = trigger => {
-      const memoryKey = trigger?.dataset?.memoryKey;
-      if (!memoryKey) return false;
-      return openGameMemoryCapsuleByKey(memoryKey, teamData, { source: 'route-games' });
-    };
     gameSearch.addEventListener('input', updateGames);
     gameSeason.addEventListener('change', updateGames);
-    gamesPanel.addEventListener('click', event => {
-      const trigger = event.target.closest('[data-memory-key]');
-      if (!trigger || !gamesPanel.contains(trigger)) return;
-      event.preventDefault();
-      openCapsuleFromTrigger(trigger);
-    });
-    gamesPanel.addEventListener('keydown', event => {
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      const trigger = event.target.closest('.team-route-game-row, .team-route-game-card');
-      if (!trigger || trigger !== event.target || !gamesPanel.contains(trigger)) return;
-      event.preventDefault();
-      openCapsuleFromTrigger(trigger);
-    });
   }
 }
 
@@ -11932,9 +10194,125 @@ function renderFranchiseBestStrip() {
   `).join('');
 }
 
+function renderRecordsBoard() {
+  const rows = [...franchiseUniverseState.rows];
+  const kpis = document.getElementById('recordsBoardKpis');
+  const leaders = document.getElementById('recordsBoardLeaders');
+  const titles = document.getElementById('recordsBoardTitles');
+  const milestones = document.getElementById('recordsBoardMilestones');
+  if (!kpis || !leaders || !titles || !milestones) return;
+  if (!rows.length) {
+    kpis.innerHTML = '<div class="records-board-kpi"><span>Loading</span><strong>Records board</strong><em>Franchise data is still loading.</em></div>';
+    leaders.innerHTML = '<div class="records-board-empty">Loading leaders...</div>';
+    titles.innerHTML = '<div class="records-board-empty">Loading title ladder...</div>';
+    milestones.innerHTML = '<div class="records-board-empty">Loading milestones...</div>';
+    return;
+  }
+
+  const byMetric = (key, dir = 'desc') => [...rows].sort((left, right) => {
+    const delta = Number(left[key] || 0) - Number(right[key] || 0);
+    return dir === 'asc' ? delta || left.name.localeCompare(right.name) : -delta || left.name.localeCompare(right.name);
+  });
+  const winsLeader = byMetric('wins')[0];
+  const pctLeader = byMetric('pct')[0];
+  const playoffLeader = byMetric('playoffAppearances')[0];
+  const titleLeader = [...rows].sort((left, right) =>
+    (Number(right.superBowls || 0) - Number(left.superBowls || 0)) ||
+    (Number(right.conferenceTitles || 0) - Number(left.conferenceTitles || 0)) ||
+    (Number(right.playoffAppearances || 0) - Number(left.playoffAppearances || 0)) ||
+    left.name.localeCompare(right.name)
+  )[0];
+
+  const kpiItems = [
+    { label: 'All-time wins', row: winsLeader, value: formatNumber(winsLeader.wins), note: `${winsLeader.short} leads the archive win count.` },
+    { label: 'Best win %', row: pctLeader, value: formatUniversePct(pctLeader.pct), note: `${pctLeader.short} owns the strongest all-time win rate.` },
+    { label: 'Playoff trips', row: playoffLeader, value: formatNumber(playoffLeader.playoffAppearances), note: `${playoffLeader.short} appears in the postseason most often.` },
+    { label: 'Ring leader', row: titleLeader, value: `${formatNumber(titleLeader.superBowls)} SB`, note: `${titleLeader.short} tops the title ladder.` }
+  ];
+  kpis.innerHTML = kpiItems.map(item => `
+    <div class="records-board-kpi" style="border-color:${escapeHtml((item.row.teamColor || 'rgba(255,255,255,0.07)'))}33">
+      <span>${escapeHtml(item.label)}</span>
+      <strong>${escapeHtml(item.row.short)} ${escapeHtml(item.value)}</strong>
+      <em>${escapeHtml(item.note)}</em>
+    </div>
+  `).join('');
+
+  const leaderRows = [
+    { label: 'Most wins', row: winsLeader, value: formatNumber(winsLeader.wins), meta: `${winsLeader.losses} losses | ${formatUniversePct(winsLeader.pct)} win %` },
+    { label: 'Best win rate', row: pctLeader, value: formatUniversePct(pctLeader.pct), meta: `${formatNumber(pctLeader.wins)} wins across ${formatNumber(pctLeader.seasonsPlayed)} seasons` },
+    { label: 'Most playoff trips', row: playoffLeader, value: formatNumber(playoffLeader.playoffAppearances), meta: `${formatNumber(playoffLeader.superBowls)} SB | ${formatNumber(playoffLeader.conferenceTitles)} conf titles` },
+    { label: 'Best point diff', row: byMetric('pointDifferential')[0], value: formatSignedStat(byMetric('pointDifferential')[0].pointDifferential), meta: `${formatNumber(byMetric('pointDifferential')[0].pointsFor)} PF | ${formatNumber(byMetric('pointDifferential')[0].pointsAgainst)} PA` },
+    { label: 'Most points scored', row: byMetric('pointsFor')[0], value: formatNumber(byMetric('pointsFor')[0].pointsFor), meta: `${formatSignedStat(byMetric('pointsFor')[0].pointDifferential)} point diff` },
+    { label: 'Tightest defense', row: byMetric('pointsAgainst', 'asc')[0], value: formatNumber(byMetric('pointsAgainst', 'asc')[0].pointsAgainst), meta: `${formatNumber(byMetric('pointsAgainst', 'asc')[0].wins)} wins in archive` }
+  ];
+  leaders.innerHTML = leaderRows.map((item, index) => `
+    <button class="records-board-row" type="button" onclick="routeToTeam('${escapeHtml(item.row.slug)}')">
+      <div class="records-board-row-main">
+        <span class="records-board-rank">${index + 1}</span>
+        <img src="${escapeHtml(item.row.logo)}" alt="${escapeHtml(item.row.short)} logo">
+        <div class="records-board-row-copy">
+          <strong>${escapeHtml(item.label)} · ${escapeHtml(item.row.name)}</strong>
+          <span>${escapeHtml(item.meta)}</span>
+        </div>
+      </div>
+      <div class="records-board-value">
+        <strong>${escapeHtml(item.value)}</strong>
+        <span>${escapeHtml(item.row.division)}</span>
+      </div>
+    </button>
+  `).join('');
+
+  const titleRows = [...rows].sort((left, right) =>
+    (Number(right.superBowls || 0) - Number(left.superBowls || 0)) ||
+    (Number(right.conferenceTitles || 0) - Number(left.conferenceTitles || 0)) ||
+    (Number(right.divisionTitles || 0) - Number(left.divisionTitles || 0)) ||
+    (Number(right.playoffAppearances || 0) - Number(left.playoffAppearances || 0)) ||
+    left.name.localeCompare(right.name)
+  ).slice(0, 8);
+  titles.innerHTML = titleRows.map((row, index) => `
+    <button class="records-board-row" type="button" onclick="routeToTeam('${escapeHtml(row.slug)}')">
+      <div class="records-board-row-main">
+        <span class="records-board-rank">${index + 1}</span>
+        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <div class="records-board-row-copy">
+          <strong>${escapeHtml(row.name)}</strong>
+          <em>${escapeHtml(formatNumber(row.superBowls))} SB | ${escapeHtml(formatNumber(row.conferenceTitles))} conf | ${escapeHtml(formatNumber(row.divisionTitles))} div</em>
+        </div>
+      </div>
+      <div class="records-board-value">
+        <strong>${escapeHtml(formatNumber(row.playoffAppearances))}</strong>
+        <span>playoffs</span>
+      </div>
+    </button>
+  `).join('');
+
+  const oldest = [...rows].sort((left, right) => Number(left.firstSeason || 0) - Number(right.firstSeason || 0))[0];
+  const newest = [...rows].sort((left, right) => Number(right.firstSeason || 0) - Number(left.firstSeason || 0))[0];
+  const longest = byMetric('seasonsPlayed')[0];
+  const deepest = [...rows].sort((left, right) => Number(right.games?.length || 0) - Number(left.games?.length || 0))[0];
+  const modern = [...rows].sort((left, right) => Number(right.modernPct || 0) - Number(left.modernPct || 0))[0];
+  const positive = byMetric('pointDifferential')[0];
+  const milestoneRows = [
+    { label: 'Oldest root', row: oldest, value: `${oldest.name}`, note: `Founded ${oldest.firstSeason} | ${oldest.seasonsPlayed} seasons tracked` },
+    { label: 'Newest franchise', row: newest, value: `${newest.name}`, note: `Started ${newest.firstSeason} | ${newest.seasonsPlayed} seasons tracked` },
+    { label: 'Longest archive', row: longest, value: `${longest.seasonsPlayed} seasons`, note: `${longest.short} from ${longest.firstSeason} through 2026` },
+    { label: 'Deepest game index', row: deepest, value: `${formatNumber(deepest.games?.length || 0)} games`, note: `${deepest.short} all-time game log coverage` },
+    { label: 'Modern leader', row: modern, value: `${formatUniversePct(modern.modernPct)}`, note: `${modern.short} since 2000` },
+    { label: 'Biggest positive swing', row: positive, value: `${formatSignedStat(positive.pointDifferential)}`, note: `${positive.short} point differential` }
+  ];
+  milestones.innerHTML = milestoneRows.map(item => `
+    <button class="records-board-milestone" type="button" onclick="routeToTeam('${escapeHtml(item.row.slug)}')">
+      <span>${escapeHtml(item.label)}</span>
+      <strong>${escapeHtml(item.value)}</strong>
+      <em>${escapeHtml(item.note)}</em>
+    </button>
+  `).join('');
+}
+
 function renderFranchiseUniverse() {
   renderFranchiseUniverseTable();
   renderFranchiseComparison();
+  renderRecordsBoard();
 }
 
 async function loadFranchiseUniverseData() {
@@ -12047,19 +10425,13 @@ function formatSeason2026Pct(value) {
   return fixed.startsWith('0') ? fixed.slice(1) : fixed;
 }
 
-function isReleasedSeason2026Game(game) {
-  const date = String(game?.date || game?.displayDate || '').trim().toLowerCase();
-  const day = String(game?.day || '').trim().toLowerCase();
-  const time = String(game?.time || '').trim().toLowerCase();
-  return date && date !== 'tbd' && !date.includes('date tbd') && day && day !== 'day tbd' && time && time !== 'tbd';
-}
-
-function countReleasedSeason2026Games(schedule) {
-  return (schedule || []).filter(game => isReleasedSeason2026Game(game)).length;
-}
-
 function hasReleasedSeason2026Schedule(schedule) {
-  return countReleasedSeason2026Games(schedule) > 0;
+  return (schedule || []).some(game => {
+    const date = String(game.date || game.displayDate || '').trim().toLowerCase();
+    const day = String(game.day || '').trim().toLowerCase();
+    const time = String(game.time || '').trim().toLowerCase();
+    return date && date !== 'tbd' && !date.includes('date tbd') && day && day !== 'day tbd' && time && time !== 'tbd';
+  });
 }
 
 function getSeason2026DayNumber(label) {
@@ -12487,8 +10859,6 @@ function renderSeason2026Schedule() {
   const data = season2026State.data || {};
   const schedule = getSeason2026DisplaySchedule();
   const scheduleReleased = hasReleasedSeason2026Schedule(data.schedule || []);
-  const releasedCount = countReleasedSeason2026Games(data.schedule || []);
-  const pendingCount = Math.max((data.schedule || []).length - releasedCount, 0);
   if (!el || !select) return;
 
   const options = getSeason2026DayOptions(schedule);
@@ -12509,8 +10879,25 @@ function renderSeason2026Schedule() {
     return;
   }
 
+  const activeOption = options.find(option => option.value === season2026State.weekFilter);
+  const activeLabel = season2026State.weekFilter === 'all'
+    ? allLabel
+    : (activeOption?.label || season2026State.weekFilter || allLabel);
+  const searchLabel = season2026State.teamSearch.trim()
+    ? `Filtered for ${season2026State.teamSearch.trim()}`
+    : 'Search any club to isolate its slate';
+  const scheduleBanner = `
+    <div class="season-2026-schedule-banner">
+      <div>
+        <strong>${escapeHtml(activeLabel)} slate</strong>
+        <span>${escapeHtml(filtered.length)} matchup${filtered.length === 1 ? '' : 's'} | ${escapeHtml(searchLabel)}</span>
+      </div>
+      
+    </div>
+  `;
+
   if (!scheduleReleased) {
-    el.innerHTML = (schedule.length
+    el.innerHTML = scheduleBanner + (schedule.length
       ? renderSeason2026UnreleasedMatchups(filtered)
       : renderSeason2026PlaceholderSchedule(filtered));
     return;
@@ -12518,12 +10905,11 @@ function renderSeason2026Schedule() {
 
   const groups = groupSeason2026Schedule(filtered);
   const releaseNote = scheduleReleased
-    ? pendingCount
-      ? `Showing ${escapeHtml(filtered.length)} of ${escapeHtml(schedule.length)} official 2026 games. ${escapeHtml(releasedCount)} now carry firm date and kickoff details, while ${escapeHtml(pendingCount)} flex or TBD windows are still open.`
-      : `Showing ${escapeHtml(filtered.length)} of ${escapeHtml(schedule.length)} official 2026 games. Full date and kickoff details are loaded from the released schedule feed.`
-    : 'Week 1-18 is staged now. Each TBD slot auto-fills with teams, kickoff, network, score, and status when the official schedule feed opens.';
+    ? `Showing ${escapeHtml(filtered.length)} of ${escapeHtml(schedule.length)} official 2026 games.`
+    : 'Week 1-17 is staged now. Each TBD slot auto-fills with teams, kickoff, network, score, and status when the official schedule feed opens.';
 
   el.innerHTML = `
+    ${scheduleBanner}
     ${groups.map(group => `
       <div class="season-2026-week">
         <div class="season-2026-week-title">
@@ -12546,9 +10932,7 @@ function renderSeason2026Schedule() {
             const slotLabel = game.isSchedulePlaceholder ? 'Schedule Slot' : (game.weekNumber ? `Week ${game.weekNumber}` : (game.week || '2026'));
             const timeLabel = game.time && game.time !== 'TBD' ? game.time : 'TBD';
             const statusLabel = formatSeason2026Status(game);
-            const detailLabel = game.network && game.network !== 'TBD'
-              ? game.network
-              : (game.stadium && game.stadium !== 'TBD' ? game.stadium : 'Venue TBD');
+            const detailLabel = game.network && game.network !== 'TBD' ? game.network : 'Network TBD';
             return `
             <div class="season-2026-matchup" data-status="${escapeHtml(game.status || 'upcoming')}" data-placeholder="${game.isSchedulePlaceholder ? 'true' : 'false'}" style="--match-accent:${escapeHtml(rowAccent)}">
               <div class="season-2026-kick">
@@ -12755,19 +11139,8 @@ function renderSeason2026Source() {
   if (!el) return;
   const scheduleCount = getSeason2026DisplaySchedule().length;
   const standingsCount = sortSeason2026Rows(data.standings || []).length;
-  const releasedCount = countReleasedSeason2026Games(data.schedule || []);
-  const pendingCount = Math.max((data.schedule || []).length - releasedCount, 0);
-  const notes = Array.isArray(data.notes) ? data.notes.filter(Boolean) : [];
-  const fallbackSummary = releasedCount
-    ? pendingCount
-      ? `Official 2026 schedule feed loaded. ${releasedCount} of ${scheduleCount} games have firm date and kickoff windows, with ${pendingCount} still marked TBD or flex. ${standingsCount} standings rows are ready.`
-      : `Official 2026 schedule feed loaded. All ${scheduleCount} games now have released date and kickoff details. ${standingsCount} standings rows are ready.`
-    : `Official 2026 opponents loaded. ${scheduleCount} schedule slots and ${standingsCount} standings rows are staged. Dates, kickoff times, networks, and results stay TBD until the schedule feed publishes.`;
-  const summaryText = notes.length
-    ? `${notes.join(' ')} ${scheduleCount} schedule slots and ${standingsCount} standings rows are ready.`
-    : fallbackSummary;
   el.innerHTML = `
-    <span>${escapeHtml(summaryText)}</span>
+    
     ${data.source?.url ? `<a href="${escapeHtml(data.source.url)}" target="_blank" rel="noopener">${escapeHtml(data.source.label || 'Source')}</a>` : ''}
   `;
 }
@@ -12986,3 +11359,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- INLINE_RENDERED_TEAM_PAGES_END -->
 </body>
 </html>
+
