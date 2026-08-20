@@ -1,0 +1,13 @@
+Open the app with either option:
+
+Option 1:
+- Double-click `teams/NFLHOMEPAGE_fixed_grid.html`
+
+Option 2:
+- Double-click `start_nfl_all_time.bat`
+- This opens:
+  http://127.0.0.1:8765/teams/NFLHOMEPAGE_fixed_grid.html
+
+If the launcher does not work:
+- make sure Node.js is installed
+- or double-click `run_server_here.bat` and keep that window open while you use the site

@@ -1,0 +1,27 @@
+# Generated scrape/cache data
+cache/
+__pycache__/
+*.py[cod]
+
+# Duplicate browser bundles (JSON is used on hosted builds)
+data/browser/
+data/*.js
+
+# Local/dev files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node/Python build artifacts
+node_modules/
+dist/
+build/
+.venv/
+venv/
+
+# Vercel local metadata
+.vercel/
