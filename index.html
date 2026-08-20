@@ -5770,6 +5770,84 @@ html.preload-team-route #teamRouteView {
 }
 
 </style>
+
+<style id="nflEditorialRedesign">
+/* NFL ALL-TIME — Editorial / Broadcast redesign */
+:root{
+  --bg-0:#080b10;--bg-1:#0d1117;--bg-2:#121821;--bg-3:#18212d;
+  --border:#27303c;--border-md:#394453;--border-hi:#566273;
+  --text-1:#f7f8fa;--text-2:#c4cad2;--text-3:#7f8996;
+  --accent:#d50a0a;--accent-dim:#2a0d10;--accent-glow:transparent;
+  --radius-sm:2px;--radius-md:3px;--radius-lg:4px;
+}
+html{background:#080b10}
+body{background:#080b10!important;color:var(--text-1);font-family:'JetBrains Mono',monospace}
+body::before,body::after,.hero::before{display:none!important}
+.container{max-width:1360px;padding:0 28px}
+
+/* Navigation — compact broadcast bar */
+.topnav{background:#080b10!important;backdrop-filter:none!important;border-bottom:1px solid #29313c;box-shadow:none!important}
+.topnav::before{content:'';display:block;height:3px;background:linear-gradient(90deg,#d50a0a 0 18%,#fff 18% 20%,#013369 20% 100%)}
+.topnav-inner{max-width:1360px;height:62px;padding:0 28px;gap:38px}
+.nav-logo{font-size:18px;letter-spacing:1.2px}.nav-logo span{color:#d50a0a}
+.nav-links{gap:24px}.nav-link{padding:21px 0 18px;border-radius:0;font-size:10px;letter-spacing:1.25px;border-bottom:2px solid transparent}
+.nav-link:hover{background:none;color:#fff;border-bottom-color:#566273}.nav-link.active{background:none;color:#fff;border-bottom-color:#d50a0a}
+.nav-badge{border:0;border-radius:0;padding:0;font-size:9px;color:#aab2bd}.live-dot{border-radius:0;width:5px;height:5px;background:#43b581}.nav-freshness{font-size:8px}
+
+/* Hero — masthead, not AI landing page */
+.hero{padding:72px 0 56px;text-align:left;border-bottom:1px solid #27303c;overflow:visible}
+.hero .container{display:grid;grid-template-columns:120px minmax(0,1fr);column-gap:34px;align-items:center}
+.hero-nfl-logo-wrap{grid-row:1/5;margin:0;justify-content:flex-start;align-self:center}.hero-nfl-logo{width:104px;height:104px;filter:none}
+.hero-eyebrow{grid-column:2;display:block;width:max-content;padding:0 0 8px;border:0;border-bottom:2px solid #d50a0a;border-radius:0;margin:0 0 16px;font-size:9px;letter-spacing:2px;color:#9aa3ae}
+.hero h1{grid-column:2;font-size:clamp(48px,6.2vw,84px);line-height:.92;letter-spacing:.5px;background:none!important;-webkit-text-fill-color:#f7f8fa!important;color:#f7f8fa;margin:0 0 18px;max-width:1000px}
+.hero-sub{grid-column:2;margin:0;max-width:760px;color:#aeb6c0;font-size:12px;line-height:1.65}
+.hero-actions,.hero-quick-links{grid-column:2}
+.hero-btn,.quick-chip{border-radius:2px!important;box-shadow:none!important;background:#111720!important;border:1px solid #343d49!important}
+
+/* Sections */
+.section{padding:54px 0}.section-header{align-items:center;padding:0 0 13px;margin-bottom:22px;border-bottom:1px solid #394453}.section-header::before,.section-header::after{display:none}
+.section-eyebrow{font-size:8px;letter-spacing:1.8px;color:#7f8996;margin-bottom:5px}.section-title{font-size:clamp(25px,3vw,36px);letter-spacing:.5px;text-shadow:none}.section-subtitle{color:#8d97a4}.section-link{font-size:9px;color:#9da6b1}
+
+/* Featured franchises — editorial columns */
+.featured-grid{gap:0;border-top:1px solid #394453;border-bottom:1px solid #394453}.featured-card{background:transparent;border:0;border-right:1px solid #27303c;border-radius:0;padding:26px 28px;gap:13px;box-shadow:none!important;transform:none!important}.featured-card:last-child{border-right:0}.featured-card::before{display:none}.featured-logo,.featured-logo img{width:58px;height:58px;filter:none}.featured-meta{margin:0}.featured-conference,.featured-status{background:none;border:0;border-radius:0;padding:0;font-size:8px}.featured-status{margin-left:8px}.featured-name{font-size:29px;letter-spacing:.4px}.featured-desc{font-size:11px;line-height:1.6}.featured-stats-row{gap:0;border-color:#27303c;padding:13px 0}.featured-stat{border-right:1px solid #27303c;padding-right:12px;margin-right:12px}.featured-stat:last-child{border:0}.featured-stat-val{font-size:22px}.featured-stat-key{font-size:7px}.featured-btn{border-radius:2px;background:#111720;border:1px solid #343d49;padding:10px 14px}
+
+/* Filters */
+.filter-bar{background:#0c1016;border:1px solid #303946;border-radius:2px;padding:12px 14px;gap:12px}.filter-search,.sort-select{border-radius:1px;background:#080b10;border-color:#303946}.filter-btn{border-radius:1px;padding:7px 11px}.filter-btn.active{background:#f1f3f5;color:#090c11;border-color:#f1f3f5}
+
+/* Team directory — no flip cards, no floating pills */
+.team-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#303946;border:1px solid #303946}
+.team-card,.team-card-inner,.team-card-face{min-height:168px;border-radius:0!important}.team-card{background:#0d1117;perspective:none}.team-card-inner{transform:none!important;transition:background .15s!important;box-shadow:none!important}.team-card:hover .team-card-inner{transform:none!important;background:#131a23!important}.team-card-face{background:#0d1117!important;border:0!important;padding:18px;gap:10px}.team-card-face::after,.team-card-front::before,.team-card-back::before{display:none!important}.team-card-back{display:none!important}.team-logo{width:44px;height:44px;border:0;border-radius:0;background:transparent}.team-logo img{width:40px;height:40px;filter:none;animation:none!important}.team-name{font-size:20px;letter-spacing:.3px}.team-division{font-size:8px;letter-spacing:1px}.team-card-front-meta{border-top:1px solid #27303c;padding-top:11px}.team-card-front-meta strong{font-size:15px}.team-card-front-meta span,.team-card-front-meta em,.team-card-front-hint{font-size:7px;letter-spacing:.8px}.team-card-front-hint{color:#8d97a4}.team-chip{border-radius:1px;background:none;border:1px solid #303946;padding:5px 7px}.grid-count{font-size:10px}
+
+/* Division index */
+.division-grid{gap:1px;background:#303946;border:1px solid #303946}.division-card{background:#0d1117;border:0;border-radius:0;padding:20px}.division-card:hover{background:#111720}.division-name{font-size:19px;letter-spacing:.5px;border-color:#303946}.division-team-btn{border-radius:0;padding:9px 4px;border-bottom:1px solid #202833}.division-team-btn:hover{background:#151c25;border-color:#202833}
+
+/* Live games */
+.live-section{background:#0d1117;border:1px solid #303946;border-radius:2px}.live-header{padding:16px 18px;background:#111720}.live-title{font-size:19px;letter-spacing:.5px}.live-indicator{border:0;border-radius:0;background:none;padding:0;color:#43b581}.live-tab{border-radius:1px}.live-tab.active{background:#f4f5f6;color:#090c11;border-color:#f4f5f6}.live-games{padding:0;gap:0}.live-game{background:transparent;border:0;border-bottom:1px solid #27303c;border-radius:0;padding:15px 18px}.live-game:hover{background:#111720}.game-team-name{letter-spacing:.2px}.game-score{letter-spacing:1px}.live-note{background:#0a0e13;box-shadow:none}
+
+/* 2026 season center — scoreboard/newsroom layout */
+.season-2026-section{padding:28px 0 54px}.season-2026-shell{max-width:1360px;background:#0b0f15;border:1px solid #394453;border-radius:2px;box-shadow:none}.season-2026-shell::before{content:'2026 NFL SEASON';display:block;padding:9px 20px;background:#d50a0a;color:#fff;font:700 10px 'JetBrains Mono';letter-spacing:2px}.season-2026-top{padding:24px 22px 18px;background:#0f141b;border-color:#394453}.season-center-shield{filter:none!important}.season-2026-kicker{color:#8f99a6;font-size:8px;letter-spacing:1.8px}.season-2026-title{font-size:clamp(32px,4vw,48px);letter-spacing:.3px}.season-2026-subtitle{color:#a5aeb9}.season-center-pill,.season-2026-tab,.season-2026-filter,.season-2026-select,.season-2026-search,.season-2026-opponent-pill{border-radius:1px!important;box-shadow:none!important}.season-2026-tab.active,.season-2026-filter.active{background:#f3f4f6!important;color:#090c11!important;border-color:#f3f4f6!important}.season-2026-body{background:#0b0f15}.season-2026-card,.season-2026-panel,.season-2026-division-card,.season-2026-window-card,.season-2026-team-board,.season-2026-conference-board,.season-2026-release-board{background:#0f141b!important;border-color:#303946!important;border-radius:2px!important;box-shadow:none!important}.season-2026-kpi{border-radius:0!important;background:transparent!important;border:0!important;border-left:1px solid #303946!important}.season-2026-kpis{border-top:1px solid #303946;border-bottom:1px solid #303946}.season-2026-matchup,.season-2026-standings-row,.season-2026-mini-standing{border-radius:0!important;background:transparent!important;border:0!important;border-bottom:1px solid #27303c!important;box-shadow:none!important}.season-2026-matchup:hover,.season-2026-standings-row:hover{background:#151b24!important}.season-2026-status{border-radius:1px!important}.season-2026-schedule-banner{border-radius:1px!important;box-shadow:none!important;background:#111720!important}.season-2026-week-dot{border-radius:0!important}.season-2026-table{border-collapse:collapse}.season-2026-table th{background:#111720!important}.season-2026-table td,.season-2026-table th{border-bottom:1px solid #27303c!important}
+
+/* Universe / records / discovery — turn dashboards into editorial modules */
+.franchise-universe-shell,.records-board-shell,.franchise-compare-shell,.era-morph-shell{background:#0d1117!important;border:1px solid #303946!important;border-radius:2px!important;box-shadow:none!important}
+.franchise-universe-card,.records-board-card,.franchise-best-card,.franchise-compare-card,.morph-detail-card,.morph-kpi,.morph-moment-card,.explore-card,.discovery-card,.progress-card{background:#0f141b!important;border:1px solid #2c3541!important;border-radius:2px!important;box-shadow:none!important;transform:none!important}
+.franchise-universe-card:hover,.records-board-card:hover,.explore-card:hover,.discovery-card:hover{background:#141b24!important;transform:none!important}
+.franchise-universe-tabs,.franchise-compare-controls,.era-morph-toolbar{border-radius:0!important}.franchise-universe-filter,.franchise-compare-chip,.morph-pill,.explore-tag,.explore-modal-tag{border-radius:1px!important}
+.franchise-universe-table,.franchise-matrix-table,.team-route-table{border-collapse:collapse!important}.franchise-universe-table th,.franchise-matrix-table th,.team-route-table th{background:#111720!important}.franchise-universe-table td,.franchise-universe-table th,.franchise-matrix-table td,.franchise-matrix-table th,.team-route-table td,.team-route-table th{border-bottom:1px solid #29323e!important}
+
+/* Footer */
+.footer{background:#06080c!important;border-top:1px solid #303946!important}.footer-inner{max-width:1360px}.footer-logo{letter-spacing:.5px}.cafecito-btn,.back-to-top{border-radius:2px!important;box-shadow:none!important}
+
+/* Modals */
+.explore-modal{backdrop-filter:none!important;background:rgba(0,0,0,.82)!important}.explore-modal-panel{background:#0d1117!important;border:1px solid #4a5564!important;border-radius:2px!important;box-shadow:0 24px 80px rgba(0,0,0,.55)!important}.explore-modal-close{border-radius:1px!important}
+
+/* Team route loader + native route components */
+.team-route-loading-screen{background:#080b10!important}.team-route-loading-ring{border-radius:50%;border-color:#2f3946!important;border-top-color:#f5f7fa!important;box-shadow:none!important}.team-route-loading-logo-shell{background:transparent!important;border:0!important;box-shadow:none!important}.team-route-loading-logo{filter:none!important}.team-route-shell,.team-route-main{background:#080b10!important}.team-route-hero,.team-route-panel,.team-route-card,.team-route-mini-card,.team-route-game-card,.team-route-rival-card,.team-route-coach-card,.team-route-stadium-card,.team-route-legend-card,.team-route-achievement-card,.team-route-timeline-card{background:#0d1117!important;border:1px solid #303946!important;border-radius:2px!important;box-shadow:none!important}.team-route-badge,.team-route-btn,.team-route-input,.team-route-select{border-radius:1px!important}.team-route-section-header{border-bottom:1px solid #394453!important}.team-route-kicker{color:#8f99a6!important}
+
+/* Responsive */
+@media(max-width:980px){.featured-grid{grid-template-columns:1fr}.featured-card{border-right:0;border-bottom:1px solid #27303c}.team-grid{grid-template-columns:repeat(2,1fr)}.division-grid{grid-template-columns:repeat(2,1fr)}.hero .container{grid-template-columns:84px 1fr}.hero-nfl-logo{width:72px;height:72px}}
+@media(max-width:640px){.container,.topnav-inner{padding-left:16px;padding-right:16px}.hero{padding:42px 0 34px}.hero .container{display:block}.hero-nfl-logo-wrap{justify-content:flex-start;margin-bottom:18px}.hero-nfl-logo{width:64px;height:64px}.hero h1{font-size:44px}.hero-eyebrow{margin-bottom:12px}.team-grid{grid-template-columns:1fr}.division-grid{grid-template-columns:1fr}.nav-links{display:none}.section{padding:38px 0}.season-2026-top{align-items:flex-start}.season-2026-kpis{grid-template-columns:repeat(2,1fr)!important}}
+</style>
+
 </head>
 <body>
 
@@ -8355,6 +8433,31 @@ function installLegacyTeamClock(frame) {
   doc?.getElementById('codexTeamClockStyle')?.remove();
 }
 
+
+function installEditorialFrameStyle(frame) {
+  const doc = frame?.contentDocument;
+  if (!doc || doc.getElementById('nflEditorialFrameStyle')) return;
+  const style = doc.createElement('style');
+  style.id = 'nflEditorialFrameStyle';
+  style.textContent = `
+    :root{--editorial-bg:#080b10;--editorial-panel:#0d1117;--editorial-line:#303946;--editorial-text:#f6f7f9;--editorial-muted:#9aa4b0}
+    html,body{background:var(--editorial-bg)!important;color:var(--editorial-text)!important}
+    body{background-image:none!important}
+    body::before,body::after{display:none!important}
+    *{box-shadow:none!important}
+    header,nav{backdrop-filter:none!important}
+    [class*="hero"],[class*="panel"],[class*="card"],[class*="shell"],[class*="section"]{box-shadow:none!important}
+    [class*="card"],[class*="panel"]{border-radius:2px!important}
+    [class*="pill"],[class*="chip"],[class*="badge"],[class*="btn"],button,input,select{border-radius:1px!important}
+    h1,h2,h3{background-image:none!important;-webkit-text-fill-color:currentColor!important;text-shadow:none!important}
+    table{border-collapse:collapse!important}
+    th{background:#111720!important}
+    td,th{border-color:#2b3440!important}
+    img{filter:none!important}
+  `;
+  doc.head.appendChild(style);
+}
+
 function renderLegacyTeamFrame(slug, html, teamData = null) {
   const view = getTeamRouteView();
   if (!view) return;
@@ -8397,6 +8500,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
       window.setTimeout(() => routeLoader.remove(), 420);
     }
     try {
+      installEditorialFrameStyle(frame);
       ensureLegacyFrame2026Season(frame, teamData);
       installLegacyTeamClock(frame);
       installRouteBridge(frame.contentWindow, slug);
