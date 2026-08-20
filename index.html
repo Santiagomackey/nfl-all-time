@@ -106,7 +106,7 @@ body::after {
   top: 0;
   z-index: 100;
   background: linear-gradient(90deg, rgba(10,18,32,0.92) 0%, rgba(15,27,47,0.94) 42%, rgba(1,51,105,0.72) 100%);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
   border-bottom: 1px solid var(--border);
   box-shadow: 0 10px 28px rgba(0,0,0,0.28);
 }
@@ -576,14 +576,15 @@ body::after {
   cursor: pointer;
   position: relative;
   min-height: 190px;
-  perspective: 1800px;
+  perspective: 1000px;
+  contain: layout paint style;
 }
 .team-card-inner {
   position: relative;
   min-height: 190px;
   border-radius: 14px;
   transform-style: preserve-3d;
-  transition: transform 1.18s cubic-bezier(.16,.78,.18,1), box-shadow .32s ease;
+  transition: transform .24s ease-out;
 }
 .team-card-face {
   position: absolute;
@@ -624,8 +625,7 @@ body::after {
 }
 @media (hover:hover) and (pointer:fine) {
   .team-card:hover .team-card-inner {
-    transform: rotateY(180deg) translateY(-1px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.22), 0 0 14px color-mix(in srgb, var(--team-card-color) 12%, transparent);
+    transform: rotateY(180deg);
   }
   .team-card:hover .team-card-face,
   .team-card:hover .team-card-face::after {
@@ -677,7 +677,7 @@ body::after {
 }
 @media (hover:hover) and (pointer:fine) {
   .team-card:hover .team-logo img {
-    animation: teamLogoFloat 1.8s ease-in-out infinite;
+    animation: none;
   }
 }
 @keyframes teamLogoFloat {
@@ -4610,7 +4610,7 @@ body::after {
     radial-gradient(circle at top right, rgba(255,255,255,0.07), transparent 32%),
     linear-gradient(180deg, rgba(6,18,37,0.98), rgba(3,8,20,0.98));
   opacity: 1;
-  transition: opacity 180ms ease;
+  transition: opacity 90ms ease;
 }
 
 body.team-route-active {
@@ -5388,7 +5388,7 @@ html.preload-team-route #teamRouteView {
     linear-gradient(180deg, #07101e 0%, #091425 52%, #070e1a 100%);
   opacity: 1;
   visibility: visible;
-  transition: opacity .38s ease, visibility .38s ease;
+  transition: opacity .16s ease, visibility .16s ease;
 }
 .team-route-loading-screen::before {
   content: '';
@@ -5397,8 +5397,8 @@ html.preload-team-route #teamRouteView {
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255,255,255,.026), transparent 66%);
-  filter: blur(8px);
-  animation: nflLoaderHalo 2.8s ease-in-out infinite;
+  filter: none;
+  animation: none;
 }
 .team-route-loading-screen::after {
   content: '';
@@ -5447,7 +5447,7 @@ html.preload-team-route #teamRouteView {
 .team-route-loading-ring::after {
   inset: 22px;
   border: 1px solid rgba(255,255,255,.055);
-  animation: nflLoaderPulse 1.8s ease-in-out infinite;
+  animation: none;
 }
 .team-route-loading-logo-shell {
   position: relative;
@@ -5463,21 +5463,21 @@ html.preload-team-route #teamRouteView {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
     0 20px 50px rgba(0,0,0,.30);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
 }
 .team-route-loading-logo {
   width: 82px;
   height: 82px;
   object-fit: contain;
   filter: drop-shadow(0 14px 20px rgba(0,0,0,.34));
-  animation: nflLoaderLogo 1.9s ease-in-out infinite;
+  animation: none;
 }
 .team-route-frame-wrap {
   position: relative;
 }
 .team-route-frame-wrap .legacy-team-frame {
   opacity: 0;
-  transition: opacity .34s ease;
+  transition: opacity .16s ease;
 }
 .team-route-frame-wrap .legacy-team-frame.is-ready {
   opacity: 1;
@@ -5784,8 +5784,6 @@ html.preload-team-route #teamRouteView {
       <a href="#universe" class="nav-link">Universe</a>
       <a href="#divisions" class="nav-link">Divisions</a>
       <a href="#live" class="nav-link">Game Center</a>
-      <a href="#records" class="nav-link">Records Board</a>
-  
     </div>
     <div class="nav-right">
       <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
@@ -5803,7 +5801,6 @@ html.preload-team-route #teamRouteView {
     <a href="#universe" class="mobile-nav-link">Universe</a>
     <a href="#divisions" class="mobile-nav-link">Divisions</a>
     <a href="#live" class="mobile-nav-link">Game Center</a>
-    <a href="#records" class="mobile-nav-link">Records Board</a>
     <a href="#discover" class="mobile-nav-link">Discover</a>
     <a href="#footer" class="mobile-nav-link">Project</a>
   </div>
@@ -6497,7 +6494,7 @@ function renderTeams(teams) {
   }
 
   grid.innerHTML = teams.map(t => {
-    const accessLabel = t.slug ? 'JSON Database' : (t.status === 'in-progress' ? 'In Build' : 'Coming Soon');
+    const accessLabel = t.status === 'in-progress' ? 'In Build' : 'Coming Soon';
     const seasonsArchived = Math.max(1, 2026 - Number(t.since || 2026) + 1);
     const meterWidth = Math.max(12, Math.min(100, Math.round((seasonsArchived / 107) * 100)));
     const cardColor = getTeamCardColor(t);
@@ -6526,7 +6523,7 @@ function renderTeams(teams) {
                 <span>${t.since}-2026 all-time archive</span>
                 <em>${t.conf} ${t.div} archive</em>
               </div>
-              <div class="team-card-front-hint">${t.slug ? 'Flip for stats' : 'Archive offline'}</div>
+              <div class="team-card-front-hint">${t.slug ? 'Stats on hover' : 'Archive offline'}</div>
             </div>
           </div>
           <div class="team-card-face team-card-back">
@@ -6541,7 +6538,7 @@ function renderTeams(teams) {
             </div>
             <div class="team-card-middle">
               <div class="team-chip">Est. <strong>${t.since}</strong></div>
-              <div class="team-chip">${accessLabel}</div>
+              ${!t.slug ? `<div class="team-chip">${accessLabel}</div>` : ''}
             </div>
             <div class="team-detail-line">
               <span>Archive span <strong>${seasonsArchived}</strong> seasons <em>| peak ${peakYear}</em></span>
@@ -7489,7 +7486,7 @@ function routeHome(targetHash = '') {
     routeHome._transitionTimer = window.setTimeout(() => {
       routeHome._transitionTimer = null;
       finishHomeRoute();
-    }, 180);
+    }, 90);
   } else {
     finishHomeRoute();
   }
