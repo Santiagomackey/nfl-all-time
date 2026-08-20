@@ -6769,7 +6769,7 @@ function bindDelegatedRouteClicks(doc, routeHost = window) {
   }, true);
 }
 
-function installRouteBridge(targetWindow, currentTeamSlug = null) {
+function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamData = null) {
   if (!targetWindow) return;
 
   try {
@@ -6798,6 +6798,25 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
     const getLegacyGames = () => {
       const games = readLegacyGlobal(`typeof ALL_GAMES !== 'undefined' ? ALL_GAMES : null`);
       return Array.isArray(games) ? games : null;
+    };
+
+    const mergeLegacyAndRouteGame = (legacyGame, index) => {
+      const routeGames = Array.isArray(currentTeamData?.games) ? currentTeamData.games : [];
+      const routeGame = routeGames[index] || routeGames.find(candidate => {
+        if (!candidate || !legacyGame) return false;
+        return Number(candidate.season || candidate.year) === Number(legacyGame.season || legacyGame.year)
+          && normalizeTeamRouteKey(candidate.opponent) === normalizeTeamRouteKey(legacyGame.opponent)
+          && normalizeTeamRouteKey(candidate.round) === normalizeTeamRouteKey(legacyGame.round)
+          && Number(candidate.teamScore) === Number(legacyGame.teamScore ?? legacyGame.ravensScore)
+          && Number(candidate.opponentScore) === Number(legacyGame.opponentScore ?? legacyGame.oppScore);
+      });
+      if (!routeGame) return legacyGame;
+      return {
+        ...routeGame,
+        ...legacyGame,
+        stats: { ...(routeGame.stats || {}), ...(legacyGame.stats || {}) },
+        detail: legacyGame?.detail || routeGame?.detail || null
+      };
     };
 
     if (!doc.getElementById('nflLegacyModalTweaks')) {
@@ -6870,23 +6889,136 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       return fallback;
     };
 
+    const normalizeLegacyStatKey = (value) => String(value || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '');
+
+    // One canonical stat definition is shared by every franchise page, every
+    // season and every game. Aliases cover the slightly different field names
+    // used by the historic team files and the current live-game feed.
     const statMappings = [
-      { label: 'Total Yds', teamField: 'totalYards', opponentField: 'opponentTotalYards' },
-      { label: 'Pass Yds', teamField: 'passingYards', opponentField: 'opponentPassingYards' },
-      { label: 'Rush Yds', teamField: 'rushingYards', opponentField: 'opponentRushingYards' },
-      { label: 'Total Plays', teamField: 'totalPlays', opponentField: 'opponentTotalPlays' },
-      { label: 'Yards Per Play', teamField: 'yardsPerPlay', opponentField: 'opponentYardsPerPlay' },
-      { label: 'Yards Per Pass', teamField: 'yardsPerPass', opponentField: 'opponentYardsPerPass' },
-      { label: 'Yards Per Rush', teamField: 'yardsPerRush', opponentField: 'opponentYardsPerRush' },
-      { label: 'Possession', teamField: 'possession', opponentField: 'opponentPossession' },
-      { label: '1st Downs', teamField: 'firstDowns', opponentField: 'opponentFirstDowns' },
-      { label: 'Punts', teamField: 'punts', opponentField: 'opponentPunts' },
-      { label: 'Turnovers', teamField: 'turnovers', opponentField: 'opponentTurnovers' },
-      { label: 'Interceptions Thrown', teamField: 'interceptionsThrown', opponentField: 'opponentInterceptionsThrown' },
-      { label: 'Fumbles Lost', teamField: 'fumblesLost', opponentField: 'opponentFumblesLost' },
-      { label: 'Penalties', teamField: 'penalties', opponentField: 'opponentPenalties' },
-      { label: 'Sacks', teamField: 'sacks', opponentField: 'opponentSacks' }
-    ];
+      { label: 'Total Yds', teamField: 'totalYards', opponentField: 'opponentTotalYards', aliases: ['Total Yards', 'Total Offense', 'Yards', 'Yds'] },
+      { label: 'Pass Yds', teamField: 'passingYards', opponentField: 'opponentPassingYards', aliases: ['Passing Yards', 'Net Passing Yards', 'Pass Yards'] },
+      { label: 'Rush Yds', teamField: 'rushingYards', opponentField: 'opponentRushingYards', aliases: ['Rushing Yards', 'Rush Yards'] },
+      { label: 'Total Plays', teamField: 'totalPlays', opponentField: 'opponentTotalPlays', aliases: ['Plays', 'Offensive Plays'] },
+      { label: 'Yards Per Play', teamField: 'yardsPerPlay', opponentField: 'opponentYardsPerPlay', aliases: ['Yards/Play', 'Yds/Play', 'YPP'] },
+      { label: 'Yards Per Pass', teamField: 'yardsPerPass', opponentField: 'opponentYardsPerPass', aliases: ['Yards/Pass', 'Yds/Pass', 'Net Yards Per Pass'] },
+      { label: 'Yards Per Rush', teamField: 'yardsPerRush', opponentField: 'opponentYardsPerRush', aliases: ['Yards/Rush', 'Yds/Rush', 'Rush Average'] },
+      { label: 'Possession', teamField: 'possession', opponentField: 'opponentPossession', aliases: ['Time of Possession', 'Possession Time', 'TOP'] },
+      { label: '1st Downs', teamField: 'firstDowns', opponentField: 'opponentFirstDowns', aliases: ['First Downs', '1st Down'] },
+      { label: 'Punts', teamField: 'punts', opponentField: 'opponentPunts', aliases: ['Punts-Punting Yards'] },
+      { label: 'Turnovers', teamField: 'turnovers', opponentField: 'opponentTurnovers', aliases: ['Total Turnovers', 'Giveaways'] },
+      { label: 'Interceptions Thrown', teamField: 'interceptionsThrown', opponentField: 'opponentInterceptionsThrown', aliases: ['Interceptions', 'Passes Intercepted', 'INT Thrown', 'INT'] },
+      { label: 'Fumbles Lost', teamField: 'fumblesLost', opponentField: 'opponentFumblesLost', aliases: ['Lost Fumbles', 'Fumbles-Lost'] },
+      { label: 'Penalties', teamField: 'penalties', opponentField: 'opponentPenalties', aliases: ['Penalties-Yards', 'Penalty Yards'] },
+      { label: 'Sacks', teamField: 'sacks', opponentField: 'opponentSacks', aliases: ['Sacks Allowed', 'Times Sacked'] }
+    ].map(mapping => ({
+      ...mapping,
+      normalizedAliases: [mapping.label, mapping.teamField, ...(mapping.aliases || [])].map(normalizeLegacyStatKey)
+    }));
+
+    const readLooseLegacyStat = (source, aliases) => {
+      if (!source || typeof source !== 'object') return null;
+      const aliasKeys = new Set((aliases || []).map(normalizeLegacyStatKey));
+      for (const [key, value] of Object.entries(source)) {
+        if (aliasKeys.has(normalizeLegacyStatKey(key))) {
+          const normalized = normalizeLegacyValue(value);
+          if (normalized !== null) return normalized;
+        }
+      }
+      return null;
+    };
+
+    const getLegacyMatchDetails = (game, index) => {
+      if (game?.detail && typeof game.detail === 'object') return game.detail;
+      const details = readLegacyGlobal(`typeof MATCH_DETAILS !== 'undefined' ? MATCH_DETAILS : null`);
+      if (!details) return null;
+      if (Array.isArray(details)) {
+        return details[index] || details.find(entry => entry && (
+          String(entry.id || entry.gameId || '') === String(game?.id || game?.gameId || '')
+        )) || null;
+      }
+      if (typeof details !== 'object') return null;
+
+      const directKeys = [
+        game?.id,
+        game?.gameId,
+        game?.eventId,
+        index,
+        String(index),
+        `${game?.year || game?.season || ''}-${game?.round || game?.week || ''}`
+      ].filter(value => value !== null && value !== undefined && String(value).trim());
+      for (const key of directKeys) {
+        if (details[key] && typeof details[key] === 'object') return details[key];
+      }
+
+      const yearBucket = details[game?.year] || details[game?.season];
+      if (yearBucket && typeof yearBucket === 'object') {
+        const opponentKey = normalizeTeamRouteKey(game?.opponent || '');
+        const found = Object.entries(yearBucket).find(([key, value]) =>
+          value && typeof value === 'object' && normalizeTeamRouteKey(key).includes(opponentKey)
+        );
+        if (found) return found[1];
+      }
+      return null;
+    };
+
+    const getLegacyStatSources = (game, detail, side) => {
+      const teamIsHome = String(game?.location || game?.homeAway || '').toLowerCase() !== 'away';
+      const teamLocationStats = teamIsHome ? game?.homeStats : game?.awayStats;
+      const opponentLocationStats = teamIsHome ? game?.awayStats : game?.homeStats;
+      const detailTeamLocationStats = teamIsHome ? detail?.homeStats : detail?.awayStats;
+      const detailOpponentLocationStats = teamIsHome ? detail?.awayStats : detail?.homeStats;
+
+      if (side === 'team') {
+        return [
+          game?.teamStats,
+          game?.stats?.team,
+          game?.stats?.for,
+          game?.stats,
+          teamLocationStats,
+          detail?.teamStats,
+          detail?.stats?.team,
+          detail?.stats?.for,
+          detail?.stats,
+          detailTeamLocationStats
+        ].filter(Boolean);
+      }
+      return [
+        game?.opponentStats,
+        game?.stats?.opponent,
+        game?.stats?.against,
+        opponentLocationStats,
+        detail?.opponentStats,
+        detail?.stats?.opponent,
+        detail?.stats?.against,
+        detailOpponentLocationStats
+      ].filter(Boolean);
+    };
+
+    const resolveLegacyMappedValue = (game, detail, mapping, side) => {
+      const directField = side === 'team' ? mapping.teamField : mapping.opponentField;
+      const directAliases = side === 'team'
+        ? [mapping.teamField, ...(mapping.aliases || [])]
+        : [mapping.opponentField, `opponent ${mapping.label}`, `opp ${mapping.label}`];
+      const directGameValue = readLooseLegacyStat(game, directAliases);
+      if (directGameValue !== null) return directGameValue;
+      const directDetailValue = readLooseLegacyStat(detail, directAliases);
+      if (directDetailValue !== null) return directDetailValue;
+
+      for (const nestedRoot of [game?.stats, detail?.stats]) {
+        const nestedDirectValue = readLooseLegacyStat(nestedRoot, directAliases);
+        if (nestedDirectValue !== null) return nestedDirectValue;
+      }
+
+      const nestedAliases = [directField, mapping.teamField, mapping.label, ...(mapping.aliases || [])];
+      for (const source of getLegacyStatSources(game, detail, side)) {
+        const value = readLooseLegacyStat(source, nestedAliases);
+        if (value !== null) return value;
+      }
+      return null;
+    };
 
     const buildLegacyGameStatRows = (game, panel) => {
       if (!game) return [];
@@ -6943,27 +7075,29 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       `).join('')}</div>`;
     };
 
-    const buildCompleteLegacyGameStatRows = (game, panel) => {
+    const buildCompleteLegacyGameStatRows = (game, panel, index) => {
       if (!game || !panel) return [];
       const sideInfo = resolveComparisonSides(game, panel);
-      const rows = [];
-      const seen = new Set();
+      const importedRows = [];
+      const importedByKey = new Map();
+      const usedImportedKeys = new Set();
 
-      const pushRow = (label, leftValue, rightValue, leftLabel = sideInfo.leftLabel, rightLabel = sideInfo.rightLabel) => {
+      const importRow = (label, leftValue, rightValue, leftLabel = sideInfo.leftLabel, rightLabel = sideInfo.rightLabel) => {
         const cleanLabel = String(label || '').trim();
         const cleanLeft = normalizeLegacyValue(leftValue);
         const cleanRight = normalizeLegacyValue(rightValue);
-        if (!cleanLabel || !cleanLeft || !cleanRight) return;
-        const key = cleanLabel.toLowerCase();
-        if (seen.has(key)) return;
-        seen.add(key);
-        rows.push({
+        if (!cleanLabel || (cleanLeft === null && cleanRight === null)) return;
+        const key = normalizeLegacyStatKey(cleanLabel);
+        if (importedByKey.has(key)) return;
+        const row = {
           label: cleanLabel,
           leftLabel: String(leftLabel || sideInfo.leftLabel || '').trim(),
           rightLabel: String(rightLabel || sideInfo.rightLabel || '').trim(),
           leftValue: cleanLeft,
           rightValue: cleanRight
-        });
+        };
+        importedRows.push(row);
+        importedByKey.set(key, row);
       };
 
       // New card-based layout, when present.
@@ -6971,7 +7105,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
         const statLabel = (card.querySelector('.compare-stat-label')?.textContent || '').trim();
         const values = card.querySelectorAll('.compare-value');
         const names = card.querySelectorAll('.compare-stat-team-name');
-        pushRow(
+        importRow(
           statLabel,
           values[0]?.textContent,
           values[1]?.textContent,
@@ -6986,7 +7120,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       panel.querySelectorAll('.compare-table tr').forEach(tr => {
         const cells = tr.querySelectorAll('td');
         if (cells.length < 5) return;
-        pushRow(
+        importRow(
           cells[2]?.textContent,
           cells[0]?.textContent,
           cells[4]?.textContent,
@@ -6995,52 +7129,115 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
         );
       });
 
-      // Add structured game fields only when the imported match sheet
-      // does not already contain that statistic.
-      statMappings.forEach(mapping => {
-        const key = mapping.label.toLowerCase();
-        if (seen.has(key)) return;
-
-        const teamValue = normalizeLegacyValue(game[mapping.teamField]);
-        const opponentValue = normalizeLegacyValue(game[mapping.opponentField]);
-        const fallbackLeft = sideInfo.leftIsTeam ? teamValue : opponentValue;
-        const fallbackRight = sideInfo.leftIsTeam ? opponentValue : teamValue;
-
-        pushRow(
-          mapping.label,
-          fallbackLeft,
-          fallbackRight,
-          sideInfo.leftLabel,
-          sideInfo.rightLabel
+      const detail = getLegacyMatchDetails(game, index);
+      const importDetailStat = (entry, fallbackLabel = '') => {
+        if (Array.isArray(entry)) {
+          if (entry.length >= 5) {
+            importRow(entry[2], entry[0], entry[4], entry[1], entry[3]);
+          } else if (entry.length >= 3) {
+            importRow(entry[0] || fallbackLabel, entry[1], entry[2], detail?.leftTeam, detail?.rightTeam);
+          }
+          return;
+        }
+        if (!entry || typeof entry !== 'object') return;
+        const label = entry.label || entry.stat || entry.name || entry.metric || fallbackLabel;
+        const leftValue = entry.leftValue ?? entry.left ?? entry.homeValue ?? entry.teamValue ?? entry.valueA ?? entry.a;
+        const rightValue = entry.rightValue ?? entry.right ?? entry.awayValue ?? entry.opponentValue ?? entry.valueB ?? entry.b;
+        importRow(
+          label,
+          leftValue,
+          rightValue,
+          entry.leftTeam || entry.homeTeam || detail?.leftTeam || sideInfo.leftLabel,
+          entry.rightTeam || entry.awayTeam || detail?.rightTeam || sideInfo.rightLabel
         );
+      };
+
+      if (Array.isArray(detail?.teamStats)) {
+        detail.teamStats.forEach(entry => importDetailStat(entry));
+      } else if (detail?.teamStats && typeof detail.teamStats === 'object') {
+        Object.entries(detail.teamStats).forEach(([label, entry]) => {
+          if (Array.isArray(entry) || (entry && typeof entry === 'object')) {
+            importDetailStat(entry, label);
+          } else {
+            importRow(label, entry, null, detail?.leftTeam, detail?.rightTeam);
+          }
+        });
+      }
+
+      const canonicalRows = statMappings.map(mapping => {
+        const importedEntry = [...importedByKey.entries()].find(([key]) =>
+          mapping.normalizedAliases.includes(key)
+        );
+        if (importedEntry) usedImportedKeys.add(importedEntry[0]);
+        const imported = importedEntry?.[1] || null;
+
+        const teamValue = resolveLegacyMappedValue(game, detail, mapping, 'team');
+        const opponentValue = resolveLegacyMappedValue(game, detail, mapping, 'opponent');
+        const mappedLeft = sideInfo.leftIsTeam ? teamValue : opponentValue;
+        const mappedRight = sideInfo.leftIsTeam ? opponentValue : teamValue;
+        const leftValue = normalizeLegacyValue(imported?.leftValue) || mappedLeft || '—';
+        const rightValue = normalizeLegacyValue(imported?.rightValue) || mappedRight || '—';
+
+        return {
+          label: mapping.label,
+          leftLabel: imported?.leftLabel || sideInfo.leftLabel,
+          rightLabel: imported?.rightLabel || sideInfo.rightLabel,
+          leftValue,
+          rightValue
+        };
       });
 
-      return rows;
+      // Preserve any additional verified stat included in a historic match
+      // sheet after the shared canonical block.
+      const extraRows = importedRows.filter(row => !usedImportedKeys.has(normalizeLegacyStatKey(row.label)))
+        .map(row => ({
+          ...row,
+          leftValue: row.leftValue || '—',
+          rightValue: row.rightValue || '—'
+        }));
+
+      return [...canonicalRows, ...extraRows];
     };
 
     const renderCompleteLegacyGameStatRows = (panel, rows) => {
       if (!panel) return;
       const inside = panel.querySelector('.inside');
       if (!inside) return;
-      if (!rows.length) {
-        inside.innerHTML = `<div class="muted">No verified team stat sheet is available for this matchup.</div>`;
-        return;
-      }
+      const signature = JSON.stringify(rows);
+      if (panel.dataset.nflStatsSignature === signature) return;
+      panel.dataset.nflStatsSignature = signature;
       inside.innerHTML = `<div class="compare-stack">${rows.map((row) => `
         <div class="compare-stat-card ${row.label === 'Possession' ? 'compare-row-possession' : ''}">
           <span class="compare-stat-label">${escapeHtml(row.label)}</span>
           <div class="compare-stat-values">
             <div class="compare-stat-team">
               <span class="compare-stat-team-name">${escapeHtml(row.leftLabel)}</span>
-              <strong class="compare-value${row.label === 'Possession' ? ' compare-value-time' : ''}">${escapeHtml(row.leftValue)}</strong>
+              <strong class="compare-value${row.label === 'Possession' ? ' compare-value-time' : ''}${row.leftValue === '—' ? ' compare-value-missing' : ''}">${escapeHtml(row.leftValue)}</strong>
             </div>
             <div class="compare-stat-team">
               <span class="compare-stat-team-name">${escapeHtml(row.rightLabel)}</span>
-              <strong class="compare-value${row.label === 'Possession' ? ' compare-value-time' : ''}">${escapeHtml(row.rightValue)}</strong>
+              <strong class="compare-value${row.label === 'Possession' ? ' compare-value-time' : ''}${row.rightValue === '—' ? ' compare-value-missing' : ''}">${escapeHtml(row.rightValue)}</strong>
             </div>
           </div>
         </div>
       `).join('')}</div>`;
+    };
+
+    const findLegacyTeamStatsPanel = (modal) => [...(modal?.querySelectorAll('.mini-panel') || [])].find(panel => {
+      const heading = normalizeLegacyStatKey(panel.querySelector('h3')?.textContent || '');
+      return heading === 'teamstats' || heading === 'teamstatistics';
+    }) || null;
+
+    const ensureLegacyTeamStatsPanel = (modal) => {
+      const existing = findLegacyTeamStatsPanel(modal);
+      if (existing) return existing;
+      const host = modal?.querySelector('.modal-grid, .match-detail-grid, .details-grid, #modalBody, .modal-body');
+      if (!host) return null;
+      const panel = doc.createElement('section');
+      panel.className = 'mini-panel nfl-team-stats-panel';
+      panel.innerHTML = '<h3>Team Stats</h3><div class="inside"></div>';
+      host.appendChild(panel);
+      return panel;
     };
 
     const resetLegacyMatchScroll = () => {
@@ -7058,13 +7255,11 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       const index = getCurrentGameIndex();
       if (!games || !Number.isFinite(index) || !games[index]) return;
 
-      const teamStatsPanel = [...modal.querySelectorAll('.mini-panel')].find(panel => {
-        const heading = panel.querySelector('h3');
-        return heading && (heading.textContent || '').trim() === 'Team Stats';
-      });
+      const teamStatsPanel = ensureLegacyTeamStatsPanel(modal);
       if (!teamStatsPanel) return;
 
-      const rows = buildCompleteLegacyGameStatRows(games[index], teamStatsPanel);
+      const game = mergeLegacyAndRouteGame(games[index], index);
+      const rows = buildCompleteLegacyGameStatRows(game, teamStatsPanel, index);
       renderCompleteLegacyGameStatRows(teamStatsPanel, rows);
       teamStatsPanel.dataset.nflStatsRepaired = 'true';
     };
@@ -7086,6 +7281,8 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
         const result = originalOpenMatch.apply(this, args);
         resetLegacyMatchScroll();
         repairLegacyMatchStats();
+        scheduleLegacyMatchStatRepair();
+        [24, 90, 240].forEach(delay => targetWindow.setTimeout(repairLegacyMatchStats, delay));
         return result;
       };
     }
@@ -7140,6 +7337,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
     if (!doc.__nflRouteObserver && targetWindow.MutationObserver && doc.body) {
       doc.__nflRouteObserver = new targetWindow.MutationObserver(mutations => {
         let needsOpponentWire = false;
+        let needsStatRepair = false;
 
         for (const mutation of mutations) {
           for (const node of mutation.addedNodes) {
@@ -7150,15 +7348,38 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
             ) {
               needsOpponentWire = true;
             }
+            if (
+              node.matches?.('#matchModal, #modalBody, .modal-body, .mini-panel, .compare-table, .compare-stat-card') ||
+              node.querySelector?.('#matchModal, #modalBody, .modal-body, .mini-panel, .compare-table, .compare-stat-card')
+            ) {
+              needsStatRepair = true;
+            }
           }
         }
 
         if (needsOpponentWire) {
           wireOpponentButtons();
         }
+        if (needsStatRepair) {
+          scheduleLegacyMatchStatRepair();
+        }
       });
       doc.__nflRouteObserver.observe(doc.body, { childList: true, subtree: true });
     }
+
+    if (!doc.__nflLegacyStatsClickBridge) {
+      doc.__nflLegacyStatsClickBridge = true;
+      doc.addEventListener('click', event => {
+        const trigger = event.target?.closest?.('.match-row, [data-index], [data-game-index], [onclick*="openMatch"]');
+        if (!trigger) return;
+        scheduleLegacyMatchStatRepair();
+        [24, 90, 240].forEach(delay => targetWindow.setTimeout(repairLegacyMatchStats, delay));
+      }, true);
+    }
+
+    // Repair an already-open game as well as games opened after this bridge is
+    // installed. This is what makes the feature universal across all teams.
+    scheduleLegacyMatchStatRepair();
   } catch (error) {
     console.warn('Could not bind route delegation inside legacy team frame.', error);
   }
@@ -8440,7 +8661,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
     try {
       ensureLegacyFrame2026Season(frame, teamData);
       installLegacyTeamClock(frame);
-      installRouteBridge(frame.contentWindow, slug);
+      installRouteBridge(frame.contentWindow, slug, teamData);
       frame.contentWindow?.scrollTo(0, 0);
     } catch (error) {
       console.warn('Could not reset iframe scroll position.', error);
@@ -8971,7 +9192,7 @@ async function handleRoute() {
         if (activeTeamData) {
           ensureLegacyFrame2026Season(existingFrame, activeTeamData);
         }
-        installRouteBridge(existingFrame.contentWindow);
+        installRouteBridge(existingFrame.contentWindow, slug, activeTeamData);
       } catch (error) {
         console.warn('Could not refresh legacy route buttons in the active team frame.', error);
       }
@@ -11827,4 +12048,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- INLINE_RENDERED_TEAM_PAGES_END -->
 </body>
 </html>
-
