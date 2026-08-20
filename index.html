@@ -6,7 +6,8 @@
 <meta name="description" content="NFL All-Time Franchise Database - The definitive hub for every NFL franchise, season, game, and historical record since 1920.">
 <meta name="theme-color" content="#0b1220">
 <title>NFL All-Time Franchise Database</title>
-<link rel="icon" type="image/png" href="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png">
+<link rel="icon" type="image/png" href="./blitzbook-logo.png?v=1">
+<link rel="apple-touch-icon" href="./blitzbook-logo.png?v=1">
 <link rel="apple-touch-icon" href="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6219,7 +6220,7 @@ select {
 <section class="hero">
   <div class="container">
     <div class="hero-nfl-logo-wrap">
-      <img class="hero-nfl-logo" src="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png" alt="NFL logo">
+      <img class="hero-nfl-logo" src="./blitzbook-logo.png?v=1" alt="Blitzbook logo">
     </div>
     <div class="hero-eyebrow">
       &mdash; &nbsp; The Definitive NFL Historical Record &nbsp; &mdash;
@@ -7186,6 +7187,42 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
     const doc = targetWindow.document;
     bindDelegatedRouteClicks(doc, window);
 
+    const isDirectYouTubeVideoUrl = (rawUrl) => {
+      if (!rawUrl) return false;
+      try {
+        const url = new URL(String(rawUrl), window.location.href);
+        const host = url.hostname.toLowerCase().replace(/^www\./, '');
+        if (host === 'youtu.be') {
+          return /^[a-zA-Z0-9_-]{11}$/.test(url.pathname.split('/').filter(Boolean)[0] || '');
+        }
+        if (host !== 'youtube.com' && host !== 'm.youtube.com') return false;
+        if (url.pathname === '/watch') {
+          return /^[a-zA-Z0-9_-]{11}$/.test(url.searchParams.get('v') || '');
+        }
+        const pathMatch = url.pathname.match(/^\/(?:shorts|embed)\/([a-zA-Z0-9_-]{11})(?:\/|$)/);
+        return Boolean(pathMatch);
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const sanitizeLegacyContent = () => {
+      doc.querySelectorAll('#bestSeasonBtn, button, a, [role="button"]').forEach(node => {
+        if (String(node.textContent || '').trim().toLowerCase() === 'featured') node.remove();
+      });
+
+      doc.querySelectorAll('h1, h2, h3, .panel-title, .section-title').forEach(heading => {
+        if (normalizeTeamRouteKey(heading.textContent) !== 'featuredgames') return;
+        const section = heading.closest('section, .panel, .card, .feature-panel') || heading;
+        section.remove();
+      });
+
+      doc.querySelectorAll('.youtube-btn, a[href*="youtube.com"], a[href*="youtu.be"], a[href*="google.com/search"]').forEach(node => {
+        const href = node.getAttribute?.('href') || '';
+        if (!isDirectYouTubeVideoUrl(href)) node.remove();
+      });
+    };
+
     const routeSlug = resolveTeamSlug(currentTeamSlug || getRouteTeamSlug() || getTeamRouteView()?.dataset.loadedSlug);
     const emptyStatValues = new Set(['', '-', '--', '---', 'N/A', 'Unavailable', 'Not tracked', 'Not available']);
 
@@ -7771,11 +7808,13 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
 
     wireHomeButtons();
     wireOpponentButtons();
+    sanitizeLegacyContent();
 
     if (!doc.__nflRouteObserver && targetWindow.MutationObserver && doc.body) {
       doc.__nflRouteObserver = new targetWindow.MutationObserver(mutations => {
         let needsOpponentWire = false;
         let needsStatRepair = false;
+        let needsContentSanitize = false;
 
         for (const mutation of mutations) {
           for (const node of mutation.addedNodes) {
@@ -7792,6 +7831,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
             ) {
               needsStatRepair = true;
             }
+            needsContentSanitize = true;
           }
         }
 
@@ -7800,6 +7840,9 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
         }
         if (needsStatRepair) {
           scheduleLegacyMatchStatRepair();
+        }
+        if (needsContentSanitize) {
+          sanitizeLegacyContent();
         }
       });
       doc.__nflRouteObserver.observe(doc.body, { childList: true, subtree: true });
@@ -7943,11 +7986,8 @@ function setTeamRouteMode(active) {
   document.body.classList.toggle('team-route-active', Boolean(active));
 }
 
-function setAppFavicon(iconUrl) {
-  const fallback = 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png';
-  const baseUrl = iconUrl || fallback;
-  const separator = baseUrl.includes('?') ? '&' : '?';
-  const resolved = `${baseUrl}${separator}v=${Date.now()}`;
+function setAppFavicon() {
+  const resolved = './blitzbook-logo.png?v=1';
   ['icon', 'shortcut icon', 'apple-touch-icon'].forEach(relValue => {
     document.querySelectorAll(`link[rel="${relValue}"]`).forEach(node => node.remove());
     const link = document.createElement('link');
@@ -8431,7 +8471,6 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
       <button class="pill active">All Games</button>
       <button class="pill">Regular Season</button>
       <button class="pill">Playoffs</button>
-      <button class="pill">Featured</button>
     </section>
     <section class="section" id="season">
       <div class="section-title">${escapeHtml(shortName)} Archive</div>
@@ -8538,7 +8577,6 @@ function buildPortableLegacyTeamPageTemplateUnused(teamData) {
       <button class="toggle active" type="button">All Games</button>
       <button class="toggle" type="button">Regular Season</button>
       <button class="toggle" type="button">Playoffs</button>
-      <button class="tool-btn" type="button">Featured</button>
       <button class="tool-btn" type="button">Head-to-Head</button>
     </div>
     <div class="micro-detail-note">Tip: search by opponent, round, or season year.</div>
@@ -8658,7 +8696,6 @@ function buildPortableLegacyTeamPage(teamData) {
       <button class="toggle active" type="button">All Games</button>
       <button class="toggle" type="button">Regular Season</button>
       <button class="toggle" type="button">Playoffs</button>
-      <button class="toggle" type="button">Featured</button>
       <button class="toggle" type="button">Head-to-Head</button>
     </div>
   </div>
@@ -8757,9 +8794,7 @@ function buildLiveRouteGame(slug, liveGame, index) {
     opponentTurnovers: opponentStats.turnovers || '',
     opponentFirstDowns: opponentStats.firstDowns || '',
     opponentPossession: opponentStats.timeOfPossession || opponentStats.possession || '',
-    links: {
-      youtubeSummary: liveGame?.youtubeSummaryUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(`2026 ${slug} ${liveGame?.opponent || ''} highlights`)}`
-    }
+    links: {}
   };
 }
 
@@ -8909,7 +8944,7 @@ function injectLegacyRouteBridge(html, teamData = null) {
   }
 
   if (routeTeamData && !bridgedHtml.includes('__NFL_2026_SEASON_BUTTON_FIX__')) {
-    const season2026Script = `<script>(function(){if(window.__NFL_2026_SEASON_BUTTON_FIX__)return;window.__NFL_2026_SEASON_BUTTON_FIX__=true;var YEAR='2026';function normalizeGame(game,index){game=game||{};var stats=game.stats||{};var result=String(game.result||'').toUpperCase();if(result!=='W'&&result!=='L'&&result!=='T')result='TBD';var teamScore=game.teamScore==null?0:Number(game.teamScore||0);var oppScore=game.opponentScore==null?0:Number(game.opponentScore||0);return{year:2026,season:2026,opponent:game.opponent||'Opponent',opponentCode:game.opponentCode||game.opponentSlug||'',ravensScore:teamScore,teamScore:teamScore,oppScore:oppScore,opponentScore:oppScore,location:game.location||(game.homeAway==='away'?'Away':'Home'),result:result,round:game.round||('Game '+(index+1)),competition:game.competition||'Regular Season',isPlayoff:!!game.isPlayoff,date:game.date||'',displayDate:game.displayDate||'TBD',totalYards:stats.totalYards||'',passingYards:stats.passingYards||'',rushingYards:stats.rushingYards||'',turnovers:stats.turnovers||'',firstDowns:stats.firstDowns||'',possession:stats.timeOfPossession||stats.possession||'',stadium:game.stadium||'',youtubeSummaryUrl:(game.links&&game.links.youtubeSummary)||'',youtubeSummaryLabel:'Watch on YouTube'};}function install(){var route=window.__NFL_ROUTE_TEAM_DATA__;var routeGames=route&&Array.isArray(route.games)?route.games:[];if(!routeGames.length)return false;try{if(typeof ALL_GAMES!=='undefined'&&Array.isArray(ALL_GAMES)&&!ALL_GAMES.some(function(game){return Number(game.year||game.season)===2026;})){routeGames.map(normalizeGame).forEach(function(game){var idx=ALL_GAMES.push(game)-1;if(typeof seasons!=='undefined'&&seasons){seasons[YEAR]=seasons[YEAR]||[];seasons[YEAR].push(Object.assign({},game,{_index:idx}));}});}if(typeof YEARS!=='undefined'&&Array.isArray(YEARS)&&!YEARS.some(function(year){return String(year)===YEAR;})){YEARS.push(2026);YEARS.sort(function(a,b){return Number(a)-Number(b);});}if(typeof seasonSummaryCache!=='undefined'&&seasonSummaryCache&&typeof seasonSummaryCache.clear==='function')seasonSummaryCache.clear();if(typeof renderSeasonStrip==='function')renderSeasonStrip();if(typeof render==='function'&&typeof state!=='undefined'&&String(state.selectedYear)===YEAR)render();return true;}catch(error){console.warn('Could not install 2026 season button.',error);return false;}}function fallbackButton(){var wrap=document.getElementById('seasonStrip');if(!wrap||wrap.querySelector('[data-year=\"2026\"]'))return;var button=document.createElement('button');button.className='season-btn';button.dataset.year='2026';button.innerHTML='<span class=\"year\">2026</span><span class=\"mini\">0-0 <span class=\"mini-playoff-dot\"></span></span><span class=\"mini-meter\"><span class=\"mini-meter-fill\" style=\"width:6%\"></span></span>';button.addEventListener('click',function(){try{state.selectedYear='2026';state.selectedMatchIndex=null;state.isHistorical=false;render();}catch(error){install();}});wrap.appendChild(button);}if(!install())fallbackButton();setTimeout(function(){install();fallbackButton();},150);})();<\\/script>`;
+    const season2026Script = `<script>(function(){if(window.__NFL_2026_SEASON_BUTTON_FIX__)return;window.__NFL_2026_SEASON_BUTTON_FIX__=true;var YEAR='2026';function normalizeGame(game,index){game=game||{};var stats=game.stats||{};var result=String(game.result||'').toUpperCase();if(result!=='W'&&result!=='L'&&result!=='T')result='TBD';var teamScore=game.teamScore==null?0:Number(game.teamScore||0);var oppScore=game.opponentScore==null?0:Number(game.opponentScore||0);return{year:2026,season:2026,opponent:game.opponent||'Opponent',opponentCode:game.opponentCode||game.opponentSlug||'',ravensScore:teamScore,teamScore:teamScore,oppScore:oppScore,opponentScore:oppScore,location:game.location||(game.homeAway==='away'?'Away':'Home'),result:result,round:game.round||('Game '+(index+1)),competition:game.competition||'Regular Season',isPlayoff:!!game.isPlayoff,date:game.date||'',displayDate:game.displayDate||'TBD',totalYards:stats.totalYards||'',passingYards:stats.passingYards||'',rushingYards:stats.rushingYards||'',turnovers:stats.turnovers||'',firstDowns:stats.firstDowns||'',possession:stats.timeOfPossession||stats.possession||'',stadium:game.stadium||'',youtubeSummaryUrl:'',youtubeSummaryLabel:''};}function install(){var route=window.__NFL_ROUTE_TEAM_DATA__;var routeGames=route&&Array.isArray(route.games)?route.games:[];if(!routeGames.length)return false;try{if(typeof ALL_GAMES!=='undefined'&&Array.isArray(ALL_GAMES)&&!ALL_GAMES.some(function(game){return Number(game.year||game.season)===2026;})){routeGames.map(normalizeGame).forEach(function(game){var idx=ALL_GAMES.push(game)-1;if(typeof seasons!=='undefined'&&seasons){seasons[YEAR]=seasons[YEAR]||[];seasons[YEAR].push(Object.assign({},game,{_index:idx}));}});}if(typeof YEARS!=='undefined'&&Array.isArray(YEARS)&&!YEARS.some(function(year){return String(year)===YEAR;})){YEARS.push(2026);YEARS.sort(function(a,b){return Number(a)-Number(b);});}if(typeof seasonSummaryCache!=='undefined'&&seasonSummaryCache&&typeof seasonSummaryCache.clear==='function')seasonSummaryCache.clear();if(typeof renderSeasonStrip==='function')renderSeasonStrip();if(typeof render==='function'&&typeof state!=='undefined'&&String(state.selectedYear)===YEAR)render();return true;}catch(error){console.warn('Could not install 2026 season button.',error);return false;}}function fallbackButton(){var wrap=document.getElementById('seasonStrip');if(!wrap||wrap.querySelector('[data-year=\"2026\"]'))return;var button=document.createElement('button');button.className='season-btn';button.dataset.year='2026';button.innerHTML='<span class=\"year\">2026</span><span class=\"mini\">0-0 <span class=\"mini-playoff-dot\"></span></span><span class=\"mini-meter\"><span class=\"mini-meter-fill\" style=\"width:6%\"></span></span>';button.addEventListener('click',function(){try{state.selectedYear='2026';state.selectedMatchIndex=null;state.isHistorical=false;render();}catch(error){install();}});wrap.appendChild(button);}if(!install())fallbackButton();setTimeout(function(){install();fallbackButton();},150);})();<\\/script>`;
     bridgedHtml = bridgedHtml.includes('</head>')
       ? bridgedHtml.replace('</head>', `${season2026Script}\n</head>`)
       : `${season2026Script}\n${bridgedHtml}`;
@@ -8970,8 +9005,8 @@ function ensureLegacyFrame2026Season(frame, teamData) {
           opponentFirstDowns: game.opponentFirstDowns || (game.opponentStats && game.opponentStats.firstDowns) || '',
           opponentPossession: game.opponentPossession || (game.opponentStats && (game.opponentStats.timeOfPossession || game.opponentStats.possession)) || '',
           stadium: game.stadium || '',
-          youtubeSummaryUrl: (game.links && game.links.youtubeSummary) || '',
-          youtubeSummaryLabel: 'Watch on YouTube'
+          youtubeSummaryUrl: '',
+          youtubeSummaryLabel: ''
         };
       }
 
@@ -10298,7 +10333,7 @@ function addTeamResult(game, side) {
     channel: game.channel || '',
     stats: isAway ? game.stats?.away || {} : game.stats?.home || {},
     opponentStats: isAway ? game.stats?.home || {} : game.stats?.away || {},
-    youtubeSummaryUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(`2026 ${isAway ? game.awayTeam : game.homeTeam} ${isAway ? game.homeTeam : game.awayTeam} highlights`)}`
+    youtubeSummaryUrl: ''
   });
 }
 
