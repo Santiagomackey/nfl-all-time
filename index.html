@@ -5769,6 +5769,411 @@ html.preload-team-route #teamRouteView {
   .season-2026-body { padding: 14px; }
 }
 
+/* ============================================================
+   PHONE-FIRST RESPONSIVE POLISH
+   ============================================================ */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .team-card {
+    perspective: none;
+  }
+  .team-card-inner,
+  .team-card:hover .team-card-inner {
+    transform: none !important;
+    transition: none;
+  }
+  .team-card-front {
+    display: none;
+  }
+  .team-card-back {
+    position: relative;
+    inset: auto;
+    min-height: 190px;
+    transform: none;
+  }
+  .team-card:hover .team-card-face,
+  .team-card:hover .team-card-face::after {
+    border-color: color-mix(in srgb, var(--team-card-color) 42%, rgba(255,255,255,0.10));
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .topnav-inner {
+    height: 60px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+  .nav-logo {
+    font-size: 15px;
+    letter-spacing: 1.6px;
+  }
+  .nav-badge {
+    padding: 5px 9px;
+    letter-spacing: 1px;
+  }
+  .nav-freshness {
+    display: none;
+  }
+  .mobile-menu-btn {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+  .mobile-nav {
+    padding: 2px 14px 14px;
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+  }
+  .mobile-nav.open {
+    display: block;
+  }
+  .mobile-nav-link {
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+  }
+  .hero {
+    padding: 34px 0 30px;
+  }
+  .hero::before {
+    height: 390px;
+  }
+  .hero-nfl-logo-wrap {
+    margin-bottom: 12px;
+  }
+  .hero-nfl-logo {
+    width: 72px;
+    height: 72px;
+  }
+  .hero-eyebrow {
+    max-width: 100%;
+    margin-bottom: 18px;
+    padding: 7px 12px;
+    letter-spacing: 1.8px;
+    line-height: 1.5;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 12vw, 56px);
+    letter-spacing: 1.4px;
+    line-height: .98;
+  }
+  .hero-sub {
+    margin-bottom: 28px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .hero-actions {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 22px;
+  }
+  .hero-btn {
+    min-height: 46px;
+    min-width: 0;
+  }
+  .hero-quick-links {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 24px;
+    padding-bottom: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .hero-quick-links::-webkit-scrollbar {
+    display: none;
+  }
+  .quick-chip {
+    flex: 0 0 auto;
+    min-height: 38px;
+  }
+  .section {
+    padding: 30px 0;
+  }
+  .section-header,
+  .records-board-head,
+  .universe-card-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .section-header {
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: clamp(25px, 8vw, 32px);
+    letter-spacing: 1.2px;
+  }
+  .section-subtitle {
+    line-height: 1.55;
+  }
+  .section-link {
+    min-height: 44px;
+    align-items: center;
+  }
+  .featured-card,
+  .division-card,
+  .explore-card {
+    padding: 20px;
+  }
+  .featured-grid,
+  .progress-strip,
+  .division-grid,
+  .explore-grid,
+  .discovery-grid {
+    grid-template-columns: 1fr;
+  }
+  .featured-grid .featured-card:last-child {
+    grid-column: auto;
+  }
+  .filter-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+  .filter-search-wrap,
+  .filter-group,
+  .sort-select {
+    width: 100%;
+    min-width: 0;
+  }
+  .filter-search,
+  .sort-select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .filter-divider {
+    display: none;
+  }
+  .filter-label {
+    display: block;
+    margin-bottom: 7px;
+  }
+  .filter-btns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .filter-btn {
+    min-height: 42px;
+    padding: 8px;
+  }
+  .grid-count {
+    line-height: 1.5;
+  }
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .team-card,
+  .team-card-inner {
+    min-width: 0;
+  }
+  .division-team-btn {
+    min-height: 44px;
+  }
+  .universe-top,
+  .universe-body,
+  .season-2026-top,
+  .season-2026-body {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .universe-controls,
+  .season-2026-schedule-tools {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .universe-select,
+  .season-2026-select,
+  .season-2026-search {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .season-2026-table-wrap,
+  .franchise-matrix-wrap,
+  .franchise-timeline-wall {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .season-2026-matchup {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .season-2026-team,
+  .season-2026-vs,
+  .season-2026-status {
+    justify-self: stretch;
+    text-align: left;
+  }
+  .season-2026-vs {
+    padding-left: 44px;
+  }
+  .live-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+  .live-tabs {
+    width: 100%;
+    margin-left: 0;
+  }
+  .live-tab {
+    flex: 1;
+    min-height: 42px;
+  }
+  .live-games {
+    padding: 10px;
+  }
+  .live-game {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 8px;
+    padding: 12px 10px;
+  }
+  .game-team {
+    min-width: 0;
+    gap: 6px;
+  }
+  .game-team-name {
+    font-size: 14px;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .game-team-logo,
+  .game-team-logo img {
+    width: 24px;
+    height: 24px;
+  }
+  .game-score {
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+  .records-board-shell {
+    width: calc(100vw - 20px);
+    border-radius: 16px;
+  }
+  .records-board-header,
+  .records-board-kpis,
+  .records-board-grid {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .records-board-row {
+    padding: 12px;
+  }
+  .franchise-tier-row {
+    grid-template-columns: 1fr;
+  }
+  .footer-stats-row {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  .back-to-top {
+    right: 14px;
+    bottom: 14px;
+    width: 46px;
+    height: 46px;
+  }
+  .explore-modal {
+    align-items: flex-end;
+    padding: 10px;
+  }
+  .explore-modal-panel {
+    max-height: calc(100dvh - 20px);
+    overflow-y: auto;
+    border-radius: 20px 20px 14px 14px;
+  }
+  .explore-modal-header,
+  .explore-modal-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .explore-modal-title-row {
+    gap: 10px;
+  }
+  .era-morph-inner,
+  .morph-identity-panel,
+  .morph-detail-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .nav-badge > span:not(.nav-freshness) {
+    display: none;
+  }
+  .nav-badge {
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    padding: 0;
+  }
+  .mobile-nav-links,
+  .team-grid,
+  .season-2026-kpis,
+  .universe-kpis,
+  .records-board-kpis,
+  .records-board-milestones {
+    grid-template-columns: 1fr;
+  }
+  .team-card,
+  .team-card-inner,
+  .team-card-back {
+    min-height: 180px;
+  }
+  .team-card-face {
+    padding: 15px;
+  }
+  .team-detail-line {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .featured-stats-row,
+  .team-card-stats {
+    gap: 6px;
+  }
+  .records-board-row {
+    gap: 8px;
+  }
+  .records-board-row-copy strong {
+    max-width: 145px;
+  }
+  .season-2026-week-rail {
+    grid-template-columns: 1fr;
+  }
+  .season-2026-table {
+    min-width: 390px;
+  }
+  .season-2026-table th,
+  .season-2026-table td {
+    padding: 8px 7px;
+  }
+  .footer-inner {
+    text-align: left;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -8650,6 +9055,79 @@ function installLegacyTeamClock(frame) {
   doc?.getElementById('codexTeamClockStyle')?.remove();
 }
 
+function makeLegacyTeamPageMobileReady(html) {
+  let responsiveHtml = String(html || '');
+  const viewportTag = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
+  if (/<meta\b[^>]*name=["']viewport["'][^>]*>/i.test(responsiveHtml)) {
+    responsiveHtml = responsiveHtml.replace(/<meta\b[^>]*name=["']viewport["'][^>]*>/i, viewportTag);
+  } else if (/<head\b[^>]*>/i.test(responsiveHtml)) {
+    responsiveHtml = responsiveHtml.replace(/<head\b[^>]*>/i, match => `${match}\n${viewportTag}`);
+  }
+
+  if (responsiveHtml.includes('id="nfl-phone-layout"')) return responsiveHtml;
+
+  const phoneStyle = `<style id="nfl-phone-layout">
+html,body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+body{margin:0!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,svg,video{max-width:100%}
+button,a,input,select{touch-action:manipulation}
+.page,.viewport,.container,.wrap{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:auto!important;margin-right:auto!important}
+  .table-wrap,.standings-wrap,.compare-table-wrap,.modal-table-wrap{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  .mobile-message,.mobile-scroll-note{display:none!important}
+@media(max-width:760px){
+  .page,.container,.wrap{padding-left:12px!important;padding-right:12px!important}
+  .viewport{min-width:0!important}
+  .topbar,.top,.header{width:100%!important;min-width:0!important}
+  .topbar{height:auto!important;min-height:58px!important;grid-template-columns:auto minmax(0,1fr) auto!important;gap:8px!important;padding:8px 10px!important}
+  .top{padding-top:50px!important}
+  .home,.light,.corner,.home-btn-corner,.theme-toggle-corner{min-height:42px!important;padding:9px 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  .badge{max-width:100%!important;min-width:0!important;padding:7px 10px!important;font-size:9px!important;letter-spacing:1.4px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  .mast{padding:28px 12px 20px!important}
+  .mast img,.main-logo,.logo{width:76px!important;height:64px!important;margin:18px auto 14px!important}
+  h1,.mast h1{font-size:clamp(36px,12vw,52px)!important;line-height:.96!important;letter-spacing:1.4px!important;overflow-wrap:anywhere}
+  .mast p,.subtitle,.sub{font-size:11px!important;line-height:1.6!important;padding:0 4px!important}
+  .intro,.hero,.hero-grid,.toolbar{grid-template-columns:1fr!important;gap:14px!important}
+  .intro,.hero,.hero-panel{padding:16px!important;border-radius:16px!important}
+  .intro h2,.hero-title{font-size:clamp(36px,11vw,48px)!important;line-height:.96!important;overflow-wrap:anywhere}
+  .summary,.copy,.hero-text{font-size:14px!important;line-height:1.65!important}
+  .kpis,.stat-grid,.hero-stat-grid,.stats,.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .card,.stat,.stat-card,.hero-stat-card{min-width:0!important;padding:13px!important}
+  .value,.stat strong,.stat-value,.hero-stat-card strong{font-size:26px!important}
+  .filter,.toolbar{display:grid!important;grid-template-columns:1fr!important;padding:10px!important}
+  .search,.search-input,.pill,.toggle,.tool-btn{width:100%!important;min-width:0!important;min-height:44px!important;font-size:16px!important}
+  .toggle-row,.toggles{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;gap:8px!important}
+  .season-strip{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .season,.season-btn{scroll-snap-align:start}
+  .panel-head{align-items:flex-start!important;flex-direction:column!important}
+  .panel-body{padding:12px!important}
+  .game,.live-row,.match-row-card{grid-template-columns:1fr!important;gap:9px!important;padding:12px!important}
+  .score-card,.match-teams{width:100%!important;min-width:0!important;justify-content:flex-start!important;flex-wrap:wrap!important}
+  .scoreboard{grid-template-columns:1fr auto 1fr!important;gap:6px!important;width:100%!important}
+  .box{min-width:0!important;padding:10px 6px!important}
+  .box strong{font-size:34px!important}
+  .game-list{max-height:none!important;overflow:visible!important;padding-right:0!important}
+  .modal{padding:8px!important}
+  .modal-card,.modal-content{width:100%!important;max-width:100%!important;max-height:calc(100dvh - 16px)!important;overflow-y:auto!important;border-radius:16px!important}
+  .modal-grid,.match-detail-grid,.details-grid{grid-template-columns:1fr!important}
+  table{max-width:none}
+}
+@media(max-width:430px){
+  .page,.container,.wrap{padding-left:10px!important;padding-right:10px!important}
+  .topbar{grid-template-columns:auto 1fr auto!important}
+  .topbar .badge{font-size:8px!important;letter-spacing:1px!important;text-align:center!important}
+  .home,.light,.corner,.home-btn-corner,.theme-toggle-corner{font-size:9px!important;letter-spacing:1px!important}
+  .kpis,.stat-grid,.hero-stat-grid,.stats,.stats-grid{grid-template-columns:1fr!important}
+  .toggle-row,.toggles{grid-template-columns:1fr!important}
+  .scoreboard{grid-template-columns:1fr!important}
+  .vs{padding:2px 0!important;text-align:center!important}
+}
+</style>`;
+
+  return responsiveHtml.includes('</head>')
+    ? responsiveHtml.replace('</head>', `${phoneStyle}\n</head>`)
+    : `${phoneStyle}\n${responsiveHtml}`;
+}
+
 function renderLegacyTeamFrame(slug, html, teamData = null) {
   const view = getTeamRouteView();
   if (!view) return;
@@ -8703,7 +9181,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, { once: true });
 
-  const bridgedHtml = legacyHtml;
+  const bridgedHtml = makeLegacyTeamPageMobileReady(legacyHtml);
   frame.removeAttribute('src');
   frame.srcdoc = bridgedHtml;
   window.requestAnimationFrame(() => {
