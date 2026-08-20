@@ -6970,9 +6970,11 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
       const opponentLocationStats = teamIsHome ? game?.awayStats : game?.homeStats;
       const detailTeamLocationStats = teamIsHome ? detail?.homeStats : detail?.awayStats;
       const detailOpponentLocationStats = teamIsHome ? detail?.awayStats : detail?.homeStats;
+      const verifiedStats = game?.__verifiedStats?.[side];
 
       if (side === 'team') {
         return [
+          verifiedStats,
           game?.teamStats,
           game?.stats?.team,
           game?.stats?.for,
@@ -6986,6 +6988,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
         ].filter(Boolean);
       }
       return [
+        verifiedStats,
         game?.opponentStats,
         game?.stats?.opponent,
         game?.stats?.against,
@@ -7002,6 +7005,11 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
       const directAliases = side === 'team'
         ? [mapping.teamField, ...(mapping.aliases || [])]
         : [mapping.opponentField, `opponent ${mapping.label}`, `opp ${mapping.label}`];
+      const verifiedValue = readLooseLegacyStat(
+        game?.__verifiedStats?.[side],
+        [mapping.teamField, mapping.label, ...(mapping.aliases || [])]
+      );
+      if (verifiedValue !== null) return verifiedValue;
       const directGameValue = readLooseLegacyStat(game, directAliases);
       if (directGameValue !== null) return directGameValue;
       const directDetailValue = readLooseLegacyStat(detail, directAliases);
@@ -7175,8 +7183,13 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
         const opponentValue = resolveLegacyMappedValue(game, detail, mapping, 'opponent');
         const mappedLeft = sideInfo.leftIsTeam ? teamValue : opponentValue;
         const mappedRight = sideInfo.leftIsTeam ? opponentValue : teamValue;
-        const leftValue = normalizeLegacyValue(imported?.leftValue) || mappedLeft || '—';
-        const rightValue = normalizeLegacyValue(imported?.rightValue) || mappedRight || '—';
+        const verifiedAvailable = Boolean(game?.__verifiedStats);
+        const leftValue = verifiedAvailable
+          ? mappedLeft || normalizeLegacyValue(imported?.leftValue) || '—'
+          : normalizeLegacyValue(imported?.leftValue) || mappedLeft || '—';
+        const rightValue = verifiedAvailable
+          ? mappedRight || normalizeLegacyValue(imported?.rightValue) || '—'
+          : normalizeLegacyValue(imported?.rightValue) || mappedRight || '—';
 
         return {
           label: mapping.label,
@@ -7262,6 +7275,29 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
       const rows = buildCompleteLegacyGameStatRows(game, teamStatsPanel, index);
       renderCompleteLegacyGameStatRows(teamStatsPanel, rows);
       teamStatsPanel.dataset.nflStatsRepaired = 'true';
+
+      const requestKey = [
+        routeSlug,
+        game?.date || game?.displayDate || '',
+        game?.opponent || '',
+        game?.teamScore ?? game?.ravensScore ?? '',
+        game?.opponentScore ?? game?.oppScore ?? ''
+      ].join('|');
+      if (teamStatsPanel.dataset.nflVerifiedRequest !== requestKey) {
+        teamStatsPanel.dataset.nflVerifiedRequest = requestKey;
+        fetchVerifiedGameStats(game, routeSlug).then(verifiedStats => {
+          if (!verifiedStats) return;
+          const activeModal = doc.querySelector('#matchModal.open');
+          const activeIndex = getCurrentGameIndex();
+          if (!activeModal || activeIndex !== index || teamStatsPanel.dataset.nflVerifiedRequest !== requestKey) return;
+          const verifiedGame = { ...game, __verifiedStats: verifiedStats };
+          const verifiedRows = buildCompleteLegacyGameStatRows(verifiedGame, teamStatsPanel, index);
+          renderCompleteLegacyGameStatRows(teamStatsPanel, verifiedRows);
+          teamStatsPanel.dataset.nflStatsSource = verifiedStats.source || 'verified-box-score';
+        }).catch(error => {
+          console.warn('Could not complete the selected historical box score.', error);
+        });
+      }
     };
 
     const scheduleLegacyMatchStatRepair = () => {
@@ -9274,6 +9310,10 @@ let liveGamesCache = { ...FALLBACK_GAME_DATA };
 let currentTab = 'live';
 const liveSummaryCache = new Map();
 const liveSummaryPending = new Map();
+const archivedScoreboardCache = new Map();
+const archivedScoreboardPending = new Map();
+const verifiedGameStatsCache = new Map();
+const verifiedGameStatsPending = new Map();
 
 function createEmptyLiveData() {
   return {
@@ -9387,10 +9427,11 @@ function findSummaryTeam(summaryData, competitor) {
 function readSummaryStat(summaryTeam, keys) {
   const stats = summaryTeam?.statistics || [];
   const keyList = Array.isArray(keys) ? keys : [keys];
+  const normalizeKey = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
   for (const key of keyList) {
     const row = stats.find(item => {
-      const names = [item.name, item.displayName, item.abbreviation, item.label].map(value => String(value || '').toLowerCase());
-      return names.some(name => name === String(key).toLowerCase());
+      const names = [item.name, item.displayName, item.abbreviation, item.label].map(normalizeKey);
+      return names.some(name => name === normalizeKey(key));
     });
     if (row && row.displayValue !== undefined) return row.displayValue;
     if (row && row.value !== undefined) return row.value;
@@ -9428,6 +9469,185 @@ async function fetchGameSummary(eventId) {
       return null;
     });
   liveSummaryPending.set(eventId, request);
+  return request;
+}
+
+function parseFirstStatNumber(value) {
+  const match = String(value ?? '').match(/-?\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : null;
+}
+
+function parseCompletionAttempts(value) {
+  const match = String(value || '').match(/(\d+)\s*[\/-]\s*(\d+)/);
+  return match ? { completions: Number(match[1]), attempts: Number(match[2]) } : null;
+}
+
+function parseClockSeconds(value) {
+  const match = String(value || '').match(/(\d{1,2}):(\d{2})/);
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+
+function formatClockSeconds(value) {
+  if (!Number.isFinite(value)) return '';
+  const safe = Math.max(0, Math.round(value));
+  return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, '0')}`;
+}
+
+function extractCompleteSummaryStats(summaryData, competitor) {
+  const summaryTeam = findSummaryTeam(summaryData, competitor);
+  if (!summaryTeam) return null;
+  const read = keys => readSummaryStat(summaryTeam, keys);
+  const totalYards = read(['totalYards', 'total yards', 'total net yards', 'yds']);
+  const passingYards = read(['netPassingYards', 'passingYards', 'passing', 'pass yards', 'net yards passing']);
+  const rushingYards = read(['rushingYards', 'rushing', 'rush yards', 'net yards rushing']);
+  const completionAttempts = read(['completionAttempts', 'comp-att', 'comp/att', 'att-comp-int']);
+  const rushingAttempts = read(['rushingAttempts', 'rushing attempts', 'rush attempts']);
+  const sacksYards = read(['sacksYardsLost', 'sacks-yards lost', 'sacked-yards lost']);
+  const parsedPass = parseCompletionAttempts(completionAttempts);
+  const passAttempts = parsedPass?.attempts ?? null;
+  const rushAttempts = parseFirstStatNumber(rushingAttempts);
+  const sacks = parseFirstStatNumber(sacksYards);
+  const totalPlaysRaw = read(['totalPlays', 'total plays', 'offensivePlays', 'offensive plays']);
+  const totalPlays = totalPlaysRaw || (
+    Number.isFinite(passAttempts) && Number.isFinite(rushAttempts)
+      ? String(passAttempts + rushAttempts + (Number.isFinite(sacks) ? sacks : 0))
+      : ''
+  );
+  const totalYardsNumber = parseFirstStatNumber(totalYards);
+  const passingYardsNumber = parseFirstStatNumber(passingYards);
+  const rushingYardsNumber = parseFirstStatNumber(rushingYards);
+  const totalPlaysNumber = parseFirstStatNumber(totalPlays);
+  const passingPlayCount = Number.isFinite(passAttempts)
+    ? passAttempts + (Number.isFinite(sacks) ? sacks : 0)
+    : null;
+
+  return {
+    totalYards,
+    passingYards,
+    rushingYards,
+    totalPlays,
+    yardsPerPlay: read(['yardsPerPlay', 'yards per play', 'average gain']) || (
+      Number.isFinite(totalYardsNumber) && Number.isFinite(totalPlaysNumber) && totalPlaysNumber > 0
+        ? (totalYardsNumber / totalPlaysNumber).toFixed(1)
+        : ''
+    ),
+    yardsPerPass: read(['yardsPerPass', 'yards per pass', 'avg yds/att']) || (
+      Number.isFinite(passingYardsNumber) && Number.isFinite(passingPlayCount) && passingPlayCount > 0
+        ? (passingYardsNumber / passingPlayCount).toFixed(1)
+        : ''
+    ),
+    yardsPerRush: read(['yardsPerRushAttempt', 'yardsPerRush', 'yards per rush', 'average gain rushing']) || (
+      Number.isFinite(rushingYardsNumber) && Number.isFinite(rushAttempts) && rushAttempts > 0
+        ? (rushingYardsNumber / rushAttempts).toFixed(1)
+        : ''
+    ),
+    possession: read(['possessionTime', 'possession', 'time of possession']),
+    firstDowns: read(['firstDowns', 'first downs']),
+    punts: String(parseFirstStatNumber(read(['punts', 'puntsAverage', 'punts-average', 'punts-punting yards'])) ?? ''),
+    turnovers: read(['turnovers', 'total turnovers', 'to']),
+    interceptionsThrown: read(['interceptions', 'interceptionsThrown', 'interceptions thrown', 'passes intercepted']),
+    fumblesLost: read(['fumblesLost', 'fumbles lost', 'lost fumbles']),
+    penalties: String(parseFirstStatNumber(read(['totalPenaltiesYards', 'penalties', 'penalties-yards'])) ?? ''),
+    sacks: String(Number.isFinite(sacks) ? sacks : '')
+  };
+}
+
+function getArchivedGameDateKey(game) {
+  const raw = String(game?.date || game?.displayDate || '').trim();
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}${iso[2]}${iso[3]}`;
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return `${parsed.getFullYear()}${String(parsed.getMonth() + 1).padStart(2, '0')}${String(parsed.getDate()).padStart(2, '0')}`;
+}
+
+async function fetchArchivedScoreboard(dateKey) {
+  if (!dateKey) return null;
+  if (archivedScoreboardCache.has(dateKey)) return archivedScoreboardCache.get(dateKey);
+  if (archivedScoreboardPending.has(dateKey)) return archivedScoreboardPending.get(dateKey);
+  const request = fetch(`${LIVE_SCOREBOARD_ENDPOINT}?dates=${encodeURIComponent(dateKey)}&limit=100`, { cache: 'force-cache' })
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+      archivedScoreboardCache.set(dateKey, data);
+      archivedScoreboardPending.delete(dateKey);
+      return data;
+    })
+    .catch(error => {
+      archivedScoreboardPending.delete(dateKey);
+      console.warn(`Could not load the NFL scoreboard for ${dateKey}.`, error);
+      return null;
+    });
+  archivedScoreboardPending.set(dateKey, request);
+  return request;
+}
+
+function findArchivedEspnEvent(scoreboard, game, routeSlug) {
+  const teamSlug = resolveTeamSlug(routeSlug);
+  const opponentSlug = resolveTeamSlug(game?.opponentSlug || game?.opponent);
+  const teamScore = Number(game?.teamScore ?? game?.ravensScore);
+  const opponentScore = Number(game?.opponentScore ?? game?.oppScore);
+  let best = null;
+  let bestScore = -1;
+
+  for (const event of scoreboard?.events || []) {
+    const competition = event?.competitions?.[0];
+    const competitors = competition?.competitors || [];
+    if (competitors.length < 2) continue;
+    const teamCompetitor = competitors.find(entry => resolveLiveTeamSlug(entry.team) === teamSlug);
+    const opponentCompetitor = competitors.find(entry => resolveLiveTeamSlug(entry.team) === opponentSlug);
+    if (!teamCompetitor || !opponentCompetitor) continue;
+
+    let matchScore = 10;
+    if (Number.isFinite(teamScore) && Number(teamCompetitor.score) === teamScore) matchScore += 5;
+    if (Number.isFinite(opponentScore) && Number(opponentCompetitor.score) === opponentScore) matchScore += 5;
+    if (String(competition.type?.abbreviation || event.seasonType?.name || '').toLowerCase().includes('post') === Boolean(game?.isPlayoff)) matchScore += 1;
+    if (matchScore > bestScore) {
+      bestScore = matchScore;
+      best = { event, competition, teamCompetitor, opponentCompetitor };
+    }
+  }
+  return best;
+}
+
+async function fetchVerifiedGameStats(game, routeSlug) {
+  const dateKey = getArchivedGameDateKey(game);
+  const cacheKey = [
+    routeSlug,
+    dateKey,
+    game?.opponent || '',
+    game?.teamScore ?? game?.ravensScore ?? '',
+    game?.opponentScore ?? game?.oppScore ?? ''
+  ].join('|');
+  if (!dateKey || !routeSlug) return null;
+  if (verifiedGameStatsCache.has(cacheKey)) return verifiedGameStatsCache.get(cacheKey);
+  if (verifiedGameStatsPending.has(cacheKey)) return verifiedGameStatsPending.get(cacheKey);
+
+  const request = fetchArchivedScoreboard(dateKey)
+    .then(async scoreboard => {
+      const match = findArchivedEspnEvent(scoreboard, game, routeSlug);
+      if (!match) return null;
+      const eventId = match.event?.id || match.competition?.id;
+      const summary = await fetchGameSummary(eventId);
+      if (!summary) return null;
+      const team = extractCompleteSummaryStats(summary, match.teamCompetitor);
+      const opponent = extractCompleteSummaryStats(summary, match.opponentCompetitor);
+      if (!team || !opponent) return null;
+
+      const teamPossession = parseClockSeconds(team.possession);
+      const opponentPossession = parseClockSeconds(opponent.possession);
+      if (!team.possession && Number.isFinite(opponentPossession)) team.possession = formatClockSeconds(3600 - opponentPossession);
+      if (!opponent.possession && Number.isFinite(teamPossession)) opponent.possession = formatClockSeconds(3600 - teamPossession);
+
+      const result = { team, opponent, source: 'ESPN verified box score', eventId: String(eventId || '') };
+      verifiedGameStatsCache.set(cacheKey, result);
+      return result;
+    })
+    .catch(error => {
+      console.warn('Could not verify the selected NFL box score.', error);
+      return null;
+    })
+    .finally(() => verifiedGameStatsPending.delete(cacheKey));
+  verifiedGameStatsPending.set(cacheKey, request);
   return request;
 }
 
