@@ -6944,37 +6944,78 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
     };
 
     const buildCompleteLegacyGameStatRows = (game, panel) => {
-      if (!game) return [];
+      if (!game || !panel) return [];
       const sideInfo = resolveComparisonSides(game, panel);
-      const existingRows = new Map();
-      panel?.querySelectorAll('.compare-stat-card').forEach(card => {
+      const rows = [];
+      const seen = new Set();
+
+      const pushRow = (label, leftValue, rightValue, leftLabel = sideInfo.leftLabel, rightLabel = sideInfo.rightLabel) => {
+        const cleanLabel = String(label || '').trim();
+        const cleanLeft = normalizeLegacyValue(leftValue);
+        const cleanRight = normalizeLegacyValue(rightValue);
+        if (!cleanLabel || !cleanLeft || !cleanRight) return;
+        const key = cleanLabel.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+        rows.push({
+          label: cleanLabel,
+          leftLabel: String(leftLabel || sideInfo.leftLabel || '').trim(),
+          rightLabel: String(rightLabel || sideInfo.rightLabel || '').trim(),
+          leftValue: cleanLeft,
+          rightValue: cleanRight
+        });
+      };
+
+      // New card-based layout, when present.
+      panel.querySelectorAll('.compare-stat-card').forEach(card => {
         const statLabel = (card.querySelector('.compare-stat-label')?.textContent || '').trim();
         const values = card.querySelectorAll('.compare-value');
-        existingRows.set(statLabel, {
-          left: values[0] ? (values[0].textContent || '').trim() : '',
-          right: values[1] ? (values[1].textContent || '').trim() : ''
-        });
+        const names = card.querySelectorAll('.compare-stat-team-name');
+        pushRow(
+          statLabel,
+          values[0]?.textContent,
+          values[1]?.textContent,
+          names[0]?.textContent || sideInfo.leftLabel,
+          names[1]?.textContent || sideInfo.rightLabel
+        );
       });
 
-      return statMappings.map(mapping => {
-        const existing = existingRows.get(mapping.label) || {};
+      // Original franchise pages use:
+      // left value | left team | stat | right team | right value
+      // Keep every imported MATCH_DETAILS stat instead of overwriting the table.
+      panel.querySelectorAll('.compare-table tr').forEach(tr => {
+        const cells = tr.querySelectorAll('td');
+        if (cells.length < 5) return;
+        pushRow(
+          cells[2]?.textContent,
+          cells[0]?.textContent,
+          cells[4]?.textContent,
+          cells[1]?.textContent || sideInfo.leftLabel,
+          cells[3]?.textContent || sideInfo.rightLabel
+        );
+      });
+
+      // Add structured game fields only when the imported match sheet
+      // does not already contain that statistic.
+      statMappings.forEach(mapping => {
+        const key = mapping.label.toLowerCase();
+        if (seen.has(key)) return;
+
         const teamValue = normalizeLegacyValue(game[mapping.teamField]);
         const opponentValue = normalizeLegacyValue(game[mapping.opponentField]);
         const fallbackLeft = sideInfo.leftIsTeam ? teamValue : opponentValue;
         const fallbackRight = sideInfo.leftIsTeam ? opponentValue : teamValue;
-        const leftValue = normalizeLegacyValue(existing.left) || fallbackLeft;
-        const rightValue = normalizeLegacyValue(existing.right) || fallbackRight;
 
-        if (!leftValue || !rightValue) return null;
+        pushRow(
+          mapping.label,
+          fallbackLeft,
+          fallbackRight,
+          sideInfo.leftLabel,
+          sideInfo.rightLabel
+        );
+      });
 
-        return {
-          label: mapping.label,
-          leftLabel: sideInfo.leftLabel,
-          rightLabel: sideInfo.rightLabel,
-          leftValue,
-          rightValue
-        };
-      }).filter(Boolean);
+      return rows;
     };
 
     const renderCompleteLegacyGameStatRows = (panel, rows) => {
@@ -6982,7 +7023,7 @@ function installRouteBridge(targetWindow, currentTeamSlug = null) {
       const inside = panel.querySelector('.inside');
       if (!inside) return;
       if (!rows.length) {
-        inside.innerHTML = `<div class="muted">Only fully available game stats are shown for this matchup.</div>`;
+        inside.innerHTML = `<div class="muted">No verified team stat sheet is available for this matchup.</div>`;
         return;
       }
       inside.innerHTML = `<div class="compare-stack">${rows.map((row) => `
