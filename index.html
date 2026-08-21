@@ -9382,7 +9382,41 @@ button,a,input,select{touch-action:manipulation}
 </style>`;
 
   return responsiveHtml.includes('</head>')
-    ? responsiveHtml.replace('</head>', `${phoneStyle}\n</head>`)
+    ? responsiveHtml.replace('</head>', `${phoneStyle}\n
+<style id="blitzbook-wheel-scroll-fix">
+/* Restore normal document wheel scrolling. Avoid nested vertical scroll traps. */
+html, body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: auto !important;
+}
+body { touch-action: pan-y pinch-zoom; }
+
+/* Let these large dashboard sections participate in the main page scroll. */
+#season2026 .season-2026-schedule,
+#season2026 .season-2026-standings-wrap {
+  max-height: none !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+  scrollbar-gutter: auto !important;
+}
+#universe .franchise-universe-table-wrap {
+  max-height: none !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+  scrollbar-gutter: auto !important;
+  will-change: auto !important;
+}
+
+/* Horizontal-only scrollers keep horizontal scrolling without capturing vertical wheel input. */
+#universe .franchise-matrix-wrap,
+#universe .franchise-timeline-wall,
+#universe .franchise-best-strip,
+#season2026 .season-2026-schedule {
+  overscroll-behavior-y: auto !important;
+}
+</style>
+</head>`)
     : `${phoneStyle}\n${responsiveHtml}`;
 }
 
