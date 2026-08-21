@@ -8915,6 +8915,145 @@ function injectLegacyRouteBridge(html, teamData = null) {
   bridgedHtml = injectRouteAttrs(bridgedHtml, /(<(?:button|a)\b[^>]*\bid="homeViewBtn"\b[^>]*)(>)/gi, homeAttrs);
   bridgedHtml = injectRouteAttrs(bridgedHtml, /(<a\b[^>]*\bid="opponentPageBtn"\b[^>]*)(>)/gi, rivalAttrs);
 
+  // The generated franchise pages originally treated the Game Center as a
+  // live-only widget. When no kickoff was in progress they rendered a fake
+  // 0-0 game against "Opponent". Replace that narrow selector before the
+  // page enters srcdoc so every team gets a useful live, next, or latest game.
+  bridgedHtml = bridgedHtml.replace(
+    /const LIVE_CENTER_REFRESH_MS = 15000;/g,
+    'const LIVE_CENTER_REFRESH_MS = 60000;'
+  );
+  const reliableLiveCenterRefresh = `  function refreshLiveCenter() {
+    const panel = document.getElementById("liveCenter2026");
+    if (!panel) return Promise.resolve();
+
+    const setText = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    };
+    const isTeamEvent = (event) => getCompetitorsFromEvent(event).some(isCurrentTeamCompetitor);
+    const eventTime = (event) => {
+      const value = new Date(event?.date || event?.competitions?.[0]?.date || 0).getTime();
+      return Number.isFinite(value) ? value : 0;
+    };
+    const uniqueEvents = (events) => {
+      const seen = new Set();
+      return events.filter((event) => {
+        const key = String(event?.id || event?.competitions?.[0]?.id || event?.date || "");
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    };
+    const setContextCopy = (mode, event) => {
+      const title = panel.querySelector(".panel-title");
+      const note = panel.querySelector(".live-api-note");
+      const chips = panel.querySelectorAll(".live-chip");
+      if (title) title.innerHTML = '<span class="live-status-dot"></span> ' + LIVE_SEASON_YEAR + ' ' + htmlEscape(teamLabel()) + ' Game Center';
+      if (note) note.textContent = mode === "live"
+        ? "This game is live. Scores, status, and quick details update automatically from ESPN."
+        : mode === "next"
+        ? "No game is live right now. Showing the next scheduled " + teamLabel() + " game instead."
+        : mode === "latest"
+        ? "No game is live right now. Showing the latest completed " + teamLabel() + " game instead."
+        : "Showing the most relevant NFL game available from ESPN.";
+      if (chips[0]) chips[0].innerHTML = '<span class="live-status-dot"></span><strong>' + (mode === "live" ? "Live now" : mode === "next" ? "Next game" : mode === "latest" ? "Latest result" : "NFL game") + '</strong>';
+      if (chips[1]) chips[1].innerHTML = 'Updates every <strong>60s</strong>';
+      if (chips[2]) chips[2].innerHTML = 'Season <strong>' + LIVE_SEASON_YEAR + '</strong>';
+    };
+    const customizeNonLiveView = (event, mode) => {
+      const status = getEventStatus(event);
+      const competitors = getCompetitorsFromEvent(event);
+      const home = competitors.find((entry) => String(entry?.homeAway || "").toLowerCase() === "home") || competitors[0];
+      const away = competitors.find((entry) => String(entry?.homeAway || "").toLowerCase() === "away") || competitors[1];
+      const homeName = home?.team?.shortDisplayName || home?.team?.displayName || "Home";
+      const awayName = away?.team?.shortDisplayName || away?.team?.displayName || "Away";
+      const venue = event?.competitions?.[0]?.venue?.fullName || "Venue TBD";
+      const dateLabel = formatDateTime(event?.date || event?.competitions?.[0]?.date);
+      const stateKey = String(status?.state || "").toLowerCase();
+
+      if (mode === "next" || stateKey === "pre") {
+        setText("liveHomeScore", "—");
+        setText("liveAwayScore", "—");
+        setText("liveQuarter", "NEXT GAME");
+        setText("liveClock", dateLabel);
+        setText("liveDownDist", status?.detail || status?.shortDetail || "Scheduled");
+        setText("livePossession", "—");
+        setText("liveScoringPlay", "Kickoff: " + dateLabel);
+        setText("liveDrive", venue);
+        setText("liveGameState", "Scheduled");
+        setText("liveLastPlay", homeName + " vs " + awayName + " · " + dateLabel);
+        const feed = document.getElementById("playFeed");
+        if (feed) feed.innerHTML = '<div class="play-row"><span class="play-time">NEXT</span><span class="play-text">' + htmlEscape(homeName + " vs " + awayName + " at " + venue) + '</span></div>';
+      } else if (mode === "latest") {
+        setText("liveQuarter", "FINAL");
+        setText("liveClock", "Final");
+        setText("liveDownDist", status?.detail || status?.shortDetail || "Game complete");
+        setText("liveGameState", "Final");
+        setText("liveDrive", venue);
+      }
+    };
+
+    const scheduleRequest = TEAM_INFO.espnTeamId
+      ? fetchJson(SCHEDULE_URL(TEAM_INFO.espnTeamId))
+      : Promise.resolve(null);
+
+    return Promise.allSettled([fetchJson(SCOREBOARD_URL), scheduleRequest])
+      .then(([scoreboardResult, scheduleResult]) => {
+        const scoreboardEvents = scoreboardResult.status === "fulfilled" ? extractEvents(scoreboardResult.value) : [];
+        const scheduleEvents = scheduleResult.status === "fulfilled" ? extractEvents(scheduleResult.value) : [];
+        const teamEvents = uniqueEvents([...scheduleEvents, ...scoreboardEvents.filter(isTeamEvent)]).filter(isTeamEvent);
+        const now = Date.now();
+        const currentTeamLive = teamEvents.find((event) => String(getEventStatus(event)?.state || "").toLowerCase() === "in");
+        const upcomingTeamGames = teamEvents
+          .filter((event) => String(getEventStatus(event)?.state || "").toLowerCase() === "pre" && (!eventTime(event) || eventTime(event) >= now - 10800000))
+          .sort((left, right) => (eventTime(left) || Number.MAX_SAFE_INTEGER) - (eventTime(right) || Number.MAX_SAFE_INTEGER));
+        const completedTeamGames = teamEvents
+          .filter((event) => {
+            const status = getEventStatus(event);
+            return String(status?.state || "").toLowerCase() === "post" || Boolean(status?.completed);
+          })
+          .sort((left, right) => eventTime(right) - eventTime(left));
+        const anyLiveGame = scoreboardEvents.find((event) => String(getEventStatus(event)?.state || "").toLowerCase() === "in");
+
+        const preferred = currentTeamLive || upcomingTeamGames[0] || completedTeamGames[0] || anyLiveGame || null;
+        const mode = currentTeamLive ? "live" : upcomingTeamGames[0] ? "next" : completedTeamGames[0] ? "latest" : anyLiveGame ? "league" : "idle";
+
+        if (!preferred) {
+          console.info("[Blitzbook Game Center] No schedule event is currently available.", { team: teamLabel() });
+          showIdleLiveCenter("No 2026 game is available yet. Check again after the schedule feed updates.");
+          setText("liveHomeScore", "—");
+          setText("liveAwayScore", "—");
+          return null;
+        }
+
+        console.info("[Blitzbook Game Center] Selected game.", { team: teamLabel(), eventId: preferred.id, mode });
+        setContextCopy(mode, preferred);
+        const status = getEventStatus(preferred);
+        const stateKey = String(status?.state || "").toLowerCase();
+        const renderEvent = (summaryData) => {
+          updateLiveCenterFromEvent(preferred, summaryData);
+          customizeNonLiveView(preferred, mode);
+        };
+
+        if ((stateKey === "in" || stateKey === "post") && preferred.id) {
+          return fetchJson(SUMMARY_URL(preferred.id)).then(renderEvent).catch(() => renderEvent(null));
+        }
+        renderEvent(null);
+        return null;
+      })
+      .catch((error) => {
+        console.error("[Blitzbook Game Center] Refresh failed.", error);
+        showIdleLiveCenter("Could not refresh ESPN right now. Tap Refresh to try again.");
+        setText("liveHomeScore", "—");
+        setText("liveAwayScore", "—");
+      });
+  }`;
+  bridgedHtml = bridgedHtml.replace(
+    /  function refreshLiveCenter\(\) \{[\s\S]*?\n  \}\n\n  function attachSeasonOverrides/,
+    `${reliableLiveCenterRefresh}\n\n  function attachSeasonOverrides`
+  );
+
   const routeTeamData = getLegacyRouteTeamData(teamData);
   if (routeTeamData) {
     const dataScript = `<script>window.__NFL_ROUTE_TEAM_DATA__=${JSON.stringify(routeTeamData).replace(/</g, '\\u003c')};<\\/script>`;
