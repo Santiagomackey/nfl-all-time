@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7203,11 +7203,13 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
         if (String(node.textContent || '').trim().toLowerCase() === 'featured') node.remove();
       });
 
-      doc.querySelectorAll('h1, h2, h3, .panel-title, .section-title').forEach(heading => {
-        if (normalizeTeamRouteKey(heading.textContent) !== 'featuredgames') return;
-        const section = heading.closest('section, .panel, .card, .feature-panel') || heading;
+      doc.querySelectorAll('h1, h2, h3, .panel-title, .section-title, .card-title, .feature-title').forEach(heading => {
+        const key = normalizeTeamRouteKey(heading.textContent);
+        if (key !== 'featuredgames' && key !== 'featuredgame') return;
+        const section = heading.closest('section, .panel, .card, .feature-panel, .featured-games, [data-section="featured-games"]') || heading;
         section.remove();
       });
+      doc.querySelectorAll('.featured-games, #featuredGames, [data-section="featured-games"], [data-featured-games]').forEach(node => node.remove());
 
       doc.querySelectorAll('.youtube-btn, a[href*="youtube.com"], a[href*="youtu.be"], a[href*="google.com/search"]').forEach(node => {
         const href = node.getAttribute?.('href') || '';
@@ -12948,6 +12950,317 @@ document.addEventListener('DOMContentLoaded', async () => {
   sections.forEach(s => ioNav.observe(s));
 });
 </script>
+
+<style id="blitzbook-smooth-gamecenter-patch">
+/* Smoother team-card flip: keep the effect, reduce repaint cost. */
+.team-card { perspective: 760px; contain: layout paint; }
+.team-card-inner {
+  transition: transform .34s cubic-bezier(.2,.72,.2,1) !important;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+.team-card-face {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.team-card-back { transform: rotateY(180deg) translateZ(1px); }
+@media (hover:hover) and (pointer:fine) {
+  .team-card:hover .team-card-inner { transform: rotateY(180deg) translateZ(0) !important; }
+}
+
+/* All-Time Franchise Rankings: remove expensive effects from the scroll layer. */
+.franchise-universe-table-wrap {
+  contain: layout paint;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  will-change: scroll-position;
+  background: #0b1423 !important;
+}
+.franchise-universe-table tbody tr {
+  transition: background-color .1s linear !important;
+  contain: layout paint style;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.franchise-universe-table tbody tr:hover { box-shadow: inset 3px 0 0 var(--team-row-color, var(--nfl-red)) !important; }
+.franchise-universe-table .franchise-table-team img { filter: none !important; }
+.franchise-universe-table .franchise-table-number { text-shadow: none !important; }
+.franchise-universe-table .franchise-rank-badge.top { box-shadow: none !important; }
+.franchise-universe-table th { backdrop-filter: none !important; }
+
+/* Game cards now behave like real clickable game rows. */
+.live-game { cursor: pointer; }
+.live-game-team-link {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 3px 5px;
+  margin: -3px -5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  min-width: 0;
+}
+.game-team.home .live-game-team-link { flex-direction: row-reverse; text-align: right; }
+.live-game-team-link:hover { background: rgba(255,255,255,.055); }
+.live-game-open-hint {
+  margin-top: 5px;
+  font-size: 7px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* Full game detail modal. */
+.blitz-game-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: none;
+  place-items: center;
+  padding: 22px;
+  background: rgba(2,7,15,.78);
+  backdrop-filter: blur(8px);
+}
+.blitz-game-modal.open { display: grid; }
+.blitz-game-dialog {
+  width: min(920px, 96vw);
+  max-height: min(820px, 92vh);
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 18px;
+  background: #0d1727;
+  box-shadow: 0 28px 80px rgba(0,0,0,.46);
+}
+.blitz-game-modal-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background: rgba(13,23,39,.97);
+}
+.blitz-game-modal-head strong {
+  font-family: 'Oswald',sans-serif;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+.blitz-game-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.035);
+  color: #fff;
+  cursor: pointer;
+  font-size: 19px;
+}
+.blitz-game-scoreboard {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 24px 22px 18px;
+}
+.blitz-game-team-button {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 8px;
+  border-radius: 12px;
+}
+.blitz-game-team-button.home { flex-direction: row-reverse; text-align: right; }
+.blitz-game-team-button:hover { background: rgba(255,255,255,.05); }
+.blitz-game-team-button img { width: 52px; height: 52px; object-fit: contain; }
+.blitz-game-team-button b { display:block; font-family:'Oswald',sans-serif; font-size:20px; letter-spacing:1px; text-transform:uppercase; }
+.blitz-game-team-button span { display:block; margin-top:3px; font-size:9px; color:#8494aa; }
+.blitz-game-score { text-align:center; min-width:160px; }
+.blitz-game-score strong { display:block; font-family:'Oswald',sans-serif; font-size:36px; letter-spacing:3px; }
+.blitz-game-score span { display:block; margin-top:4px; font-size:9px; letter-spacing:1.7px; text-transform:uppercase; color:#91a3ba; }
+.blitz-game-live-note {
+  margin: 0 22px 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(62,207,142,.16);
+  background: rgba(62,207,142,.055);
+  color: #84d9b4;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.blitz-game-stats { padding: 0 22px 22px; }
+.blitz-game-stats-title {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  font-family:'Oswald',sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #dce6f2;
+}
+.blitz-stat-row {
+  display:grid;
+  grid-template-columns: minmax(80px,1fr) minmax(130px,1.4fr) minmax(80px,1fr);
+  align-items:center;
+  gap:12px;
+  min-height:42px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+}
+.blitz-stat-row .value { font-family:'Oswald',sans-serif; font-size:15px; color:#f4f7fb; }
+.blitz-stat-row .value:last-child { text-align:right; }
+.blitz-stat-row .label { text-align:center; font-size:8px; font-weight:800; letter-spacing:1.15px; text-transform:uppercase; color:#768aa3; }
+.blitz-game-loading { padding:22px; text-align:center; color:#8294ab; font-size:10px; letter-spacing:1px; }
+@media (max-width: 640px) {
+  .blitz-game-modal { padding: 8px; }
+  .blitz-game-dialog { width:100%; max-height:94vh; border-radius:14px; }
+  .blitz-game-scoreboard { gap:8px; padding:18px 10px 14px; }
+  .blitz-game-team-button { flex-direction:column; text-align:center; gap:6px; padding:5px; }
+  .blitz-game-team-button.home { flex-direction:column; text-align:center; }
+  .blitz-game-team-button img { width:38px; height:38px; }
+  .blitz-game-team-button b { font-size:14px; }
+  .blitz-game-score { min-width:95px; }
+  .blitz-game-score strong { font-size:26px; }
+  .blitz-game-stats { padding:0 12px 16px; }
+  .blitz-stat-row { grid-template-columns: 1fr 1.25fr 1fr; gap:6px; }
+}
+</style>
+<script id="blitzbook-game-detail-patch">
+(function(){
+  const statRows = [
+    ['totalYards','Total Yards'],
+    ['passingYards','Passing Yards'],
+    ['rushingYards','Rushing Yards'],
+    ['totalPlays','Total Plays'],
+    ['yardsPerPlay','Yards / Play'],
+    ['yardsPerPass','Yards / Pass'],
+    ['yardsPerRush','Yards / Rush'],
+    ['firstDowns','First Downs'],
+    ['turnovers','Turnovers'],
+    ['interceptionsThrown','Interceptions'],
+    ['fumblesLost','Fumbles Lost'],
+    ['sacks','Sacks'],
+    ['penalties','Penalties'],
+    ['punts','Punts'],
+    ['possession','Time of Possession']
+  ];
+
+  function safe(v){ return (typeof escapeHtml === 'function') ? escapeHtml(v == null ? '' : String(v)) : String(v == null ? '' : v); }
+  function modal(){
+    let node=document.getElementById('blitzGameModal');
+    if(node) return node;
+    node=document.createElement('div');
+    node.id='blitzGameModal';
+    node.className='blitz-game-modal';
+    node.setAttribute('aria-hidden','true');
+    node.innerHTML='<div class="blitz-game-dialog" role="dialog" aria-modal="true" aria-label="Game details"><div class="blitz-game-modal-head"><strong id="blitzGameModalTitle">Game Center</strong><button class="blitz-game-close" type="button" aria-label="Close">×</button></div><div id="blitzGameModalBody"></div></div>';
+    document.body.appendChild(node);
+    node.querySelector('.blitz-game-close').addEventListener('click', closeModal);
+    node.addEventListener('click',e=>{ if(e.target===node) closeModal(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&node.classList.contains('open')) closeModal(); });
+    return node;
+  }
+  function closeModal(){
+    const node=document.getElementById('blitzGameModal');
+    if(!node) return;
+    node.classList.remove('open');
+    node.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  function gameById(id){ return (window.NFL_LIVE_DATA?.games||[]).find(g=>String(g.id)===String(id)); }
+  function teamButton(game,side){
+    const slug=side==='away'?game.awaySlug:game.homeSlug;
+    const logo=side==='away'?game.away:game.home;
+    const name=side==='away'?game.awayName:game.homeName;
+    const full=side==='away'?game.awayTeam:game.homeTeam;
+    const record=side==='away'?game.awayRecord:game.homeRecord;
+    return '<button class="blitz-game-team-button '+(side==='home'?'home':'')+'" type="button" data-game-team="'+safe(slug)+'"><img src="'+safe(logo)+'" alt="'+safe(name)+' logo"><span><b>'+safe(name)+'</b><span>'+safe(record||full||'Open team page')+'</span></span></button>';
+  }
+  function basicStats(stats){
+    stats=stats||{};
+    return {
+      totalYards:stats.totalYards||'', passingYards:stats.passingYards||'', rushingYards:stats.rushingYards||'',
+      firstDowns:stats.firstDowns||'', turnovers:stats.turnovers||'', possession:stats.possession||stats.timeOfPossession||''
+    };
+  }
+  function statsHtml(away,home){
+    const usable=statRows.filter(([key]) => String(away?.[key]??'').trim() || String(home?.[key]??'').trim());
+    if(!usable.length) return '<div class="blitz-game-loading">Detailed team statistics are not available from the feed yet.</div>';
+    return '<div class="blitz-game-stats"><div class="blitz-game-stats-title">Team statistics</div>'+usable.map(([key,label])=>'<div class="blitz-stat-row"><div class="value">'+safe(away?.[key]||'—')+'</div><div class="label">'+safe(label)+'</div><div class="value">'+safe(home?.[key]||'—')+'</div></div>').join('')+'</div>';
+  }
+  function renderShell(game,statsAway,statsHome,loading){
+    const node=modal();
+    const title=document.getElementById('blitzGameModalTitle');
+    const body=document.getElementById('blitzGameModalBody');
+    if(title) title.textContent=(game.week||'2026')+' · '+(game.status==='live'?'Live Game':game.status==='final'?'Final':'Upcoming');
+    const score=(game.awayScore!=null&&game.homeScore!=null)?(game.awayScore+' - '+game.homeScore):'VS';
+    const liveCopy=game.status==='live' ? '<div class="blitz-game-live-note">This game is in progress. The score and available stats update from the live feed, so some categories can still be incomplete until the game is final.</div>' : '';
+    body.innerHTML='<div class="blitz-game-scoreboard">'+teamButton(game,'away')+'<div class="blitz-game-score"><strong>'+safe(score)+'</strong><span>'+safe(game.statusTxt||game.status||'Game')+'</span><span>'+safe(game.channel||'ESPN')+'</span></div>'+teamButton(game,'home')+'</div>'+liveCopy+(loading?'<div class="blitz-game-loading">Loading the full box score…</div>':statsHtml(statsAway,statsHome));
+    body.querySelectorAll('[data-game-team]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); closeModal(); const slug=btn.dataset.gameTeam; if(slug&&typeof routeToTeam==='function') routeToTeam(slug); }));
+  }
+  async function openGame(game){
+    if(!game) return;
+    const node=modal();
+    node.classList.add('open');
+    node.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    renderShell(game,basicStats(game.stats?.away),basicStats(game.stats?.home),game.status!=='upcoming');
+    if(game.status==='upcoming') return;
+    try {
+      const summary=typeof fetchGameSummary==='function' ? await fetchGameSummary(game.id) : null;
+      if(!summary){ renderShell(game,basicStats(game.stats?.away),basicStats(game.stats?.home),false); return; }
+      const competitors=summary?.header?.competitions?.[0]?.competitors||[];
+      const awayComp=competitors.find(c=>c.homeAway==='away')||competitors[0];
+      const homeComp=competitors.find(c=>c.homeAway==='home')||competitors[1];
+      const awayStats=(typeof extractCompleteSummaryStats==='function'&&awayComp)?extractCompleteSummaryStats(summary,awayComp):basicStats(game.stats?.away);
+      const homeStats=(typeof extractCompleteSummaryStats==='function'&&homeComp)?extractCompleteSummaryStats(summary,homeComp):basicStats(game.stats?.home);
+      renderShell(game,awayStats||basicStats(game.stats?.away),homeStats||basicStats(game.stats?.home),false);
+    } catch(err){
+      console.warn('Could not open full game stats.',err);
+      renderShell(game,basicStats(game.stats?.away),basicStats(game.stats?.home),false);
+    }
+  }
+
+  // Replace the old "expand one stats line" behavior with a full game-detail view.
+  renderGames = function(){
+    const games=liveGamesCache[currentTab]||[];
+    const el=document.getElementById('liveGames');
+    if(!el) return;
+    if(!games.length){ el.innerHTML=renderEmptyGames(); return; }
+    el.innerHTML=games.map(g=>'\
+      <div class="live-game" data-live-game-id="'+safe(g.id||'')+'" role="button" tabindex="0" aria-label="Open '+safe(g.awayName)+' vs '+safe(g.homeName)+' game details">\
+        <div class="game-team away"><button class="live-game-team-link" type="button" data-live-team="'+safe(g.awaySlug||'')+'"><div class="game-team-logo"><img loading="lazy" decoding="async" src="'+safe(g.away)+'" alt="'+safe(g.awayName)+' logo"></div><div><div class="game-team-name">'+safe(g.awayName)+'</div><div class="game-team-record">'+safe(g.awayRecord||'')+'</div></div></button></div>\
+        <div class="game-center"><div class="game-score">'+((g.awayScore!==null&&g.homeScore!==null)?safe(g.awayScore+' - '+g.homeScore):'vs')+'</div><div class="game-status '+safe(g.status)+'">'+safe(g.statusTxt)+'</div><div class="game-channel">'+safe(g.channel)+'</div><div class="live-game-open-hint">Open game details</div></div>\
+        <div class="game-team home"><button class="live-game-team-link" type="button" data-live-team="'+safe(g.homeSlug||'')+'"><div class="game-team-logo"><img loading="lazy" decoding="async" src="'+safe(g.home)+'" alt="'+safe(g.homeName)+' logo"></div><div><div class="game-team-name">'+safe(g.homeName)+'</div><div class="game-team-record">'+safe(g.homeRecord||'')+'</div></div></button></div>\
+      </div>').join('');
+    el.querySelectorAll('[data-live-team]').forEach(btn=>btn.addEventListener('click',e=>{ e.preventDefault(); e.stopPropagation(); const slug=btn.dataset.liveTeam; if(slug&&typeof routeToTeam==='function') routeToTeam(slug); }));
+    el.querySelectorAll('.live-game').forEach(card=>{
+      const open=()=>openGame(gameById(card.dataset.liveGameId));
+      card.addEventListener('click',open);
+      card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
+    });
+  };
+
+  // Re-render once after this patch is installed so existing Recent/Live rows get the new behavior.
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>renderGames(),{once:true});
+  else renderGames();
+})();
+</script>
+
 <!-- INLINE_RENDERED_TEAM_PAGES_START -->
 <!-- External rendered team pages load from nfl_all_time/data/browser-pages/*.js -->
 <!-- INLINE_RENDERED_TEAM_PAGES_END -->
