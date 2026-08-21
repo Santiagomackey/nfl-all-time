@@ -6171,6 +6171,61 @@ select {
 img{content-visibility:auto;}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto!important}.fade-in{transition:none!important}}
 </style>
+
+<style id="blitzbook-scroll-performance-v2">
+/* Keep expensive off-screen homepage content out of the paint pipeline. */
+#homeShell main > section,
+#homeShell .section,
+#homeShell .section-shell,
+#homeShell .universe-panel,
+#homeShell .season-2026-panel {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 760px;
+}
+
+/* Isolate the two largest interactive areas so scrolling them does not repaint the whole page. */
+#franchiseUniverseTable,
+#franchiseUniverseRows,
+.franchise-grid,
+.team-grid,
+.records-board-list {
+  contain: layout paint style;
+}
+
+/* GPU-friendly transforms for card interactions. */
+.team-card,
+.franchise-card,
+[class*="flip-card"],
+[class*="team-card"] {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+/* During active scrolling, temporarily pause decorative work that causes frame drops. */
+html.blitzbook-is-scrolling .team-card,
+html.blitzbook-is-scrolling .franchise-card,
+html.blitzbook-is-scrolling .featured-card,
+html.blitzbook-is-scrolling .records-board-row,
+html.blitzbook-is-scrolling .universe-row,
+html.blitzbook-is-scrolling [class*="flip-card"] {
+  transition: none !important;
+  animation-play-state: paused !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  box-shadow: none !important;
+}
+
+html.blitzbook-is-scrolling *::before,
+html.blitzbook-is-scrolling *::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+}
+</style>
 </head>
 <body>
 
@@ -7211,6 +7266,34 @@ function installRouteBridge(targetWindow, currentTeamSlug = null, currentTeamDat
       });
       doc.querySelectorAll('.featured-games, #featuredGames, [data-section="featured-games"], [data-featured-games]').forEach(node => node.remove());
 
+      // Legacy team pages use several different wrappers for Featured Games and team-vs-team panels.
+      // Remove them by content as well, so every franchise page is covered regardless of template version.
+      const removeLegacyPanelByText = (patterns) => {
+        const candidates = [...doc.querySelectorAll('section, article, .panel, .card, .section, .feature-panel, .module, .widget')];
+        candidates.forEach(node => {
+          if (!node?.isConnected) return;
+          const text = normalizeTeamRouteKey((node.textContent || '').slice(0, 1400));
+          if (!text) return;
+          if (!patterns.some(pattern => text.includes(pattern))) return;
+          // Do not touch game-detail/stat modals; those comparisons are real box-score stats.
+          if (node.closest('#matchModal, #modalBody, .modal-body, [role="dialog"]')) return;
+          node.remove();
+        });
+      };
+      removeLegacyPanelByText(['featuredgames', 'openahighlightedgameandlandonitsexactrowintheseasontable']);
+      removeLegacyPanelByText(['teamcomparison', 'teamvsteamcomparison', 'compareteams', 'comparisoncenter', 'lastname situation']);
+
+      // Catch headings whose wrapper classes vary between older team templates.
+      [...doc.querySelectorAll('h1,h2,h3,h4,.title,.section-title,.panel-title,.card-title')].forEach(heading => {
+        const key = normalizeTeamRouteKey(heading.textContent || '');
+        if (!key) return;
+        const isFeatured = key.includes('featuredgames');
+        const isTeamCompare = key.includes('teamcomparison') || key.includes('teamvsteam') || key.includes('compareteams');
+        if (!isFeatured && !isTeamCompare) return;
+        const wrapper = heading.closest('section,article,.panel,.card,.section,.module,.widget') || heading.parentElement || heading;
+        if (!wrapper.closest('#matchModal, #modalBody, .modal-body, [role="dialog"]')) wrapper.remove();
+      });
+
       doc.querySelectorAll('.youtube-btn, a[href*="youtube.com"], a[href*="youtu.be"], a[href*="google.com/search"]').forEach(node => {
         const href = node.getAttribute?.('href') || '';
         if (!isDirectYouTubeVideoUrl(href)) node.remove();
@@ -7890,6 +7973,16 @@ function routeToTeam(slug) {
 
 function routeHome(targetHash = '') {
   setAppFavicon();
+  // Home should always open with a clean comparison center.
+  if (typeof franchiseUniverseState !== 'undefined') {
+    franchiseUniverseState.compareA = '';
+    franchiseUniverseState.compareB = '';
+    const compareAInput = document.getElementById('franchiseCompareSearchA');
+    const compareBInput = document.getElementById('franchiseCompareSearchB');
+    if (compareAInput) compareAInput.value = '';
+    if (compareBInput) compareBInput.value = '';
+    if (typeof renderFranchiseComparison === 'function') renderFranchiseComparison();
+  }
   const homeShell = getHomeShell();
   const teamView = getTeamRouteView();
   if (routeHome._transitionTimer) {
@@ -8476,6 +8569,26 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
     </section>
   </main>
 </div>
+
+<script id="blitzbook-scroll-performance-script-v2">
+(() => {
+  let scrollEndTimer = 0;
+  let scrolling = false;
+  const root = document.documentElement;
+  const onScroll = () => {
+    if (!scrolling) {
+      scrolling = true;
+      root.classList.add('blitzbook-is-scrolling');
+    }
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(() => {
+      scrolling = false;
+      root.classList.remove('blitzbook-is-scrolling');
+    }, 110);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+</script>
 </body>
 </html>`;
 }
@@ -10786,8 +10899,8 @@ const franchiseUniverseState = {
   mode: 'allTime',
   conf: 'all',
   search: '',
-  compareA: 'ravens',
-  compareB: 'steelers',
+  compareA: '',
+  compareB: '',
   tierBasis: 'championships'
 };
 
@@ -11567,10 +11680,14 @@ function getFranchiseComparisonContext(left, right) {
 function renderFranchiseComparison() {
   const result = document.getElementById('franchiseCompareResult');
   if (!result) return;
-  const left = franchiseUniverseState.rows.find(row => row.slug === franchiseUniverseState.compareA) || franchiseUniverseState.rows[0];
-  const right = franchiseUniverseState.rows.find(row => row.slug === franchiseUniverseState.compareB) || franchiseUniverseState.rows[1] || left;
+  const left = franchiseUniverseState.rows.find(row => row.slug === franchiseUniverseState.compareA);
+  const right = franchiseUniverseState.rows.find(row => row.slug === franchiseUniverseState.compareB);
+  if (!franchiseUniverseState.compareA || !franchiseUniverseState.compareB) {
+    result.innerHTML = '<div class="universe-empty">Search for two teams above to compare their all-time profiles.</div>';
+    return;
+  }
   if (!left || !right) {
-    result.innerHTML = '<div class="universe-empty">Comparison data is loading.</div>';
+    result.innerHTML = '<div class="universe-empty">Choose two valid teams to start the comparison.</div>';
     return;
   }
   const metrics = [
@@ -11620,8 +11737,13 @@ function renderFranchiseComparison() {
 }
 
 function syncFranchiseCompareSearch(side, query) {
+  const key = side === 'A' ? 'compareA' : 'compareB';
   const value = normalizeTeamRouteKey(query);
-  if (!value) return;
+  if (!value) {
+    franchiseUniverseState[key] = '';
+    renderFranchiseComparison();
+    return;
+  }
   const match = franchiseUniverseState.rows.find(row =>
     normalizeTeamRouteKey(`${row.name} ${row.short} ${row.slug}`).includes(value)
   ) || TEAMS.find(team =>
@@ -11890,11 +12012,13 @@ async function loadFranchiseUniverseData() {
 }
 
 function initializeFranchiseCompareSearches() {
+  franchiseUniverseState.compareA = '';
+  franchiseUniverseState.compareB = '';
   const searchA = document.getElementById('franchiseCompareSearchA');
   const searchB = document.getElementById('franchiseCompareSearchB');
-  const getName = slug => TEAMS.find(team => team.slug === slug)?.name || slug;
-  if (searchA) searchA.value = getName(franchiseUniverseState.compareA);
-  if (searchB) searchB.value = getName(franchiseUniverseState.compareB);
+  if (searchA) searchA.value = '';
+  if (searchB) searchB.value = '';
+  renderFranchiseComparison();
 }
 
 function initFranchiseUniverse() {
