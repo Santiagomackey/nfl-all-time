@@ -6172,59 +6172,15 @@ img{content-visibility:auto;}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto!important}.fade-in{transition:none!important}}
 </style>
 
-<style id="blitzbook-scroll-performance-v2">
-/* Keep expensive off-screen homepage content out of the paint pipeline. */
-#homeShell main > section,
-#homeShell .section,
-#homeShell .section-shell,
-#homeShell .universe-panel,
-#homeShell .season-2026-panel {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 760px;
-}
 
-/* Isolate the two largest interactive areas so scrolling them does not repaint the whole page. */
-#franchiseUniverseTable,
-#franchiseUniverseRows,
-.franchise-grid,
-.team-grid,
-.records-board-list {
-  contain: layout paint style;
-}
-
-/* GPU-friendly transforms for card interactions. */
-.team-card,
-.franchise-card,
-[class*="flip-card"],
-[class*="team-card"] {
+<style id="blitzbook-scroll-performance-safe">
+/* Safe performance pass: preserve normal layout/intrinsic sizing. */
+html { scroll-behavior: smooth; }
+.team-card, .franchise-card, [class*="flip-card"] {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  will-change: auto;
 }
-
-/* During active scrolling, temporarily pause decorative work that causes frame drops. */
-html.blitzbook-is-scrolling .team-card,
-html.blitzbook-is-scrolling .franchise-card,
-html.blitzbook-is-scrolling .featured-card,
-html.blitzbook-is-scrolling .records-board-row,
-html.blitzbook-is-scrolling .universe-row,
-html.blitzbook-is-scrolling [class*="flip-card"] {
-  transition: none !important;
-  animation-play-state: paused !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  box-shadow: none !important;
-}
-
-html.blitzbook-is-scrolling *::before,
-html.blitzbook-is-scrolling *::after {
-  animation-play-state: paused !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto !important; }
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
@@ -8570,25 +8526,7 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
   </main>
 </div>
 
-<script id="blitzbook-scroll-performance-script-v2">
-(() => {
-  let scrollEndTimer = 0;
-  let scrolling = false;
-  const root = document.documentElement;
-  const onScroll = () => {
-    if (!scrolling) {
-      scrolling = true;
-      root.classList.add('blitzbook-is-scrolling');
-    }
-    clearTimeout(scrollEndTimer);
-    scrollEndTimer = setTimeout(() => {
-      scrolling = false;
-      root.classList.remove('blitzbook-is-scrolling');
-    }, 110);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-})();
-</script>
+
 </body>
 </html>`;
 }
