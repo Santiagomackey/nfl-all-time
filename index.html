@@ -6182,6 +6182,45 @@ html { scroll-behavior: smooth; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }
 </style>
+
+<style id="blitzbook-heavy-sections-performance-v2">
+/* Targeted performance pass: Live Season Center + Franchise Universe only. */
+#season2026 .season-2026-shell,
+#universe .franchise-universe-shell {
+  box-shadow: 0 10px 28px rgba(0,0,0,.20) !important;
+}
+#season2026 .season-2026-shell::after { display: none !important; }
+#season2026 .season-2026-card,
+#season2026 .season-2026-matchup,
+#season2026 .season-2026-division-card,
+#universe .franchise-universe-card,
+#universe .franchise-universe-table-wrap {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#season2026 img,
+#universe img {
+  filter: none !important;
+}
+#universe .franchise-signal-dot {
+  animation: none !important;
+  transition: none !important;
+}
+#universe .franchise-universe-table tbody,
+#season2026 .season-2026-schedule,
+#season2026 .season-2026-standings-wrap {
+  will-change: auto !important;
+}
+#season2026 .season-2026-matchup,
+#universe .franchise-universe-table tr {
+  transition-duration: .12s !important;
+}
+/* Browser-native smooth scrolling, but avoid expensive custom repaint tricks. */
+html { scroll-behavior: smooth; }
+body { overscroll-behavior-y: none; }
+</style>
+
 </head>
 <body>
 
@@ -10812,7 +10851,7 @@ const SEASON_2026_BROWSER_FILE = SEASON_2026_BROWSER_FILES[0];
 const season2026State = {
   data: null,
   activeTab: 'schedule',
-  weekFilter: 'all',
+  weekFilter: '1',
   teamSearch: '',
   standingsFilter: 'league',
   standingsView: 'division'
@@ -11125,7 +11164,7 @@ function renderUniverseStandings(rows) {
       ${sorted.map((row, index) => `
         <div class="universe-standings-row">
           <div class="universe-standings-rank">${index + 1}</div>
-          <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+          <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
           <div>
             <strong>${escapeHtml(row.name)}</strong>
             <span>${escapeHtml(row.conf || row.conference || 'NFL')} ${escapeHtml(row.division || '')} | ${formatUniversePct(row.pct)}</span>
@@ -11187,7 +11226,7 @@ function renderUniverseTeams(rows) {
       ${sorted.map(row => `
         <button class="universe-team-tile" type="button" data-universe-team="${escapeHtml(row.slug)}">
           <div class="universe-team-tile-head">
-            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div>
               <strong>${escapeHtml(row.name)}</strong>
               <span>${escapeHtml(row.conference || 'NFL')} ${escapeHtml(row.division || '')}</span>
@@ -11492,7 +11531,7 @@ function renderFranchiseUniverseTable() {
         <td><span class="franchise-rank-badge ${index < 3 ? 'top' : ''}">${index + 1}</span></td>
         <td>
           <div class="franchise-table-team">
-            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div>
               <strong>${escapeHtml(row.name)}</strong>
               <span>${escapeHtml(row.short)}</span>
@@ -11556,7 +11595,7 @@ function renderFranchiseRankingSignal() {
             : formatNumber(row.wins);
     return `
       <div class="franchise-signal-dot" style="--signal-left:${left}%; --signal-color:${escapeHtml(row.teamColor || 'var(--accent)')}; --signal-delay:${index * -0.55}s">
-        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <span>${escapeHtml(index + 1)} ${escapeHtml(row.short)} · ${escapeHtml(metricValue)} ${escapeHtml(sortMetric)}</span>
       </div>
     `;
@@ -11708,7 +11747,7 @@ function renderFranchiseTimeline() {
     const peakPosition = Math.max(0, Math.min(99, ((row.peakYear - minYear) / span) * 100));
     return `
       <div class="franchise-timeline-row">
-        <div class="franchise-timeline-team"><img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">${escapeHtml(row.short)}</div>
+        <div class="franchise-timeline-team"><img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">${escapeHtml(row.short)}</div>
         <div class="franchise-timeline-track">
           <span class="franchise-timeline-span" style="left:${left}%;width:${width}%"></span>
           ${markers}
@@ -11749,7 +11788,7 @@ function renderFranchiseTiers() {
       <div class="franchise-tier-teams">
         ${sortFranchiseRows(grouped.get(tier) || []).map(row => `
           <div class="franchise-tier-team" data-team="${escapeHtml(row.slug)}">
-            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div><strong>${escapeHtml(row.short)}</strong><span>${escapeHtml(row.superBowls)} SB | ${escapeHtml(formatUniversePct(row.pct))}</span></div>
           </div>
         `).join('') || '<span class="season-2026-card-note">No teams</span>'}
@@ -11795,7 +11834,7 @@ function renderFranchiseBestStrip() {
   el.innerHTML = franchiseUniverseState.rows.map(row => `
     <div class="franchise-best-card" data-team="${escapeHtml(row.slug)}" style="--best-color:${escapeHtml(row.teamColor || '#d8b03e')}">
       <div class="franchise-best-head">
-        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <div><strong>${escapeHtml(row.name)}</strong><span>${escapeHtml(row.division)}</span></div>
       </div>
       <div class="franchise-best-stat"><span>Best season</span><b>${escapeHtml(row.bestSeason?.year || 'N/A')} ${escapeHtml(row.bestRecord)}</b></div>
@@ -11885,7 +11924,7 @@ function renderRecordsBoard() {
     <button class="records-board-row" type="button" onclick="routeToTeam('${escapeHtml(row.slug)}')">
       <div class="records-board-row-main">
         <span class="records-board-rank">${index + 1}</span>
-        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <div class="records-board-row-copy">
           <strong>${escapeHtml(row.name)}</strong>
           <em>${escapeHtml(formatNumber(row.superBowls))} SB | ${escapeHtml(formatNumber(row.conferenceTitles))} conf | ${escapeHtml(formatNumber(row.divisionTitles))} div</em>
@@ -11929,23 +11968,39 @@ function renderFranchiseUniverse() {
 
 async function loadFranchiseUniverseData() {
   const count = document.getElementById('franchiseUniverseCount');
-  if (count) count.textContent = 'Loading';
-  const results = await Promise.allSettled(TEAMS.map(team =>
-    loadTeamData(team.slug).then(data => ({ team, data }))
-  ));
-  franchiseUniverseState.rows = results
-    .filter(result => result.status === 'fulfilled' && result.value?.data)
-    .map(result => buildFranchiseUniverseRow(result.value));
-  if (franchiseUniverseState.rows.length < TEAMS.length) {
-    const loaded = new Set(franchiseUniverseState.rows.map(row => row.slug));
-    TEAMS.forEach(team => {
-      if (!loaded.has(team.slug)) {
-        franchiseUniverseState.rows.push(buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) }));
-      }
-    });
+  if (count) count.textContent = '32 teams';
+
+  // Fast first pass: use the already-available compact/portable data so entering
+  // this section never triggers 32 franchise files to parse at the same time.
+  franchiseUniverseState.rows = TEAMS.map(team =>
+    buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) })
+  ).sort((left, right) => right.wins - left.wins);
+  renderFranchiseUniverseTable();
+  renderFranchiseComparison();
+
+  const idlePause = () => new Promise(resolve => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => resolve(), { timeout: 450 });
+    } else {
+      setTimeout(resolve, 24);
+    }
+  });
+
+  // Detailed pass: hydrate one franchise at a time during idle slices. This
+  // preserves the complete historical stats without freezing scrolling.
+  const detailedRows = [];
+  for (let index = 0; index < TEAMS.length; index += 1) {
+    if (index) await idlePause();
+    const team = TEAMS[index];
+    try {
+      const data = await loadTeamData(team.slug);
+      detailedRows.push(buildFranchiseUniverseRow({ team, data }));
+    } catch (error) {
+      detailedRows.push(buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) }));
+    }
   }
-  franchiseUniverseState.rows.sort((left, right) => right.wins - left.wins);
-  filterTeams();
+
+  franchiseUniverseState.rows = detailedRows.sort((left, right) => right.wins - left.wins);
   renderFranchiseUniverse();
 }
 
@@ -11963,9 +12018,11 @@ function initFranchiseUniverse() {
   const root = document.getElementById('universe');
   if (!root) return;
   initializeFranchiseCompareSearches();
+  let franchiseUniverseSearchTimer = 0;
   document.getElementById('franchiseUniverseSearch')?.addEventListener('input', event => {
     franchiseUniverseState.search = event.target.value;
-    renderFranchiseUniverseTable();
+    clearTimeout(franchiseUniverseSearchTimer);
+    franchiseUniverseSearchTimer = setTimeout(renderFranchiseUniverseTable, 120);
   });
   document.querySelectorAll('[data-universe-conf]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -12251,16 +12308,12 @@ function getSeason2026FilteredSchedule() {
   const schedule = getSeason2026DisplaySchedule();
   const search = normalizeTeamRouteKey(season2026State.teamSearch);
   return schedule.filter(game => {
-    const dayKey = normalizeSeason2026Key(game.day && game.day !== 'TBD' ? game.day : 'Day TBD') || 'day-tbd';
-    if (season2026State.weekFilter !== 'all' && dayKey !== season2026State.weekFilter) return false;
+    const weekKey = game.weekNumber ? String(game.weekNumber) : normalizeSeason2026Key(game.week || 'tbd');
+    if (season2026State.weekFilter !== 'all' && weekKey !== season2026State.weekFilter) return false;
     if (!search) return true;
     const teamText = [
-      game.awayTeam,
-      game.awayShort,
-      game.awaySlug,
-      game.homeTeam,
-      game.homeShort,
-      game.homeSlug
+      game.awayTeam, game.awayShort, game.awaySlug,
+      game.homeTeam, game.homeShort, game.homeSlug
     ].filter(Boolean).join(' ');
     return normalizeTeamRouteKey(teamText).includes(search);
   });
@@ -12475,8 +12528,8 @@ function renderSeason2026Schedule() {
   const scheduleReleased = hasReleasedSeason2026Schedule(data.schedule || []);
   if (!el || !select) return;
 
-  const options = getSeason2026DayOptions(schedule);
-  const allLabel = 'All days';
+  const options = getSeason2026WeekOptions(schedule);
+  const allLabel = 'All weeks';
   const hasAllOption = options.some(option => option.value === 'all');
   select.innerHTML = `${hasAllOption ? '' : `<option value="all">${escapeHtml(allLabel)}</option>`}${options.map(option => `
     <option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>
@@ -12489,7 +12542,7 @@ function renderSeason2026Schedule() {
 
   const filtered = getSeason2026FilteredSchedule();
   if (!filtered.length) {
-    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this day or team search yet.</div>`;
+    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this week or team search yet.</div>`;
     return;
   }
 
@@ -12555,12 +12608,12 @@ function renderSeason2026Schedule() {
                 ${game.windowNote ? `<span class="season-2026-window-note">${escapeHtml(game.windowNote)}</span>` : ''}
               </div>
               <div class="season-2026-team">
-                <img src="${escapeHtml(getTeamLogoBySlug(game.awaySlug))}" alt="${escapeHtml(game.awayShort)} logo">
+                <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(game.awaySlug))}" alt="${escapeHtml(game.awayShort)} logo">
                 <div><strong>${escapeHtml(game.awayShort || game.awayTeam)}</strong><span>Away</span></div>
               </div>
               <div class="season-2026-vs">${hasScore ? `${escapeHtml(game.awayScore)} - ${escapeHtml(game.homeScore)}` : '@'}</div>
               <div class="season-2026-team">
-                <img src="${escapeHtml(getTeamLogoBySlug(game.homeSlug))}" alt="${escapeHtml(game.homeShort)} logo">
+                <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(game.homeSlug))}" alt="${escapeHtml(game.homeShort)} logo">
                 <div><strong>${escapeHtml(game.homeShort || game.homeTeam)}</strong><span>Home</span></div>
               </div>
               <div class="season-2026-status ${escapeHtml(game.status || 'upcoming')}">
@@ -12647,7 +12700,7 @@ function renderSeason2026SnapshotList(targetId, rows) {
     <div class="season-2026-standings-list">
       ${rows.map(row => `
         <div class="season-2026-standings-row">
-          <img src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
+          <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
           <div>
             <strong>${escapeHtml(row.shortName || row.team)}</strong>
             <span>${escapeHtml(row.division || row.conference || 'NFL')}</span>
@@ -12670,7 +12723,7 @@ function renderSeason2026MiniStanding(row, index, rankType = 'division') {
   return `
     <div class="season-2026-mini-standing">
       <span class="season-2026-mini-rank">${escapeHtml(rank)}</span>
-      <img src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
+      <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
       <div>
         <b>${escapeHtml(row.shortName || row.team)}</b>
         <small>${escapeHtml(row.division || row.conference || 'NFL')}</small>
@@ -12812,8 +12865,16 @@ function mergeSeason2026LiveScoreboard(scoreboardPayload) {
 
 async function refreshSeason2026LiveData() {
   if (!season2026State.data) return;
+  const shell = document.getElementById('season2026');
+  if (shell) {
+    const rect = shell.getBoundingClientRect();
+    if (rect.bottom < -300 || rect.top > window.innerHeight + 300) return;
+  }
+  const hasLiveGame = (window.NFL_LIVE_DATA?.games || []).some(game => game.status === 'live');
+  if (!hasLiveGame) return;
   updateSeasonData();
-  renderSeason2026Dashboard();
+  renderSeason2026Schedule();
+  renderSeason2026Standings();
 }
 
 async function initSeason2026Dashboard() {
@@ -12823,7 +12884,6 @@ async function initSeason2026Dashboard() {
     await loadSeason2026Data();
     updateSeasonData();
     renderSeason2026Dashboard();
-    await refreshSeason2026LiveData();
   } catch (error) {
     console.error('Failed to initialize 2026 dashboard', error);
     const schedule = document.getElementById('season2026Schedule');
@@ -12839,9 +12899,11 @@ async function initSeason2026Dashboard() {
     season2026State.weekFilter = event.target.value;
     renderSeason2026Schedule();
   });
+  let season2026SearchTimer = 0;
   document.getElementById('season2026TeamSearch')?.addEventListener('input', event => {
     season2026State.teamSearch = event.target.value;
-    renderSeason2026Schedule();
+    clearTimeout(season2026SearchTimer);
+    season2026SearchTimer = setTimeout(renderSeason2026Schedule, 120);
   });
   document.getElementById('season2026StandingsView')?.addEventListener('change', event => {
     season2026State.standingsView = event.target.value;
