@@ -1,0 +1,275 @@
+{
+  "schemaVersion": "1.0.0",
+  "teams": [
+    {
+      "slug": "49ers",
+      "teamName": "San Francisco 49ers",
+      "indexPage": "teams/49ers.html",
+      "databasePage": "teams/49ersdatabase.html",
+      "dataFile": "data/49ers.json",
+      "aliases": []
+    },
+    {
+      "slug": "bears",
+      "teamName": "Chicago Bears",
+      "indexPage": "teams/bears.html",
+      "databasePage": "teams/bearsdatabase.html",
+      "dataFile": "data/bears.json",
+      "aliases": [
+        "teams/bearssdatabase.html"
+      ]
+    },
+    {
+      "slug": "bengals",
+      "teamName": "Cincinnati Bengals",
+      "indexPage": "teams/bengals.html",
+      "databasePage": "teams/bengalsdatabase.html",
+      "dataFile": "data/bengals.json",
+      "aliases": []
+    },
+    {
+      "slug": "bills",
+      "teamName": "Buffalo Bills",
+      "indexPage": "teams/bills.html",
+      "databasePage": "teams/billsdatabase.html",
+      "dataFile": "data/bills.json",
+      "aliases": []
+    },
+    {
+      "slug": "broncos",
+      "teamName": "Denver Broncos",
+      "indexPage": "teams/broncos.html",
+      "databasePage": "teams/broncosdatabase.html",
+      "dataFile": "data/broncos.json",
+      "aliases": []
+    },
+    {
+      "slug": "browns",
+      "teamName": "Cleveland Browns",
+      "indexPage": "teams/browns.html",
+      "databasePage": "teams/brownsdatabase.html",
+      "dataFile": "data/browns.json",
+      "aliases": []
+    },
+    {
+      "slug": "buccaneers",
+      "teamName": "Tampa Bay Buccaneers",
+      "indexPage": "teams/buccaneers.html",
+      "databasePage": "teams/buccaneersdatabase.html",
+      "dataFile": "data/buccaneers.json",
+      "aliases": []
+    },
+    {
+      "slug": "cardinals",
+      "teamName": "Arizona Cardinals",
+      "indexPage": "teams/cardinals.html",
+      "databasePage": "teams/cardinals.html",
+      "dataFile": "data/cardinals.json",
+      "aliases": [
+        "teams/cardinalsdatabase.html"
+      ]
+    },
+    {
+      "slug": "chargers",
+      "teamName": "Los Angeles Chargers",
+      "indexPage": "teams/chargers.html",
+      "databasePage": "teams/chargersdatabase.html",
+      "dataFile": "data/chargers.json",
+      "aliases": [
+        "teams/chartgersdatabase.html"
+      ]
+    },
+    {
+      "slug": "chiefs",
+      "teamName": "Kansas City Chiefs",
+      "indexPage": "teams/chiefs.html",
+      "databasePage": "teams/chiefsdatabase.html",
+      "dataFile": "data/chiefs.json",
+      "aliases": []
+    },
+    {
+      "slug": "colts",
+      "teamName": "Indianapolis Colts",
+      "indexPage": "teams/colts.html",
+      "databasePage": "teams/coltsdatabase.html",
+      "dataFile": "data/colts.json",
+      "aliases": []
+    },
+    {
+      "slug": "commanders",
+      "teamName": "Washington Commanders",
+      "indexPage": "teams/commanders.html",
+      "databasePage": "teams/commandersdatabase.html",
+      "dataFile": "data/commanders.json",
+      "aliases": []
+    },
+    {
+      "slug": "cowboys",
+      "teamName": "Dallas Cowboys",
+      "indexPage": "teams/cowboys.html",
+      "databasePage": "teams/cowboysdatabase.html",
+      "dataFile": "data/cowboys.json",
+      "aliases": [
+        "teams/cowboyssdatabase.html"
+      ]
+    },
+    {
+      "slug": "dolphins",
+      "teamName": "Miami Dolphins",
+      "indexPage": "teams/dolphins.html",
+      "databasePage": "teams/dolphinsdatabase.html",
+      "dataFile": "data/dolphins.json",
+      "aliases": []
+    },
+    {
+      "slug": "eagles",
+      "teamName": "Philadelphia Eagles",
+      "indexPage": "teams/eagles.html",
+      "databasePage": "teams/eaglesdatabase.html",
+      "dataFile": "data/eagles.json",
+      "aliases": []
+    },
+    {
+      "slug": "falcons",
+      "teamName": "Atlanta Falcons",
+      "indexPage": "teams/falcons.html",
+      "databasePage": "teams/falconsdatabase.html",
+      "dataFile": "data/falcons.json",
+      "aliases": []
+    },
+    {
+      "slug": "giants",
+      "teamName": "New York Giants",
+      "indexPage": "teams/giants.html",
+      "databasePage": "teams/giantsdatabase.html",
+      "dataFile": "data/giants.json",
+      "aliases": []
+    },
+    {
+      "slug": "jaguars",
+      "teamName": "Jacksonville Jaguars",
+      "indexPage": "teams/jaguars.html",
+      "databasePage": "teams/jaguarsdatabase.html",
+      "dataFile": "data/jaguars.json",
+      "aliases": []
+    },
+    {
+      "slug": "jets",
+      "teamName": "New York Jets",
+      "indexPage": "teams/jets.html",
+      "databasePage": "teams/jetsdatabase.html",
+      "dataFile": "data/jets.json",
+      "aliases": []
+    },
+    {
+      "slug": "lions",
+      "teamName": "Detroit Lions",
+      "indexPage": "teams/lions.html",
+      "databasePage": "teams/lionsdatabase.html",
+      "dataFile": "data/lions.json",
+      "aliases": [
+        "teams/lionssdatabase.html"
+      ]
+    },
+    {
+      "slug": "packers",
+      "teamName": "Green Bay Packers",
+      "indexPage": "teams/packers.html",
+      "databasePage": "teams/packersdatabase.html",
+      "dataFile": "data/packers.json",
+      "aliases": []
+    },
+    {
+      "slug": "panthers",
+      "teamName": "Carolina Panthers",
+      "indexPage": "teams/panthers.html",
+      "databasePage": "teams/panthersdatabase.html",
+      "dataFile": "data/panthers.json",
+      "aliases": []
+    },
+    {
+      "slug": "patriots",
+      "teamName": "New England Patriots",
+      "indexPage": "teams/patriots.html",
+      "databasePage": "teams/patriots.html",
+      "dataFile": "data/patriots.json",
+      "aliases": [
+        "teams/patriotsdatabase.html"
+      ]
+    },
+    {
+      "slug": "raiders",
+      "teamName": "Las Vegas Raiders",
+      "indexPage": "teams/raiders.html",
+      "databasePage": "teams/raidersdatabase.html",
+      "dataFile": "data/raiders.json",
+      "aliases": []
+    },
+    {
+      "slug": "rams",
+      "teamName": "Los Angeles Rams",
+      "indexPage": "teams/rams.html",
+      "databasePage": "teams/rams.html",
+      "dataFile": "data/rams.json",
+      "aliases": [
+        "teams/ramsdatabase.html"
+      ]
+    },
+    {
+      "slug": "ravens",
+      "teamName": "Baltimore Ravens",
+      "indexPage": "teams/ravens.html",
+      "databasePage": "teams/ravensdatabase.html",
+      "dataFile": "data/ravens.json",
+      "aliases": []
+    },
+    {
+      "slug": "saints",
+      "teamName": "New Orleans Saints",
+      "indexPage": "teams/saints.html",
+      "databasePage": "teams/saintsdatabase.html",
+      "dataFile": "data/saints.json",
+      "aliases": []
+    },
+    {
+      "slug": "seahawks",
+      "teamName": "Seattle Seahawks",
+      "indexPage": "teams/seahawks.html",
+      "databasePage": "teams/seahawksdatabase.html",
+      "dataFile": "data/seahawks.json",
+      "aliases": []
+    },
+    {
+      "slug": "steelers",
+      "teamName": "Pittsburgh Steelers",
+      "indexPage": "teams/steelers.html",
+      "databasePage": "teams/steelersdatabase.html",
+      "dataFile": "data/steelers.json",
+      "aliases": []
+    },
+    {
+      "slug": "texans",
+      "teamName": "Houston Texans",
+      "indexPage": "teams/texans.html",
+      "databasePage": "teams/texansdatabase.html",
+      "dataFile": "data/texans.json",
+      "aliases": []
+    },
+    {
+      "slug": "titans",
+      "teamName": "Tennessee Titans",
+      "indexPage": "teams/titans.html",
+      "databasePage": "teams/titansdatabase.html",
+      "dataFile": "data/titans.json",
+      "aliases": []
+    },
+    {
+      "slug": "vikings",
+      "teamName": "Minnesota Vikings",
+      "indexPage": "teams/vikings.html",
+      "databasePage": "teams/vikingsdatabase.html",
+      "dataFile": "data/vikings.json",
+      "aliases": []
+    }
+  ]
+}

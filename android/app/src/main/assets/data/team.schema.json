@@ -1,0 +1,627 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nfl-all-time.local/schemas/team.schema.json",
+  "title": "NFL Franchise Database Team Schema",
+  "description": "Reusable schema for a single NFL franchise database JSON file used by the single-app renderer.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "slug",
+    "identity",
+    "franchiseSummary",
+    "overviewStats",
+    "seasons",
+    "games",
+    "rivalries",
+    "legends",
+    "coaches",
+    "stadiumHistory",
+    "timeline",
+    "achievements",
+    "honors"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "franchiseSummary": {
+      "$ref": "#/$defs/franchiseSummary"
+    },
+    "overviewStats": {
+      "$ref": "#/$defs/overviewStats"
+    },
+    "seasons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/season"
+      }
+    },
+    "games": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/game"
+      }
+    },
+    "rivalries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rivalry"
+      }
+    },
+    "legends": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/legend"
+      }
+    },
+    "coaches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/personEntry"
+      }
+    },
+    "stadiumHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stadiumEntry"
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/timelineEntry"
+      }
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/achievement"
+      }
+    },
+    "honors": {
+      "$ref": "#/$defs/honors"
+    },
+    "featuredGames": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/featuredGame"
+      }
+    },
+    "featuredPlayersBySeason": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/featuredPlayersBySeason"
+      }
+    },
+    "teamLogoMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "ui": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "nullableNumber": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "teamName",
+        "shortName",
+        "conference",
+        "division",
+        "foundedYear",
+        "colors",
+        "assets",
+        "branding"
+      ],
+      "properties": {
+        "teamName": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "shortName": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "conference": {
+          "type": "string"
+        },
+        "division": {
+          "type": "string"
+        },
+        "foundedYear": {
+          "type": "number"
+        },
+        "seasonStartYear": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "colors": {
+          "type": "object",
+          "required": [
+            "primary",
+            "secondary"
+          ],
+          "properties": {
+            "primary": {
+              "type": "string"
+            },
+            "secondary": {
+              "type": "string"
+            },
+            "tertiary": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "darkBgStart": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "darkBgMid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "darkBgEnd": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "assets": {
+          "type": "object",
+          "properties": {
+            "logo": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "wordmark": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "favicon": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "helmet": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "branding": {
+          "type": "object",
+          "properties": {
+            "heroTitle": {
+              "type": "string"
+            },
+            "heroKicker": {
+              "type": "string"
+            },
+            "heroText": {
+              "type": "string"
+            },
+            "badgeText": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "franchiseSummary": {
+      "type": "object",
+      "properties": {
+        "intro": {
+          "type": "string"
+        },
+        "legacySummary": {
+          "type": "string"
+        },
+        "notableEras": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "years": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "overviewStats": {
+      "type": "object",
+      "properties": {
+        "games": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "wins": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "losses": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "ties": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "winPct": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "regularSeasonGames": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "playoffGames": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "playoffWins": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "playoffLosses": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "playoffAppearances": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "championships": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "superBowls": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "conferenceTitles": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "divisionTitles": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "pointsFor": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "pointsAgainst": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "season": {
+      "type": "object",
+      "required": [
+        "year"
+      ],
+      "properties": {
+        "year": {
+          "type": "number"
+        },
+        "record": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wins": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "losses": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "ties": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "coach": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quarterback": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "finish": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "division": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "divisionRank": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "playoffResult": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notableSeason": {
+          "type": "boolean"
+        },
+        "teamStats": {
+          "type": "object"
+        },
+        "leaders": {
+          "type": "array"
+        },
+        "standings": {
+          "type": "array"
+        },
+        "sources": {
+          "type": "object"
+        }
+      }
+    },
+    "game": {
+      "type": "object",
+      "required": [
+        "id",
+        "season",
+        "opponent",
+        "result"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "season": {
+          "type": "number"
+        },
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayDate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "round": {
+          "type": "string"
+        },
+        "competition": {
+          "type": "string"
+        },
+        "opponent": {
+          "type": "string"
+        },
+        "opponentSlug": {
+          "type": "string"
+        },
+        "homeAway": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "teamScore": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "opponentScore": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "overtime": {
+          "type": "boolean"
+        },
+        "isPlayoff": {
+          "type": "boolean"
+        },
+        "stadium": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stats": {
+          "type": "object"
+        },
+        "links": {
+          "type": "object"
+        },
+        "detail": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "rivalry": {
+      "type": "object",
+      "properties": {
+        "opponent": {
+          "type": "string"
+        },
+        "opponentSlug": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "notableMeetings": {
+          "type": "array"
+        }
+      }
+    },
+    "legend": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "years": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "personEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "years": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "stadiumEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "years": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "timelineEntry": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "achievement": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ]
+        },
+        "detail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "honors": {
+      "type": "object",
+      "properties": {
+        "retiredNumbers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hallOfFamers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "featuredGame": {
+      "type": "object"
+    },
+    "featuredPlayersBySeason": {
+      "type": "object"
+    }
+  }
+}
