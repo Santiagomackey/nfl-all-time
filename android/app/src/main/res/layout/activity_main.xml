@@ -30,16 +30,16 @@
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:background="@color/bb_surface">
 
-        <Button android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:text="HOME" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
-        <Button android:id="@+id/navTeams" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:text="TEAMS" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
-        <Button android:id="@+id/navGames" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:text="GAMES" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
-        <Button android:id="@+id/navUniverse" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:text="UNIVERSE" android:textSize="9sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
+        <Button android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="HOME" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
+        <Button android:id="@+id/navTeams" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="TEAMS" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
+        <Button android:id="@+id/navGames" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="GAMES" android:textSize="10sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
+        <Button android:id="@+id/navUniverse" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="UNIVERSE" android:textSize="9sp" android:textColor="@color/bb_text" android:backgroundTint="@color/bb_surface_2" />
     </LinearLayout>
 </LinearLayout>

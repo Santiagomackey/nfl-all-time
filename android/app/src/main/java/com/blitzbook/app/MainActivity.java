@@ -14,11 +14,15 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://nfl-all-time.vercel.app/";
     private static final String HOST = "nfl-all-time.vercel.app";
     private WebView webView;
     private ProgressBar progressBar;
+    private String mobileScript = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,9 @@ public class MainActivity extends Activity {
         Button navGames = findViewById(R.id.navGames);
         Button navUniverse = findViewById(R.id.navUniverse);
 
+        mobileScript = readAsset("app-mobile.js");
         configureWebView();
+
         navHome.setOnClickListener(v -> goHome());
         navTeams.setOnClickListener(v -> jumpTo("teams"));
         navGames.setOnClickListener(v -> jumpTo("live"));
@@ -40,6 +46,15 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState == null) webView.loadUrl(HOME_URL);
         else webView.restoreState(savedInstanceState);
+    }
+
+    private String readAsset(String name) {
+        StringBuilder out = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open(name)))) {
+            String line;
+            while ((line = br.readLine()) != null) out.append(line).append('\n');
+        } catch (Exception ignored) {}
+        return out.toString();
     }
 
     private void configureWebView() {
@@ -55,9 +70,10 @@ public class MainActivity extends Activity {
         s.setSupportZoom(false);
         s.setMediaPlaybackRequiresUserGesture(true);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
-        s.setUserAgentString(s.getUserAgentString() + " BlitzbookAndroid/1.0 Mobile");
+        s.setUserAgentString(s.getUserAgentString() + " BlitzbookAndroid/2.0 Mobile");
 
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public void onProgressChanged(WebView view, int newProgress) {
                 progressBar.setProgress(newProgress);
@@ -71,7 +87,9 @@ public class MainActivity extends Activity {
             }
 
             @Override public void onPageFinished(WebView view, String url) {
-                injectMobileAppMode();
+                if (mobileScript != null && !mobileScript.isEmpty()) {
+                    view.evaluateJavascript(mobileScript, null);
+                }
             }
 
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -88,55 +106,22 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void injectMobileAppMode() {
-        String js = "(function(){" +
-            "var vp=document.querySelector('meta[name=viewport]');if(!vp){vp=document.createElement('meta');vp.name='viewport';document.head.appendChild(vp);}vp.content='width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover';" +
-            "document.documentElement.classList.add('bb-apk-mobile');" +
-            "var st=document.getElementById('bb-apk-style');if(!st){st=document.createElement('style');st.id='bb-apk-style';document.head.appendChild(st);}" +
-            "st.textContent=`" + mobileCss().replace("`", "\\`") + "`;" +
-            "})();";
-        webView.evaluateJavascript(js, null);
-    }
-
-    private String mobileCss() {
-        return "html,body{min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important}" +
-            "body{font-size:14px!important}" +
-            ".container{width:100%!important;max-width:100%!important;padding-left:14px!important;padding-right:14px!important}" +
-            ".topnav{display:none!important}" +
-            ".hero{min-height:0!important;padding:30px 0 26px!important}" +
-            ".hero h1{font-size:50px!important;line-height:.92!important;margin-bottom:14px!important}" +
-            ".hero-sub{font-size:12px!important;line-height:1.5!important;max-width:340px!important}" +
-            ".hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}" +
-            ".hero-actions .hero-btn{min-height:44px!important;font-size:9px!important;padding:10px!important}" +
-            ".hero-actions .hero-btn:nth-child(n+3){display:none!important}" +
-            ".section{padding:30px 0!important}.section-title{font-size:28px!important}.section-subtitle{font-size:11px!important}" +
-            "#teams .filter-divider,#teams .filter-group{display:none!important}" +
-            "#teams .filter-bar{display:grid!important;grid-template-columns:1fr auto!important;gap:8px!important;padding:9px!important}" +
-            "#teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}" +
-            "#teams .team-card,#teams .team-card-inner,#teams .team-card-face{height:144px!important;min-height:144px!important}" +
-            "#teams .team-card-inner{transform:none!important;transition:none!important;transform-style:flat!important}" +
-            "#teams .team-card-back{display:none!important}" +
-            "#teams .team-card-face{position:relative!important;padding:12px!important}" +
-            "#divisions{display:none!important}" +
-            "#universe .franchise-universe-tabs,#universe .franchise-ranking-signal,#universe .team-comparison,#universe .comparison-center,#universe [class*=comparison]{display:none!important}" +
-            "#universe .franchise-universe-grid{display:block!important}" +
-            "#universe .franchise-universe-card{display:none!important}" +
-            "#universe .franchise-universe-card-wide{display:block!important;width:100%!important}" +
-            "#universe .franchise-universe-table-wrap{max-height:420px!important;overflow:auto!important}" +
-            "#live .live-header{padding:12px!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important}" +
-            "#live .live-tabs{width:100%!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:5px!important}" +
-            "#live .live-tab{min-height:40px!important}" +
-            "#season2026 .season-2026-kpis{display:none!important}" +
-            "#season2026 .season-2026-grid{display:block!important}" +
-            "#season2026 .season-2026-grid>.season-2026-card:first-child{display:none!important}" +
-            "#season2026 .season-2026-grid>.season-2026-card:last-child{width:100%!important}" +
-            "*{max-width:100%}";
+    private void closeTeamOverlayThen(String fallbackJs) {
+        String js = "(function(){if(document.getElementById('bb-team-mobile')){if(window.bbCloseTeam)window.bbCloseTeam();return true;}return false;})()";
+        webView.evaluateJavascript(js, result -> {
+            if (!"true".equals(result) && fallbackJs != null) {
+                webView.evaluateJavascript(fallbackJs, null);
+            }
+        });
     }
 
     private void goHome() {
         String u = webView.getUrl();
-        if (u == null || !u.startsWith(HOME_URL)) webView.loadUrl(HOME_URL);
-        else webView.evaluateJavascript("window.scrollTo({top:0,behavior:'smooth'})", null);
+        if (u == null || !u.startsWith(HOME_URL)) {
+            webView.loadUrl(HOME_URL);
+            return;
+        }
+        closeTeamOverlayThen("window.scrollTo({top:0,behavior:'smooth'})");
     }
 
     private void jumpTo(String id) {
@@ -146,12 +131,16 @@ public class MainActivity extends Activity {
             return;
         }
         String js = "(function(){var e=document.getElementById('" + id + "');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});})();";
-        webView.evaluateJavascript(js, null);
+        closeTeamOverlayThen(js);
     }
 
     @Override public void onBackPressed() {
-        if (webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        String js = "(function(){if(document.getElementById('bb-team-mobile')){if(window.bbCloseTeam)window.bbCloseTeam();return true;}return false;})()";
+        webView.evaluateJavascript(js, result -> {
+            if ("true".equals(result)) return;
+            if (webView.canGoBack()) webView.goBack();
+            else MainActivity.super.onBackPressed();
+        });
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
