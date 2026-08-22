@@ -9039,15 +9039,59 @@ html.bb-mobile img { max-width:100%; }
 
 <script id="blitzbook-mobile-class">
 (function(){
-  function applyMobileClass(){
-    var mobile = window.matchMedia('(max-width: 900px)').matches || window.innerWidth <= 900;
-    document.documentElement.classList.toggle('bb-mobile', mobile);
+  function isRealPhone(){
+    var ua = navigator.userAgent || '';
+    var uaMobile = /Android|iPhone|iPod|Mobile|IEMobile|Opera Mini/i.test(ua);
+    var coarse = false;
+    try { coarse = window.matchMedia('(pointer: coarse)').matches; } catch(e) {}
+    var smallScreen = Math.min(screen.width || 9999, screen.height || 9999) <= 900;
+    var narrowViewport = window.innerWidth <= 900;
+    return uaMobile || (coarse && smallScreen) || narrowViewport;
   }
-  applyMobileClass();
+  function applyMobileClass(){
+    var mobile = isRealPhone();
+    document.documentElement.classList.toggle('bb-mobile', mobile);
+    document.body && document.body.classList.toggle('bb-mobile-body', mobile);
+    if (mobile) {
+      var vp = document.querySelector('meta[name="viewport"]');
+      if (!vp) {
+        vp = document.createElement('meta');
+        vp.name = 'viewport';
+        document.head.appendChild(vp);
+      }
+      vp.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover');
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyMobileClass, {once:true});
+  } else {
+    applyMobileClass();
+  }
   window.addEventListener('resize', applyMobileClass, {passive:true});
   window.addEventListener('orientationchange', applyMobileClass, {passive:true});
 })();
 </script>
+
+
+<style id="blitzbook-phone-force">
+@media (hover:none) and (pointer:coarse) {
+  html.bb-mobile body { min-width:0!important; width:100%!important; overflow-x:hidden!important; }
+  html.bb-mobile .topnav,
+  html.bb-mobile .topnav-inner,
+  html.bb-mobile main,
+  html.bb-mobile section,
+  html.bb-mobile .container { min-width:0!important; width:100%!important; max-width:100%!important; }
+}
+html.bb-mobile body { min-width:0!important; overflow-x:hidden!important; }
+html.bb-mobile .topnav, html.bb-mobile .topnav-inner { min-width:0!important; max-width:100%!important; }
+html.bb-mobile .nav-links { display:none!important; }
+html.bb-mobile .mobile-menu-btn { display:flex!important; }
+html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:none!important}
+html.bb-mobile #divisions{display:none!important}
+html.bb-mobile #universe .team-comparison,
+html.bb-mobile #universe .comparison-center,
+html.bb-mobile #universe [class*="comparison"]{display:none!important}
+</style>
 
 </body>
 </html>`;
