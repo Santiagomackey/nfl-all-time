@@ -6400,6 +6400,58 @@ body { overscroll-behavior-y: none; }
 }
 </style>
 
+
+<style id="blitzbook-mobile-v2">
+@media (max-width: 700px) {
+  html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  body{font-size:14px!important}
+  .topbar,.nav-shell,header nav{min-height:56px!important}
+  main,.container,.section-inner,.home-section{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}
+  /* Hero */
+  .hero{min-height:auto!important;padding:42px 18px 34px!important}
+  .hero h1{font-size:clamp(42px,14vw,64px)!important;line-height:.9!important;letter-spacing:.02em!important}
+  .hero p{max-width:330px!important;font-size:12px!important;line-height:1.55!important}
+  .hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;max-width:360px!important}
+  .hero-actions a,.hero-actions button{width:100%!important;min-height:44px!important;padding:10px!important}
+  /* Sections */
+  section{padding-left:14px!important;padding-right:14px!important}
+  .section-title,h2{font-size:28px!important}
+  /* Directory: hide desktop filter maze */
+  #teams .filters-row,#teams .filter-row,#teams .conference-filters,#teams .division-filters,#teams .status-filters{display:none!important}
+  #teams .controls{display:grid!important;grid-template-columns:1fr auto!important;gap:8px!important}
+  /* Universe becomes a mobile ranking, not a command center */
+  #universe .universe-controls .chip-row,
+  #universe .universe-tabs,
+  #universe .era-strip,
+  #universe .team-comparison,
+  #universe .comparison-center,
+  #universe [class*="comparison"],
+  #universe .ranking-note{display:none!important}
+  #universe .universe-grid{display:block!important}
+  #universe .rankings-panel{width:100%!important}
+  #universe table th:nth-child(n+6),#universe table td:nth-child(n+6){display:none!important}
+  #universe table{font-size:11px!important}
+  #universe th,#universe td{padding:10px 6px!important}
+  /* Division Explorer is redundant on mobile */
+  #divisions,#division-explorer,.division-explorer{display:none!important}
+  /* Game Center */
+  #game-center{padding-top:34px!important}
+  #game-center .gamecenter-shell{border-radius:14px!important}
+  #game-center .gamecenter-head{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:12px!important}
+  #game-center .game-tabs{width:100%!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important}
+  #game-center .game-tabs button{min-height:38px!important}
+  .game-card,.score-card{min-height:78px!important;padding:12px!important}
+  /* Live Season Center: schedule only on phone */
+  #season-center .standings-panel,#live-season-center .standings-panel,
+  #season-center [class*="standings"],#live-season-center [class*="standings"]{display:none!important}
+  #season-center .season-grid,#live-season-center .season-grid{display:block!important}
+  #season-center .schedule-panel,#live-season-center .schedule-panel{width:100%!important}
+  /* Kill desktop-scale fixed/min widths */
+  [style*="min-width"]{min-width:0!important}
+  img{max-width:100%;height:auto}
+}
+</style>
+
 </head>
 <body>
 
