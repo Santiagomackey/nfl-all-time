@@ -8856,6 +8856,199 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
 })();
 </script>
 
+
+<style id="blitzbook-real-mobile-layout">
+/* Mobile V3 — targets the actual Blitzbook DOM */
+html.bb-mobile, html.bb-mobile body {
+  width:100%!important; max-width:100%!important; overflow-x:hidden!important;
+}
+html.bb-mobile body { font-size:14px!important; }
+html.bb-mobile .container {
+  width:100%!important; max-width:none!important; padding-left:16px!important; padding-right:16px!important;
+}
+html.bb-mobile .topnav { height:58px!important; min-height:58px!important; }
+html.bb-mobile .topnav-inner { padding:0 14px!important; height:58px!important; }
+html.bb-mobile .nav-logo img { width:30px!important; height:30px!important; object-fit:contain!important; }
+html.bb-mobile .nav-links { display:none!important; }
+html.bb-mobile .mobile-menu-btn { display:flex!important; }
+html.bb-mobile .nav-badge { margin-left:auto!important; font-size:8px!important; padding:7px 9px!important; }
+html.bb-mobile .nav-freshness { display:none!important; }
+
+/* Hero */
+html.bb-mobile .hero {
+  min-height:0!important; padding:34px 0 30px!important;
+}
+html.bb-mobile .hero .container { padding:0 18px!important; }
+html.bb-mobile .hero-eyebrow {
+  font-size:8px!important; letter-spacing:2px!important; margin-bottom:16px!important; white-space:normal!important;
+}
+html.bb-mobile .hero h1 {
+  font-size:52px!important; line-height:.92!important; letter-spacing:1px!important; margin:0 0 14px!important;
+}
+html.bb-mobile .hero-sub {
+  max-width:340px!important; font-size:12px!important; line-height:1.55!important; margin-bottom:20px!important;
+}
+html.bb-mobile .hero-actions {
+  display:grid!important; grid-template-columns:1fr 1fr!important; gap:9px!important; max-width:360px!important;
+}
+html.bb-mobile .hero-actions .hero-btn {
+  min-height:44px!important; padding:11px 10px!important; display:flex!important; align-items:center!important; justify-content:center!important;
+  font-size:9px!important; letter-spacing:.9px!important; text-align:center!important;
+}
+html.bb-mobile .hero-actions .hero-btn:nth-child(n+3) { display:none!important; }
+
+/* Section rhythm */
+html.bb-mobile .divider { margin:0!important; }
+html.bb-mobile .section { padding:34px 0!important; }
+html.bb-mobile .section-header { margin-bottom:16px!important; }
+html.bb-mobile .section-eyebrow { font-size:8px!important; letter-spacing:2px!important; margin-bottom:5px!important; }
+html.bb-mobile .section-title { font-size:28px!important; line-height:1!important; letter-spacing:.8px!important; }
+html.bb-mobile .section-subtitle { font-size:11px!important; line-height:1.45!important; margin-top:7px!important; }
+
+/* All teams: search + sort only */
+html.bb-mobile #teams .filter-bar {
+  display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important;
+  padding:10px!important; margin-bottom:12px!important; border-radius:12px!important;
+}
+html.bb-mobile #teams .filter-search-wrap { min-width:0!important; width:100%!important; }
+html.bb-mobile #teams .filter-search { height:42px!important; font-size:13px!important; }
+html.bb-mobile #teams .filter-divider,
+html.bb-mobile #teams .filter-group { display:none!important; }
+html.bb-mobile #teams .sort-select { height:42px!important; padding:0 10px!important; font-size:9px!important; }
+html.bb-mobile #teams .grid-count { margin:6px 0 12px!important; font-size:10px!important; }
+html.bb-mobile #teams .team-grid {
+  grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important;
+}
+html.bb-mobile #teams .team-card,
+html.bb-mobile #teams .team-card-inner { min-height:142px!important; height:142px!important; perspective:none!important; }
+html.bb-mobile #teams .team-card-inner { transform:none!important; transition:none!important; transform-style:flat!important; }
+html.bb-mobile #teams .team-card-back { display:none!important; }
+html.bb-mobile #teams .team-card-face { position:relative!important; inset:auto!important; height:142px!important; padding:12px!important; gap:8px!important; }
+html.bb-mobile #teams .team-logo { width:34px!important; height:34px!important; border-radius:8px!important; }
+html.bb-mobile #teams .team-logo img { width:24px!important; height:24px!important; filter:none!important; }
+html.bb-mobile #teams .team-name { font-size:15px!important; }
+html.bb-mobile #teams .team-division { font-size:7px!important; letter-spacing:1px!important; }
+html.bb-mobile #teams .team-card-front-meta { padding-top:7px!important; }
+html.bb-mobile #teams .team-card-stat strong { font-size:12px!important; }
+html.bb-mobile #teams .team-card-stat span { font-size:6px!important; letter-spacing:1px!important; }
+
+/* Universe: ranking only */
+html.bb-mobile #universe { padding-top:28px!important; }
+html.bb-mobile #universe .franchise-universe-shell {
+  border-radius:14px!important; padding:0!important; box-shadow:none!important; overflow:hidden!important;
+}
+html.bb-mobile #universe .franchise-universe-header { padding:16px 14px 10px!important; margin:0!important; }
+html.bb-mobile #universe .franchise-universe-filter {
+  margin:0 10px 10px!important; padding:9px!important; display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important;
+}
+html.bb-mobile #universe .franchise-universe-filter .filter-divider,
+html.bb-mobile #universe .franchise-universe-filter .filter-group { display:none!important; }
+html.bb-mobile #universe .franchise-universe-tabs,
+html.bb-mobile #universe .franchise-ranking-signal { display:none!important; }
+html.bb-mobile #universe .franchise-universe-grid { display:block!important; padding:0 10px 10px!important; }
+html.bb-mobile #universe .franchise-universe-card { display:none!important; }
+html.bb-mobile #universe .franchise-universe-card.franchise-universe-card-wide {
+  display:block!important; width:100%!important; min-width:0!important; border-radius:12px!important; box-shadow:none!important;
+}
+html.bb-mobile #universe .season-2026-card-head { padding:12px!important; }
+html.bb-mobile #universe .season-2026-card-title { font-size:15px!important; }
+html.bb-mobile #universe .season-2026-card-note { display:none!important; }
+html.bb-mobile #universe .franchise-universe-table-wrap {
+  max-height:360px!important; overflow-y:auto!important; overflow-x:hidden!important;
+}
+html.bb-mobile #universe .franchise-universe-table { width:100%!important; table-layout:fixed!important; }
+html.bb-mobile #universe .franchise-universe-table th,
+html.bb-mobile #universe .franchise-universe-table td { padding:9px 5px!important; font-size:9px!important; }
+html.bb-mobile #universe .franchise-universe-table th:nth-child(3),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(3),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(4),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(4),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(5),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(5),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(6),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(6),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(8),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(8),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(10),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(10),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(11),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(11),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(12),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(12),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(14),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(14),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(15),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(15),
+html.bb-mobile #universe .franchise-universe-table th:nth-child(16),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(16) { display:none!important; }
+html.bb-mobile #universe .franchise-universe-table th:nth-child(1),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(1){width:36px!important}
+html.bb-mobile #universe .franchise-universe-table th:nth-child(2),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(2){width:auto!important}
+html.bb-mobile #universe .franchise-universe-table th:nth-child(7),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(7){width:52px!important}
+html.bb-mobile #universe .franchise-universe-table th:nth-child(9),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(9){width:52px!important}
+html.bb-mobile #universe .franchise-universe-table th:nth-child(13),
+html.bb-mobile #universe .franchise-universe-table td:nth-child(13){width:38px!important}
+
+/* Remove entire Division Explorer on phones */
+html.bb-mobile #divisions { display:none!important; }
+html.bb-mobile #divisions + .divider { display:none!important; }
+
+/* Game Center: compact */
+html.bb-mobile #live { padding-top:30px!important; }
+html.bb-mobile #live .live-section { border-radius:14px!important; overflow:hidden!important; box-shadow:none!important; }
+html.bb-mobile #live .live-header {
+  display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important; padding:12px!important;
+}
+html.bb-mobile #live .live-title { font-size:15px!important; }
+html.bb-mobile #live .live-indicator { font-size:8px!important; }
+html.bb-mobile #live .live-header > .live-tab { display:none!important; }
+html.bb-mobile #live .live-tabs {
+  grid-column:1/-1!important; display:grid!important; grid-template-columns:repeat(3,1fr)!important; width:100%!important; gap:6px!important;
+}
+html.bb-mobile #live .live-tab { min-height:38px!important; padding:8px!important; font-size:9px!important; }
+html.bb-mobile #live .live-games { min-height:90px!important; }
+html.bb-mobile #live .live-game-card,
+html.bb-mobile #live .game-card { padding:12px!important; min-height:76px!important; }
+
+/* Live season: schedule only */
+html.bb-mobile #season2026 { padding:30px 0!important; }
+html.bb-mobile #season2026 .season-2026-shell { border-radius:14px!important; box-shadow:none!important; }
+html.bb-mobile #season2026 .season-2026-top { padding:16px!important; }
+html.bb-mobile #season2026 .season-center-shield { width:40px!important; height:40px!important; }
+html.bb-mobile #season2026 .season-2026-title { font-size:25px!important; }
+html.bb-mobile #season2026 .season-2026-subtitle { font-size:10px!important; line-height:1.4!important; }
+html.bb-mobile #season2026 .season-center-status { display:none!important; }
+html.bb-mobile #season2026 .season-2026-body { padding:10px!important; }
+html.bb-mobile #season2026 .season-2026-kpis { display:none!important; }
+html.bb-mobile #season2026 .season-2026-grid { display:block!important; }
+html.bb-mobile #season2026 .season-2026-grid > .season-2026-card:first-child { display:none!important; }
+html.bb-mobile #season2026 .season-2026-grid > .season-2026-card:last-child { width:100%!important; }
+html.bb-mobile #season2026 .season-2026-card-head { display:block!important; padding:12px!important; }
+html.bb-mobile #season2026 .season-2026-schedule-tools { display:grid!important; grid-template-columns:1fr!important; gap:8px!important; margin-top:10px!important; }
+html.bb-mobile #season2026 .season-2026-search,
+html.bb-mobile #season2026 .season-2026-select { width:100%!important; min-height:42px!important; }
+html.bb-mobile #season2026 .season-2026-schedule { max-height:none!important; overflow:visible!important; }
+
+/* Prevent accidental desktop widths */
+html.bb-mobile * { min-width:0; }
+html.bb-mobile img { max-width:100%; }
+</style>
+
+<script id="blitzbook-mobile-class">
+(function(){
+  function applyMobileClass(){
+    var mobile = window.matchMedia('(max-width: 900px)').matches || window.innerWidth <= 900;
+    document.documentElement.classList.toggle('bb-mobile', mobile);
+  }
+  applyMobileClass();
+  window.addEventListener('resize', applyMobileClass, {passive:true});
+  window.addEventListener('orientationchange', applyMobileClass, {passive:true});
+})();
+</script>
+
 </body>
 </html>`;
 }
