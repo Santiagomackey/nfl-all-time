@@ -6182,276 +6182,6 @@ html { scroll-behavior: smooth; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }
 </style>
-
-<style id="blitzbook-heavy-sections-performance-v2">
-/* Targeted performance pass: Live Season Center + Franchise Universe only. */
-#season2026 .season-2026-shell,
-#universe .franchise-universe-shell {
-  box-shadow: 0 10px 28px rgba(0,0,0,.20) !important;
-}
-#season2026 .season-2026-shell::after { display: none !important; }
-#season2026 .season-2026-card,
-#season2026 .season-2026-matchup,
-#season2026 .season-2026-division-card,
-#universe .franchise-universe-card,
-#universe .franchise-universe-table-wrap {
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-#season2026 img,
-#universe img {
-  filter: none !important;
-}
-#universe .franchise-signal-dot {
-  animation: none !important;
-  transition: none !important;
-}
-#universe .franchise-universe-table tbody,
-#season2026 .season-2026-schedule,
-#season2026 .season-2026-standings-wrap {
-  will-change: auto !important;
-}
-#season2026 .season-2026-matchup,
-#universe .franchise-universe-table tr {
-  transition-duration: .12s !important;
-}
-/* Browser-native smooth scrolling, but avoid expensive custom repaint tricks. */
-html { scroll-behavior: smooth; }
-body { overscroll-behavior-y: none; }
-</style>
-
-
-<style id="blitzbook-mobile-app-redesign">
-/* Mobile is intentionally a simpler product surface than desktop. */
-@media (max-width: 640px) {
-  :root { --mobile-pad: 16px; }
-  html { scroll-behavior: auto !important; }
-  body { overflow-x: hidden !important; overscroll-behavior-y: auto !important; }
-  * { -webkit-tap-highlight-color: transparent; }
-  .container { width: 100% !important; padding-left: var(--mobile-pad) !important; padding-right: var(--mobile-pad) !important; }
-  .divider { opacity: .45; }
-
-  /* NAV — compact app bar */
-  .topnav { position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-  .topnav-inner { height: 56px !important; padding: 0 var(--mobile-pad) !important; }
-  .nav-logo img { width: 30px !important; height: 30px !important; object-fit: contain; }
-  .nav-links, .nav-badge { display: none !important; }
-  .nav-right { margin-left: auto; }
-  .mobile-menu-btn { display: grid !important; place-items: center; width: 40px !important; height: 40px !important; border-radius: 12px; }
-  .mobile-nav { position: fixed; left: 10px; right: 10px; top: 64px; z-index: 999; border: 1px solid rgba(255,255,255,.10); border-radius: 16px; background: rgba(10,16,28,.97); box-shadow: 0 18px 50px rgba(0,0,0,.38); }
-  .mobile-nav-links { gap: 6px; }
-  .mobile-nav-link { border-radius: 10px; min-height: 46px; }
-
-  /* HERO — one screen, two decisions */
-  .hero { min-height: auto !important; padding: 34px 0 30px !important; }
-  .hero::before { height: 310px !important; opacity: .7; }
-  .hero-eyebrow { display: none !important; }
-  .hero h1 { font-size: clamp(42px, 13vw, 58px) !important; line-height: .92 !important; letter-spacing: 1px !important; margin-bottom: 14px !important; }
-  .hero-sub { max-width: 31ch !important; margin-bottom: 22px !important; font-size: 12px !important; line-height: 1.55 !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .hero-actions { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 9px !important; margin: 0 !important; }
-  .hero-actions .hero-btn { min-height: 48px !important; padding: 0 10px !important; font-size: 9px !important; text-align: center; justify-content: center; border-radius: 12px !important; }
-  .hero-actions .hero-btn:nth-child(n+3) { display: none !important; }
-
-  /* GLOBAL SECTION RHYTHM */
-  .section { padding: 28px 0 !important; }
-  .section-header { margin-bottom: 15px !important; }
-  .section-eyebrow { font-size: 8px !important; letter-spacing: 1.4px !important; }
-  .section-title { font-size: 25px !important; line-height: 1.05 !important; letter-spacing: .7px !important; }
-  .section-subtitle { margin-top: 5px !important; font-size: 10px !important; line-height: 1.45 !important; max-width: 34ch; }
-
-  /* TEAM DIRECTORY — phone list, not 32 mini dashboards */
-  #teams .filter-bar { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; gap: 9px !important; }
-  #teams .filter-search-wrap { border: 1px solid rgba(255,255,255,.10); border-radius: 13px; background: rgba(255,255,255,.035); }
-  #teams .filter-search { min-height: 48px !important; border: 0 !important; }
-  #teams .filter-group, #teams .filter-divider { display: none !important; }
-  #teams .sort-select { min-height: 44px !important; border-radius: 12px !important; }
-  #teams .grid-count { margin: 10px 2px 12px !important; font-size: 9px !important; opacity: .7; }
-  #teams .team-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
-  #teams .team-card, #teams .team-card-inner, #teams .team-card-back { min-height: 84px !important; height: auto !important; }
-  #teams .team-card { border-radius: 14px !important; }
-  #teams .team-card-back { display: grid !important; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 12px 13px !important; }
-  #teams .team-card-back::before, #teams .team-card-back::after { opacity: .32 !important; }
-  #teams .team-card-top { min-width: 0; }
-  #teams .team-brand { gap: 11px !important; }
-  #teams .team-logo, #teams .team-logo img { width: 42px !important; height: 42px !important; }
-  #teams .team-name { font-size: 15px !important; letter-spacing: .5px !important; }
-  #teams .team-division { font-size: 8px !important; margin-top: 3px !important; }
-  #teams .team-card-middle, #teams .team-detail-line { display: none !important; }
-  #teams .team-card-stats { display: flex !important; gap: 6px !important; margin: 0 !important; }
-  #teams .team-card-stat { min-width: 56px; padding: 8px 7px !important; border-radius: 9px !important; }
-  #teams .team-card-stat:nth-child(2) { display: none !important; }
-  #teams .team-card-stat span { font-size: 6px !important; letter-spacing: .7px !important; }
-  #teams .team-card-stat strong { font-size: 11px !important; margin-top: 2px !important; white-space: nowrap; }
-
-  /* UNIVERSE — keep the ranking, remove the desktop command-center clutter */
-  #universe { padding-top: 24px !important; }
-  #universe .franchise-universe-shell { width: calc(100vw - 20px) !important; border-radius: 18px !important; }
-  #universe .franchise-universe-header { padding: 17px 14px 11px !important; }
-  #universe .section-subtitle { max-width: 31ch; }
-  #universe .franchise-universe-filter { margin: 0 12px 10px !important; padding: 0 !important; border: 0 !important; background: transparent !important; }
-  #universe .franchise-universe-filter .filter-search-wrap { border: 1px solid rgba(255,255,255,.09); border-radius: 12px; background: rgba(255,255,255,.03); }
-  #universe .franchise-universe-filter .filter-group, #universe .franchise-universe-filter .filter-divider { display: none !important; }
-  #universe .franchise-universe-filter .sort-select { min-height: 42px !important; }
-  #universe .franchise-universe-tabs, #universe .franchise-ranking-signal { display: none !important; }
-  #universe .franchise-universe-grid { display: block !important; padding: 0 12px 12px !important; }
-  #universe .franchise-universe-grid .franchise-universe-card:not(.franchise-universe-card-wide) { display: none !important; }
-  #universe .franchise-universe-card { border-radius: 13px !important; }
-  #universe .season-2026-card-head { min-height: auto !important; padding: 11px 12px !important; }
-  #universe .season-2026-card-note { display: none !important; }
-  #universe .franchise-universe-table-wrap { max-height: none !important; overflow: visible !important; }
-  #universe .franchise-universe-table { width: 100% !important; min-width: 0 !important; table-layout: fixed; }
-  #universe .franchise-universe-table th, #universe .franchise-universe-table td { padding: 10px 5px !important; font-size: 8px !important; }
-  #universe .franchise-universe-table th:nth-child(3), #universe .franchise-universe-table td:nth-child(3),
-  #universe .franchise-universe-table th:nth-child(4), #universe .franchise-universe-table td:nth-child(4),
-  #universe .franchise-universe-table th:nth-child(5), #universe .franchise-universe-table td:nth-child(5),
-  #universe .franchise-universe-table th:nth-child(6), #universe .franchise-universe-table td:nth-child(6),
-  #universe .franchise-universe-table th:nth-child(8), #universe .franchise-universe-table td:nth-child(8),
-  #universe .franchise-universe-table th:nth-child(10), #universe .franchise-universe-table td:nth-child(10),
-  #universe .franchise-universe-table th:nth-child(11), #universe .franchise-universe-table td:nth-child(11),
-  #universe .franchise-universe-table th:nth-child(12), #universe .franchise-universe-table td:nth-child(12),
-  #universe .franchise-universe-table th:nth-child(14), #universe .franchise-universe-table td:nth-child(14),
-  #universe .franchise-universe-table th:nth-child(15), #universe .franchise-universe-table td:nth-child(15),
-  #universe .franchise-universe-table th:nth-child(16), #universe .franchise-universe-table td:nth-child(16) { display: none !important; }
-  #universe .franchise-universe-table th:nth-child(1), #universe .franchise-universe-table td:nth-child(1) { width: 13%; }
-  #universe .franchise-universe-table th:nth-child(2), #universe .franchise-universe-table td:nth-child(2) { width: 45%; }
-  #universe .franchise-universe-table th:nth-child(7), #universe .franchise-universe-table td:nth-child(7) { width: 14%; }
-  #universe .franchise-universe-table th:nth-child(9), #universe .franchise-universe-table td:nth-child(9) { width: 14%; }
-  #universe .franchise-universe-table th:nth-child(13), #universe .franchise-universe-table td:nth-child(13) { width: 14%; }
-
-  /* DIVISIONS are redundant on a tiny screen; directory already has every team. */
-  #divisions, #divisions + .divider { display: none !important; }
-
-  /* GAME CENTER — primary mobile sports surface */
-  #live .section-subtitle { display: none !important; }
-  #live .live-section { border-radius: 16px !important; overflow: hidden; }
-  #live .live-header { display: grid !important; grid-template-columns: 1fr auto !important; gap: 10px !important; padding: 12px !important; }
-  #live .live-title { align-self: center; }
-  #live .live-indicator, #live .live-header > .live-tab { display: none !important; }
-  #live .live-tabs { grid-column: 1 / -1; display: grid !important; grid-template-columns: repeat(3,1fr); gap: 5px; width: 100% !important; }
-  #live .live-tab { min-height: 39px !important; border-radius: 9px !important; }
-  #live .live-games { padding: 7px !important; }
-  #live .live-game { min-height: 82px !important; padding: 10px 8px !important; border-radius: 11px !important; gap: 5px !important; }
-  #live .game-team { gap: 5px !important; }
-  #live .game-team-logo, #live .game-team-logo img { width: 26px !important; height: 26px !important; }
-  #live .game-team-name { font-size: 12px !important; }
-  #live .game-team-record { display: none !important; }
-  #live .game-score { font-size: 22px !important; min-width: 64px; }
-  #live .game-status, #live .game-network { font-size: 7px !important; }
-  #live .live-note { padding: 9px 11px !important; font-size: 8px !important; }
-
-  /* LIVE SEASON — schedule only on phone. Standings belong on the deeper view. */
-  #season2026 { padding-top: 24px !important; }
-  #season2026 .season-2026-shell { border-radius: 18px !important; }
-  #season2026 .season-2026-top { padding: 17px 14px 14px !important; }
-  #season2026 .season-center-shield { width: 42px !important; height: 42px !important; border-radius: 12px !important; }
-  #season2026 .season-center-shield img { width: 28px !important; height: 28px !important; }
-  #season2026 .season-center-brand { gap: 10px !important; }
-  #season2026 .season-2026-kicker { font-size: 7px !important; }
-  #season2026 .season-2026-title { font-size: 24px !important; line-height: 1 !important; }
-  #season2026 .season-2026-subtitle, #season2026 .season-center-status { display: none !important; }
-  #season2026 .season-2026-body { padding: 10px !important; }
-  #season2026 .season-2026-grid { display: block !important; }
-  #season2026 .season-2026-grid > .season-2026-card:first-child { display: none !important; }
-  #season2026 .season-2026-card { border-radius: 13px !important; }
-  #season2026 .season-2026-card-head { min-height: auto !important; padding: 11px !important; display: block !important; }
-  #season2026 .season-2026-card-note { display: none !important; }
-  #season2026 .season-2026-schedule-tools { margin-top: 9px; display: grid !important; grid-template-columns: 1fr 118px !important; gap: 7px !important; }
-  #season2026 .season-2026-search, #season2026 .season-2026-select { min-height: 40px !important; font-size: 13px !important; }
-  #season2026 .season-2026-schedule { max-height: none !important; overflow: visible !important; padding-right: 0 !important; }
-  #season2026 .season-2026-week { padding: 10px !important; }
-  #season2026 .season-2026-week-title { font-size: 13px !important; margin-bottom: 7px !important; }
-  #season2026 .season-2026-week-rail { display: none !important; }
-  #season2026 .season-2026-day-title { font-size: 8px !important; margin-top: 10px !important; }
-  #season2026 .season-2026-matchup { display: grid !important; grid-template-columns: 1fr auto 1fr !important; gap: 5px !important; padding: 10px 8px !important; margin-top: 6px !important; border-radius: 10px !important; }
-  #season2026 .season-2026-matchup > *:first-child { display: none !important; }
-  #season2026 .season-2026-team { min-width: 0; gap: 5px !important; }
-  #season2026 .season-2026-team img { width: 26px !important; height: 26px !important; }
-  #season2026 .season-2026-team strong { font-size: 10px !important; }
-  #season2026 .season-2026-team span { display: none !important; }
-  #season2026 .season-2026-vs { padding: 0 !important; align-self: center; justify-self: center !important; text-align: center !important; }
-  #season2026 .season-2026-status { grid-column: 1/-1; padding: 5px 7px !important; text-align: center !important; justify-self: stretch !important; font-size: 7px !important; }
-  #season2026 .season-2026-source { display: none !important; }
-
-  /* FOOTER — quiet ending */
-  .footer { padding: 26px 0 calc(26px + env(safe-area-inset-bottom)) !important; }
-  .footer-inner { display: block !important; }
-  .footer-inner > div:not(.footer-brand) { display: none !important; }
-  .footer-logo { font-size: 15px !important; }
-  .footer-desc { max-width: 32ch; font-size: 9px !important; line-height: 1.55 !important; }
-  .footer-status { margin-top: 12px !important; }
-  .cafecito-btn { margin-top: 12px !important; }
-  .back-to-top { width: 42px !important; height: 42px !important; right: 12px !important; bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
-
-  /* Mobile performance: no hover transforms, expensive filters, or decorative motion. */
-  #homeShell * { transition-duration: .12s !important; }
-  #homeShell .team-card, #homeShell .season-2026-card, #homeShell .live-game, #homeShell .franchise-universe-card { box-shadow: none !important; }
-  #homeShell img { filter: none !important; }
-  #homeShell .fade-in { transform: none !important; transition: opacity .12s linear !important; }
-}
-
-@media (max-width: 390px) {
-  :root { --mobile-pad: 13px; }
-  .hero-actions { grid-template-columns: 1fr !important; }
-  #teams .team-card-stat:nth-child(3) { display: none !important; }
-  #season2026 .season-2026-schedule-tools { grid-template-columns: 1fr !important; }
-  #universe .franchise-universe-table th:nth-child(13), #universe .franchise-universe-table td:nth-child(13) { display:none !important; }
-  #universe .franchise-universe-table th:nth-child(2), #universe .franchise-universe-table td:nth-child(2) { width: 55%; }
-}
-</style>
-
-
-<style id="blitzbook-mobile-v2">
-@media (max-width: 700px) {
-  html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-  body{font-size:14px!important}
-  .topbar,.nav-shell,header nav{min-height:56px!important}
-  main,.container,.section-inner,.home-section{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}
-  /* Hero */
-  .hero{min-height:auto!important;padding:42px 18px 34px!important}
-  .hero h1{font-size:clamp(42px,14vw,64px)!important;line-height:.9!important;letter-spacing:.02em!important}
-  .hero p{max-width:330px!important;font-size:12px!important;line-height:1.55!important}
-  .hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;max-width:360px!important}
-  .hero-actions a,.hero-actions button{width:100%!important;min-height:44px!important;padding:10px!important}
-  /* Sections */
-  section{padding-left:14px!important;padding-right:14px!important}
-  .section-title,h2{font-size:28px!important}
-  /* Directory: hide desktop filter maze */
-  #teams .filters-row,#teams .filter-row,#teams .conference-filters,#teams .division-filters,#teams .status-filters{display:none!important}
-  #teams .controls{display:grid!important;grid-template-columns:1fr auto!important;gap:8px!important}
-  /* Universe becomes a mobile ranking, not a command center */
-  #universe .universe-controls .chip-row,
-  #universe .universe-tabs,
-  #universe .era-strip,
-  #universe .team-comparison,
-  #universe .comparison-center,
-  #universe [class*="comparison"],
-  #universe .ranking-note{display:none!important}
-  #universe .universe-grid{display:block!important}
-  #universe .rankings-panel{width:100%!important}
-  #universe table th:nth-child(n+6),#universe table td:nth-child(n+6){display:none!important}
-  #universe table{font-size:11px!important}
-  #universe th,#universe td{padding:10px 6px!important}
-  /* Division Explorer is redundant on mobile */
-  #divisions,#division-explorer,.division-explorer{display:none!important}
-  /* Game Center */
-  #game-center{padding-top:34px!important}
-  #game-center .gamecenter-shell{border-radius:14px!important}
-  #game-center .gamecenter-head{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:12px!important}
-  #game-center .game-tabs{width:100%!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important}
-  #game-center .game-tabs button{min-height:38px!important}
-  .game-card,.score-card{min-height:78px!important;padding:12px!important}
-  /* Live Season Center: schedule only on phone */
-  #season-center .standings-panel,#live-season-center .standings-panel,
-  #season-center [class*="standings"],#live-season-center [class*="standings"]{display:none!important}
-  #season-center .season-grid,#live-season-center .season-grid{display:block!important}
-  #season-center .schedule-panel,#live-season-center .schedule-panel{width:100%!important}
-  /* Kill desktop-scale fixed/min widths */
-  [style*="min-width"]{min-width:0!important}
-  img{max-width:100%;height:auto}
-}
-</style>
-
 </head>
 <body>
 
@@ -8797,368 +8527,6 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
 </div>
 
 
-
-<script id="blitzbook-global-wheel-fix">
-(function(){
-  if (window.__BLITZBOOK_GLOBAL_WHEEL_FIX__) return;
-  window.__BLITZBOOK_GLOBAL_WHEEL_FIX__ = true;
-
-  const isOpenModal = () => !!document.querySelector('.modal.open, .explore-modal.open, .blitz-game-modal.open, [aria-modal="true"].open');
-  const isTeamRoute = () => document.body.classList.contains('team-route-active');
-
-  function normalizeDelta(event) {
-    let y = event.deltaY || 0;
-    if (event.deltaMode === 1) y *= 18;
-    else if (event.deltaMode === 2) y *= window.innerHeight * 0.9;
-    return y;
-  }
-
-  document.addEventListener('wheel', function(event) {
-    if (event.defaultPrevented || event.ctrlKey || event.metaKey) return;
-    if (isOpenModal() || isTeamRoute()) return;
-
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-
-    // Preserve intentional horizontal scrolling (Shift + wheel / trackpad horizontal gesture).
-    if (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-
-    // Dropdowns and number inputs need their native wheel behaviour while focused.
-    if (target.closest('select, input[type="number"]')) return;
-
-    const dy = normalizeDelta(event);
-    if (!dy) return;
-
-    // Ensure a stale modal/route lock can never leave the Home page frozen.
-    if (document.body.style.overflow === 'hidden' && !isOpenModal() && !isTeamRoute()) {
-      document.body.style.overflow = '';
-    }
-    document.documentElement.style.overflowY = 'auto';
-    document.body.style.overflowY = 'auto';
-
-    event.preventDefault();
-    window.scrollBy({ top: dy, left: 0, behavior: 'auto' });
-  }, { capture: true, passive: false });
-
-  // Also clear stale inline scroll locks when returning to Home.
-  window.addEventListener('hashchange', function(){
-    if (!location.hash.startsWith('#team=') && !isOpenModal()) {
-      document.body.style.overflow = '';
-      document.body.style.overflowY = 'auto';
-      document.documentElement.style.overflowY = 'auto';
-    }
-  });
-
-  if (!location.hash.startsWith('#team=') && !isOpenModal()) {
-    document.body.style.overflowY = 'auto';
-    document.documentElement.style.overflowY = 'auto';
-  }
-})();
-</script>
-
-
-<style id="blitzbook-real-mobile-layout">
-/* Mobile V3 — targets the actual Blitzbook DOM */
-html.bb-mobile, html.bb-mobile body {
-  width:100%!important; max-width:100%!important; overflow-x:hidden!important;
-}
-html.bb-mobile body { font-size:14px!important; }
-html.bb-mobile .container {
-  width:100%!important; max-width:none!important; padding-left:16px!important; padding-right:16px!important;
-}
-html.bb-mobile .topnav { height:58px!important; min-height:58px!important; }
-html.bb-mobile .topnav-inner { padding:0 14px!important; height:58px!important; }
-html.bb-mobile .nav-logo img { width:30px!important; height:30px!important; object-fit:contain!important; }
-html.bb-mobile .nav-links { display:none!important; }
-html.bb-mobile .mobile-menu-btn { display:flex!important; }
-html.bb-mobile .nav-badge { margin-left:auto!important; font-size:8px!important; padding:7px 9px!important; }
-html.bb-mobile .nav-freshness { display:none!important; }
-
-/* Hero */
-html.bb-mobile .hero {
-  min-height:0!important; padding:34px 0 30px!important;
-}
-html.bb-mobile .hero .container { padding:0 18px!important; }
-html.bb-mobile .hero-eyebrow {
-  font-size:8px!important; letter-spacing:2px!important; margin-bottom:16px!important; white-space:normal!important;
-}
-html.bb-mobile .hero h1 {
-  font-size:52px!important; line-height:.92!important; letter-spacing:1px!important; margin:0 0 14px!important;
-}
-html.bb-mobile .hero-sub {
-  max-width:340px!important; font-size:12px!important; line-height:1.55!important; margin-bottom:20px!important;
-}
-html.bb-mobile .hero-actions {
-  display:grid!important; grid-template-columns:1fr 1fr!important; gap:9px!important; max-width:360px!important;
-}
-html.bb-mobile .hero-actions .hero-btn {
-  min-height:44px!important; padding:11px 10px!important; display:flex!important; align-items:center!important; justify-content:center!important;
-  font-size:9px!important; letter-spacing:.9px!important; text-align:center!important;
-}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3) { display:none!important; }
-
-/* Section rhythm */
-html.bb-mobile .divider { margin:0!important; }
-html.bb-mobile .section { padding:34px 0!important; }
-html.bb-mobile .section-header { margin-bottom:16px!important; }
-html.bb-mobile .section-eyebrow { font-size:8px!important; letter-spacing:2px!important; margin-bottom:5px!important; }
-html.bb-mobile .section-title { font-size:28px!important; line-height:1!important; letter-spacing:.8px!important; }
-html.bb-mobile .section-subtitle { font-size:11px!important; line-height:1.45!important; margin-top:7px!important; }
-
-/* All teams: search + sort only */
-html.bb-mobile #teams .filter-bar {
-  display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important;
-  padding:10px!important; margin-bottom:12px!important; border-radius:12px!important;
-}
-html.bb-mobile #teams .filter-search-wrap { min-width:0!important; width:100%!important; }
-html.bb-mobile #teams .filter-search { height:42px!important; font-size:13px!important; }
-html.bb-mobile #teams .filter-divider,
-html.bb-mobile #teams .filter-group { display:none!important; }
-html.bb-mobile #teams .sort-select { height:42px!important; padding:0 10px!important; font-size:9px!important; }
-html.bb-mobile #teams .grid-count { margin:6px 0 12px!important; font-size:10px!important; }
-html.bb-mobile #teams .team-grid {
-  grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important;
-}
-html.bb-mobile #teams .team-card,
-html.bb-mobile #teams .team-card-inner { min-height:142px!important; height:142px!important; perspective:none!important; }
-html.bb-mobile #teams .team-card-inner { transform:none!important; transition:none!important; transform-style:flat!important; }
-html.bb-mobile #teams .team-card-back { display:none!important; }
-html.bb-mobile #teams .team-card-face { position:relative!important; inset:auto!important; height:142px!important; padding:12px!important; gap:8px!important; }
-html.bb-mobile #teams .team-logo { width:34px!important; height:34px!important; border-radius:8px!important; }
-html.bb-mobile #teams .team-logo img { width:24px!important; height:24px!important; filter:none!important; }
-html.bb-mobile #teams .team-name { font-size:15px!important; }
-html.bb-mobile #teams .team-division { font-size:7px!important; letter-spacing:1px!important; }
-html.bb-mobile #teams .team-card-front-meta { padding-top:7px!important; }
-html.bb-mobile #teams .team-card-stat strong { font-size:12px!important; }
-html.bb-mobile #teams .team-card-stat span { font-size:6px!important; letter-spacing:1px!important; }
-
-/* Universe: ranking only */
-html.bb-mobile #universe { padding-top:28px!important; }
-html.bb-mobile #universe .franchise-universe-shell {
-  border-radius:14px!important; padding:0!important; box-shadow:none!important; overflow:hidden!important;
-}
-html.bb-mobile #universe .franchise-universe-header { padding:16px 14px 10px!important; margin:0!important; }
-html.bb-mobile #universe .franchise-universe-filter {
-  margin:0 10px 10px!important; padding:9px!important; display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important;
-}
-html.bb-mobile #universe .franchise-universe-filter .filter-divider,
-html.bb-mobile #universe .franchise-universe-filter .filter-group { display:none!important; }
-html.bb-mobile #universe .franchise-universe-tabs,
-html.bb-mobile #universe .franchise-ranking-signal { display:none!important; }
-html.bb-mobile #universe .franchise-universe-grid { display:block!important; padding:0 10px 10px!important; }
-html.bb-mobile #universe .franchise-universe-card { display:none!important; }
-html.bb-mobile #universe .franchise-universe-card.franchise-universe-card-wide {
-  display:block!important; width:100%!important; min-width:0!important; border-radius:12px!important; box-shadow:none!important;
-}
-html.bb-mobile #universe .season-2026-card-head { padding:12px!important; }
-html.bb-mobile #universe .season-2026-card-title { font-size:15px!important; }
-html.bb-mobile #universe .season-2026-card-note { display:none!important; }
-html.bb-mobile #universe .franchise-universe-table-wrap {
-  max-height:360px!important; overflow-y:auto!important; overflow-x:hidden!important;
-}
-html.bb-mobile #universe .franchise-universe-table { width:100%!important; table-layout:fixed!important; }
-html.bb-mobile #universe .franchise-universe-table th,
-html.bb-mobile #universe .franchise-universe-table td { padding:9px 5px!important; font-size:9px!important; }
-html.bb-mobile #universe .franchise-universe-table th:nth-child(3),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(3),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(4),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(4),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(5),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(5),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(6),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(6),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(8),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(8),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(10),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(10),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(11),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(11),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(12),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(12),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(14),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(14),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(15),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(15),
-html.bb-mobile #universe .franchise-universe-table th:nth-child(16),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(16) { display:none!important; }
-html.bb-mobile #universe .franchise-universe-table th:nth-child(1),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(1){width:36px!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(2){width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(7),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(7){width:52px!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(9),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(9){width:52px!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(13),
-html.bb-mobile #universe .franchise-universe-table td:nth-child(13){width:38px!important}
-
-/* Remove entire Division Explorer on phones */
-html.bb-mobile #divisions { display:none!important; }
-html.bb-mobile #divisions + .divider { display:none!important; }
-
-/* Game Center: compact */
-html.bb-mobile #live { padding-top:30px!important; }
-html.bb-mobile #live .live-section { border-radius:14px!important; overflow:hidden!important; box-shadow:none!important; }
-html.bb-mobile #live .live-header {
-  display:grid!important; grid-template-columns:1fr auto!important; gap:8px!important; padding:12px!important;
-}
-html.bb-mobile #live .live-title { font-size:15px!important; }
-html.bb-mobile #live .live-indicator { font-size:8px!important; }
-html.bb-mobile #live .live-header > .live-tab { display:none!important; }
-html.bb-mobile #live .live-tabs {
-  grid-column:1/-1!important; display:grid!important; grid-template-columns:repeat(3,1fr)!important; width:100%!important; gap:6px!important;
-}
-html.bb-mobile #live .live-tab { min-height:38px!important; padding:8px!important; font-size:9px!important; }
-html.bb-mobile #live .live-games { min-height:90px!important; }
-html.bb-mobile #live .live-game-card,
-html.bb-mobile #live .game-card { padding:12px!important; min-height:76px!important; }
-
-/* Live season: schedule only */
-html.bb-mobile #season2026 { padding:30px 0!important; }
-html.bb-mobile #season2026 .season-2026-shell { border-radius:14px!important; box-shadow:none!important; }
-html.bb-mobile #season2026 .season-2026-top { padding:16px!important; }
-html.bb-mobile #season2026 .season-center-shield { width:40px!important; height:40px!important; }
-html.bb-mobile #season2026 .season-2026-title { font-size:25px!important; }
-html.bb-mobile #season2026 .season-2026-subtitle { font-size:10px!important; line-height:1.4!important; }
-html.bb-mobile #season2026 .season-center-status { display:none!important; }
-html.bb-mobile #season2026 .season-2026-body { padding:10px!important; }
-html.bb-mobile #season2026 .season-2026-kpis { display:none!important; }
-html.bb-mobile #season2026 .season-2026-grid { display:block!important; }
-html.bb-mobile #season2026 .season-2026-grid > .season-2026-card:first-child { display:none!important; }
-html.bb-mobile #season2026 .season-2026-grid > .season-2026-card:last-child { width:100%!important; }
-html.bb-mobile #season2026 .season-2026-card-head { display:block!important; padding:12px!important; }
-html.bb-mobile #season2026 .season-2026-schedule-tools { display:grid!important; grid-template-columns:1fr!important; gap:8px!important; margin-top:10px!important; }
-html.bb-mobile #season2026 .season-2026-search,
-html.bb-mobile #season2026 .season-2026-select { width:100%!important; min-height:42px!important; }
-html.bb-mobile #season2026 .season-2026-schedule { max-height:none!important; overflow:visible!important; }
-
-/* Prevent accidental desktop widths */
-html.bb-mobile * { min-width:0; }
-html.bb-mobile img { max-width:100%; }
-</style>
-
-<script id="blitzbook-mobile-class">
-(function(){
-  function isRealPhone(){
-    var ua = navigator.userAgent || '';
-    var uaMobile = /Android|iPhone|iPod|Mobile|IEMobile|Opera Mini/i.test(ua);
-    var coarse = false;
-    try { coarse = window.matchMedia('(pointer: coarse)').matches; } catch(e) {}
-    var smallScreen = Math.min(screen.width || 9999, screen.height || 9999) <= 900;
-    var narrowViewport = window.innerWidth <= 900;
-    return uaMobile || (coarse && smallScreen) || narrowViewport;
-  }
-  function applyMobileClass(){
-    var mobile = isRealPhone();
-    document.documentElement.classList.toggle('bb-mobile', mobile);
-    document.body && document.body.classList.toggle('bb-mobile-body', mobile);
-    if (mobile) {
-      var vp = document.querySelector('meta[name="viewport"]');
-      if (!vp) {
-        vp = document.createElement('meta');
-        vp.name = 'viewport';
-        document.head.appendChild(vp);
-      }
-      vp.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover');
-    }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyMobileClass, {once:true});
-  } else {
-    applyMobileClass();
-  }
-  window.addEventListener('resize', applyMobileClass, {passive:true});
-  window.addEventListener('orientationchange', applyMobileClass, {passive:true});
-})();
-</script>
-
-
-<style id="blitzbook-phone-force">
-@media (hover:none) and (pointer:coarse) {
-  html.bb-mobile body { min-width:0!important; width:100%!important; overflow-x:hidden!important; }
-  html.bb-mobile .topnav,
-  html.bb-mobile .topnav-inner,
-  html.bb-mobile main,
-  html.bb-mobile section,
-  html.bb-mobile .container { min-width:0!important; width:100%!important; max-width:100%!important; }
-}
-html.bb-mobile body { min-width:0!important; overflow-x:hidden!important; }
-html.bb-mobile .topnav, html.bb-mobile .topnav-inner { min-width:0!important; max-width:100%!important; }
-html.bb-mobile .nav-links { display:none!important; }
-html.bb-mobile .mobile-menu-btn { display:flex!important; }
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:none!important}
-html.bb-mobile #divisions{display:none!important}
-html.bb-mobile #universe .team-comparison,
-html.bb-mobile #universe .comparison-center,
-html.bb-mobile #universe [class*="comparison"]{display:none!important}
-</style>
-
-<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
 </body>
 </html>`;
 }
@@ -9291,72 +8659,6 @@ function buildPortableLegacyTeamPageTemplateUnused(teamData) {
   </section>
   <div class="footer">${escapeHtml(fullName)} - 2026 archive profile</div>
 </div>
-<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
 </body>
 </html>`;
 }
@@ -9477,72 +8779,6 @@ function buildPortableLegacyTeamPage(teamData) {
   </section>
   <div class="footer">${escapeHtml(fullName)} archive - built from the cafecito homepage data</div>
 </div>
-<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
 </body>
 </html>`;
 }
@@ -9902,206 +9138,8 @@ function injectLegacyRouteBridge(html, teamData = null) {
 
   const bridgeScript = `<script>(function(){if(window.__NFL_LEGACY_ROUTE_BRIDGE__)return;window.__NFL_LEGACY_ROUTE_BRIDGE__=true;function getHost(){try{if(window.parent&&window.parent!==window)return window.parent;}catch(error){}try{if(window.top&&window.top!==window)return window.top;}catch(error){}return window;}function getHostFn(name){const host=getHost();return host&&typeof host[name]==='function'?host[name].bind(host):null;}function getOpponentTarget(node){const explicit=node&&(node.getAttribute('data-route-rival')||node.getAttribute('data-opponent')||node.getAttribute('data-route-team')||node.getAttribute('href'));if(explicit)return explicit;const names=document.querySelectorAll('.modal.open .score-team-name');return names.length>1?(names[names.length-1].textContent||''):'';}window.routeHome=function(){const fn=getHostFn('routeHome');return fn?fn():false;};window.routeToTeam=function(slug){const fn=getHostFn('routeToTeam');return fn?fn(slug):false;};window.routeToRival=function(nameOrSlug){const fn=getHostFn('routeToRival');return fn?fn(nameOrSlug):false;};document.addEventListener('click',function(event){const origin=event.target&&event.target.closest?event.target:(event.target&&event.target.parentElement);if(!origin||typeof origin.closest!=='function')return;const homeTrigger=origin.closest('#topHomeBtn,#homeViewBtn,[data-route-home]');if(homeTrigger){event.preventDefault();event.stopImmediatePropagation();window.routeHome();return;}const rivalTrigger=origin.closest('#opponentPageBtn,[data-route-rival],[data-opponent]');if(rivalTrigger){const target=getOpponentTarget(rivalTrigger);if(!target)return;event.preventDefault();event.stopImmediatePropagation();window.routeToRival(target);return;}const teamTrigger=origin.closest('a[href*="#team="],[data-route-team]');if(!teamTrigger)return;const target=teamTrigger.getAttribute('data-route-team')||teamTrigger.getAttribute('href');if(!target)return;event.preventDefault();event.stopImmediatePropagation();window.routeToTeam(target);},true);})();<\\/script>`;
 
-  return bridgedHtml.includes('<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
-</body>')
-    ? bridgedHtml.replace('<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
-</body>', `${bridgeScript}\n<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
-</body>`)
+  return bridgedHtml.includes('</body>')
+    ? bridgedHtml.replace('</body>', `${bridgeScript}\n</body>`)
     : `${bridgedHtml}\n${bridgeScript}`;
 }
 
@@ -10305,41 +9343,7 @@ button,a,input,select{touch-action:manipulation}
 </style>`;
 
   return responsiveHtml.includes('</head>')
-    ? responsiveHtml.replace('</head>', `${phoneStyle}\n
-<style id="blitzbook-wheel-scroll-fix">
-/* Restore normal document wheel scrolling. Avoid nested vertical scroll traps. */
-html, body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior-y: auto !important;
-}
-body { touch-action: pan-y pinch-zoom; }
-
-/* Let these large dashboard sections participate in the main page scroll. */
-#season2026 .season-2026-schedule,
-#season2026 .season-2026-standings-wrap {
-  max-height: none !important;
-  overflow-y: visible !important;
-  overscroll-behavior: auto !important;
-  scrollbar-gutter: auto !important;
-}
-#universe .franchise-universe-table-wrap {
-  max-height: none !important;
-  overflow-y: visible !important;
-  overscroll-behavior: auto !important;
-  scrollbar-gutter: auto !important;
-  will-change: auto !important;
-}
-
-/* Horizontal-only scrollers keep horizontal scrolling without capturing vertical wheel input. */
-#universe .franchise-matrix-wrap,
-#universe .franchise-timeline-wall,
-#universe .franchise-best-strip,
-#season2026 .season-2026-schedule {
-  overscroll-behavior-y: auto !important;
-}
-</style>
-</head>`)
+    ? responsiveHtml.replace('</head>', `${phoneStyle}\n</head>`)
     : `${phoneStyle}\n${responsiveHtml}`;
 }
 
@@ -11808,7 +10812,7 @@ const SEASON_2026_BROWSER_FILE = SEASON_2026_BROWSER_FILES[0];
 const season2026State = {
   data: null,
   activeTab: 'schedule',
-  weekFilter: '1',
+  weekFilter: 'all',
   teamSearch: '',
   standingsFilter: 'league',
   standingsView: 'division'
@@ -12121,7 +11125,7 @@ function renderUniverseStandings(rows) {
       ${sorted.map((row, index) => `
         <div class="universe-standings-row">
           <div class="universe-standings-rank">${index + 1}</div>
-          <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+          <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
           <div>
             <strong>${escapeHtml(row.name)}</strong>
             <span>${escapeHtml(row.conf || row.conference || 'NFL')} ${escapeHtml(row.division || '')} | ${formatUniversePct(row.pct)}</span>
@@ -12183,7 +11187,7 @@ function renderUniverseTeams(rows) {
       ${sorted.map(row => `
         <button class="universe-team-tile" type="button" data-universe-team="${escapeHtml(row.slug)}">
           <div class="universe-team-tile-head">
-            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div>
               <strong>${escapeHtml(row.name)}</strong>
               <span>${escapeHtml(row.conference || 'NFL')} ${escapeHtml(row.division || '')}</span>
@@ -12488,7 +11492,7 @@ function renderFranchiseUniverseTable() {
         <td><span class="franchise-rank-badge ${index < 3 ? 'top' : ''}">${index + 1}</span></td>
         <td>
           <div class="franchise-table-team">
-            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div>
               <strong>${escapeHtml(row.name)}</strong>
               <span>${escapeHtml(row.short)}</span>
@@ -12552,7 +11556,7 @@ function renderFranchiseRankingSignal() {
             : formatNumber(row.wins);
     return `
       <div class="franchise-signal-dot" style="--signal-left:${left}%; --signal-color:${escapeHtml(row.teamColor || 'var(--accent)')}; --signal-delay:${index * -0.55}s">
-        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <span>${escapeHtml(index + 1)} ${escapeHtml(row.short)} · ${escapeHtml(metricValue)} ${escapeHtml(sortMetric)}</span>
       </div>
     `;
@@ -12704,7 +11708,7 @@ function renderFranchiseTimeline() {
     const peakPosition = Math.max(0, Math.min(99, ((row.peakYear - minYear) / span) * 100));
     return `
       <div class="franchise-timeline-row">
-        <div class="franchise-timeline-team"><img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">${escapeHtml(row.short)}</div>
+        <div class="franchise-timeline-team"><img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">${escapeHtml(row.short)}</div>
         <div class="franchise-timeline-track">
           <span class="franchise-timeline-span" style="left:${left}%;width:${width}%"></span>
           ${markers}
@@ -12745,7 +11749,7 @@ function renderFranchiseTiers() {
       <div class="franchise-tier-teams">
         ${sortFranchiseRows(grouped.get(tier) || []).map(row => `
           <div class="franchise-tier-team" data-team="${escapeHtml(row.slug)}">
-            <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+            <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
             <div><strong>${escapeHtml(row.short)}</strong><span>${escapeHtml(row.superBowls)} SB | ${escapeHtml(formatUniversePct(row.pct))}</span></div>
           </div>
         `).join('') || '<span class="season-2026-card-note">No teams</span>'}
@@ -12791,7 +11795,7 @@ function renderFranchiseBestStrip() {
   el.innerHTML = franchiseUniverseState.rows.map(row => `
     <div class="franchise-best-card" data-team="${escapeHtml(row.slug)}" style="--best-color:${escapeHtml(row.teamColor || '#d8b03e')}">
       <div class="franchise-best-head">
-        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <div><strong>${escapeHtml(row.name)}</strong><span>${escapeHtml(row.division)}</span></div>
       </div>
       <div class="franchise-best-stat"><span>Best season</span><b>${escapeHtml(row.bestSeason?.year || 'N/A')} ${escapeHtml(row.bestRecord)}</b></div>
@@ -12881,7 +11885,7 @@ function renderRecordsBoard() {
     <button class="records-board-row" type="button" onclick="routeToTeam('${escapeHtml(row.slug)}')">
       <div class="records-board-row-main">
         <span class="records-board-rank">${index + 1}</span>
-        <img loading="lazy" decoding="async" src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
+        <img src="${escapeHtml(row.logo)}" alt="${escapeHtml(row.short)} logo">
         <div class="records-board-row-copy">
           <strong>${escapeHtml(row.name)}</strong>
           <em>${escapeHtml(formatNumber(row.superBowls))} SB | ${escapeHtml(formatNumber(row.conferenceTitles))} conf | ${escapeHtml(formatNumber(row.divisionTitles))} div</em>
@@ -12925,39 +11929,23 @@ function renderFranchiseUniverse() {
 
 async function loadFranchiseUniverseData() {
   const count = document.getElementById('franchiseUniverseCount');
-  if (count) count.textContent = '32 teams';
-
-  // Fast first pass: use the already-available compact/portable data so entering
-  // this section never triggers 32 franchise files to parse at the same time.
-  franchiseUniverseState.rows = TEAMS.map(team =>
-    buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) })
-  ).sort((left, right) => right.wins - left.wins);
-  renderFranchiseUniverseTable();
-  renderFranchiseComparison();
-
-  const idlePause = () => new Promise(resolve => {
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => resolve(), { timeout: 450 });
-    } else {
-      setTimeout(resolve, 24);
-    }
-  });
-
-  // Detailed pass: hydrate one franchise at a time during idle slices. This
-  // preserves the complete historical stats without freezing scrolling.
-  const detailedRows = [];
-  for (let index = 0; index < TEAMS.length; index += 1) {
-    if (index) await idlePause();
-    const team = TEAMS[index];
-    try {
-      const data = await loadTeamData(team.slug);
-      detailedRows.push(buildFranchiseUniverseRow({ team, data }));
-    } catch (error) {
-      detailedRows.push(buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) }));
-    }
+  if (count) count.textContent = 'Loading';
+  const results = await Promise.allSettled(TEAMS.map(team =>
+    loadTeamData(team.slug).then(data => ({ team, data }))
+  ));
+  franchiseUniverseState.rows = results
+    .filter(result => result.status === 'fulfilled' && result.value?.data)
+    .map(result => buildFranchiseUniverseRow(result.value));
+  if (franchiseUniverseState.rows.length < TEAMS.length) {
+    const loaded = new Set(franchiseUniverseState.rows.map(row => row.slug));
+    TEAMS.forEach(team => {
+      if (!loaded.has(team.slug)) {
+        franchiseUniverseState.rows.push(buildFranchiseUniverseRow({ team, data: buildPortableTeamData(team.slug) }));
+      }
+    });
   }
-
-  franchiseUniverseState.rows = detailedRows.sort((left, right) => right.wins - left.wins);
+  franchiseUniverseState.rows.sort((left, right) => right.wins - left.wins);
+  filterTeams();
   renderFranchiseUniverse();
 }
 
@@ -12975,11 +11963,9 @@ function initFranchiseUniverse() {
   const root = document.getElementById('universe');
   if (!root) return;
   initializeFranchiseCompareSearches();
-  let franchiseUniverseSearchTimer = 0;
   document.getElementById('franchiseUniverseSearch')?.addEventListener('input', event => {
     franchiseUniverseState.search = event.target.value;
-    clearTimeout(franchiseUniverseSearchTimer);
-    franchiseUniverseSearchTimer = setTimeout(renderFranchiseUniverseTable, 120);
+    renderFranchiseUniverseTable();
   });
   document.querySelectorAll('[data-universe-conf]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -13265,12 +12251,16 @@ function getSeason2026FilteredSchedule() {
   const schedule = getSeason2026DisplaySchedule();
   const search = normalizeTeamRouteKey(season2026State.teamSearch);
   return schedule.filter(game => {
-    const weekKey = game.weekNumber ? String(game.weekNumber) : normalizeSeason2026Key(game.week || 'tbd');
-    if (season2026State.weekFilter !== 'all' && weekKey !== season2026State.weekFilter) return false;
+    const dayKey = normalizeSeason2026Key(game.day && game.day !== 'TBD' ? game.day : 'Day TBD') || 'day-tbd';
+    if (season2026State.weekFilter !== 'all' && dayKey !== season2026State.weekFilter) return false;
     if (!search) return true;
     const teamText = [
-      game.awayTeam, game.awayShort, game.awaySlug,
-      game.homeTeam, game.homeShort, game.homeSlug
+      game.awayTeam,
+      game.awayShort,
+      game.awaySlug,
+      game.homeTeam,
+      game.homeShort,
+      game.homeSlug
     ].filter(Boolean).join(' ');
     return normalizeTeamRouteKey(teamText).includes(search);
   });
@@ -13485,8 +12475,8 @@ function renderSeason2026Schedule() {
   const scheduleReleased = hasReleasedSeason2026Schedule(data.schedule || []);
   if (!el || !select) return;
 
-  const options = getSeason2026WeekOptions(schedule);
-  const allLabel = 'All weeks';
+  const options = getSeason2026DayOptions(schedule);
+  const allLabel = 'All days';
   const hasAllOption = options.some(option => option.value === 'all');
   select.innerHTML = `${hasAllOption ? '' : `<option value="all">${escapeHtml(allLabel)}</option>`}${options.map(option => `
     <option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>
@@ -13499,7 +12489,7 @@ function renderSeason2026Schedule() {
 
   const filtered = getSeason2026FilteredSchedule();
   if (!filtered.length) {
-    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this week or team search yet.</div>`;
+    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this day or team search yet.</div>`;
     return;
   }
 
@@ -13565,12 +12555,12 @@ function renderSeason2026Schedule() {
                 ${game.windowNote ? `<span class="season-2026-window-note">${escapeHtml(game.windowNote)}</span>` : ''}
               </div>
               <div class="season-2026-team">
-                <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(game.awaySlug))}" alt="${escapeHtml(game.awayShort)} logo">
+                <img src="${escapeHtml(getTeamLogoBySlug(game.awaySlug))}" alt="${escapeHtml(game.awayShort)} logo">
                 <div><strong>${escapeHtml(game.awayShort || game.awayTeam)}</strong><span>Away</span></div>
               </div>
               <div class="season-2026-vs">${hasScore ? `${escapeHtml(game.awayScore)} - ${escapeHtml(game.homeScore)}` : '@'}</div>
               <div class="season-2026-team">
-                <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(game.homeSlug))}" alt="${escapeHtml(game.homeShort)} logo">
+                <img src="${escapeHtml(getTeamLogoBySlug(game.homeSlug))}" alt="${escapeHtml(game.homeShort)} logo">
                 <div><strong>${escapeHtml(game.homeShort || game.homeTeam)}</strong><span>Home</span></div>
               </div>
               <div class="season-2026-status ${escapeHtml(game.status || 'upcoming')}">
@@ -13657,7 +12647,7 @@ function renderSeason2026SnapshotList(targetId, rows) {
     <div class="season-2026-standings-list">
       ${rows.map(row => `
         <div class="season-2026-standings-row">
-          <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
+          <img src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
           <div>
             <strong>${escapeHtml(row.shortName || row.team)}</strong>
             <span>${escapeHtml(row.division || row.conference || 'NFL')}</span>
@@ -13680,7 +12670,7 @@ function renderSeason2026MiniStanding(row, index, rankType = 'division') {
   return `
     <div class="season-2026-mini-standing">
       <span class="season-2026-mini-rank">${escapeHtml(rank)}</span>
-      <img loading="lazy" decoding="async" src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
+      <img src="${escapeHtml(getTeamLogoBySlug(row.slug))}" alt="${escapeHtml(row.shortName || row.team)} logo">
       <div>
         <b>${escapeHtml(row.shortName || row.team)}</b>
         <small>${escapeHtml(row.division || row.conference || 'NFL')}</small>
@@ -13822,16 +12812,8 @@ function mergeSeason2026LiveScoreboard(scoreboardPayload) {
 
 async function refreshSeason2026LiveData() {
   if (!season2026State.data) return;
-  const shell = document.getElementById('season2026');
-  if (shell) {
-    const rect = shell.getBoundingClientRect();
-    if (rect.bottom < -300 || rect.top > window.innerHeight + 300) return;
-  }
-  const hasLiveGame = (window.NFL_LIVE_DATA?.games || []).some(game => game.status === 'live');
-  if (!hasLiveGame) return;
   updateSeasonData();
-  renderSeason2026Schedule();
-  renderSeason2026Standings();
+  renderSeason2026Dashboard();
 }
 
 async function initSeason2026Dashboard() {
@@ -13841,6 +12823,7 @@ async function initSeason2026Dashboard() {
     await loadSeason2026Data();
     updateSeasonData();
     renderSeason2026Dashboard();
+    await refreshSeason2026LiveData();
   } catch (error) {
     console.error('Failed to initialize 2026 dashboard', error);
     const schedule = document.getElementById('season2026Schedule');
@@ -13856,11 +12839,9 @@ async function initSeason2026Dashboard() {
     season2026State.weekFilter = event.target.value;
     renderSeason2026Schedule();
   });
-  let season2026SearchTimer = 0;
   document.getElementById('season2026TeamSearch')?.addEventListener('input', event => {
     season2026State.teamSearch = event.target.value;
-    clearTimeout(season2026SearchTimer);
-    season2026SearchTimer = setTimeout(renderSeason2026Schedule, 120);
+    renderSeason2026Schedule();
   });
   document.getElementById('season2026StandingsView')?.addEventListener('change', event => {
     season2026State.standingsView = event.target.value;
@@ -14345,71 +13326,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- INLINE_RENDERED_TEAM_PAGES_START -->
 <!-- External rendered team pages load from nfl_all_time/data/browser-pages/*.js -->
 <!-- INLINE_RENDERED_TEAM_PAGES_END -->
-<style id="blitzbook-mobile-v5-preserve-desktop">
-@media (max-width:700px){
-html.bb-mobile,html.bb-mobile body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
-html.bb-mobile body{overscroll-behavior-y:auto!important;touch-action:pan-y!important}
-html.bb-mobile .container{padding-left:14px!important;padding-right:14px!important}
-/* Keep the complete hero, just stack it cleanly. */
-html.bb-mobile .hero{padding:28px 0 26px!important}
-html.bb-mobile .hero-eyebrow{display:block!important;font-size:7px!important;margin-bottom:12px!important}
-html.bb-mobile .hero h1{font-size:clamp(43px,13vw,58px)!important}
-html.bb-mobile .hero-sub{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important;max-width:38ch!important}
-html.bb-mobile .hero-actions{grid-template-columns:1fr 1fr!important;max-width:none!important}
-html.bb-mobile .hero-actions .hero-btn:nth-child(n+3){display:flex!important}
-/* Full 32-card directory, compact two-column touch cards. */
-html.bb-mobile #teams .filter-bar{grid-template-columns:1fr!important;gap:8px!important}
-html.bb-mobile #teams .filter-divider{display:none!important}
-html.bb-mobile #teams .filter-group{display:block!important;overflow-x:auto!important;scrollbar-width:none}
-html.bb-mobile #teams .filter-group::-webkit-scrollbar{display:none}
-html.bb-mobile #teams .filter-btns{display:flex!important;flex-wrap:nowrap!important;width:max-content}
-html.bb-mobile #teams .sort-select{width:100%!important}
-html.bb-mobile #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
-html.bb-mobile #teams .team-card,html.bb-mobile #teams .team-card-inner{height:150px!important;min-height:150px!important}
-/* Universe: preserve modes, ranking signal, comparison and ALL real table columns. */
-html.bb-mobile #universe .franchise-universe-shell{overflow:hidden!important;width:100%!important}
-html.bb-mobile #universe .franchise-universe-filter{grid-template-columns:1fr!important}
-html.bb-mobile #universe .franchise-universe-filter .filter-group{display:block!important;overflow-x:auto!important}
-html.bb-mobile #universe .franchise-universe-tabs{display:flex!important;overflow-x:auto!important;gap:6px!important;padding:0 10px 10px!important;scrollbar-width:none}
-html.bb-mobile #universe .franchise-universe-tabs::-webkit-scrollbar{display:none}
-html.bb-mobile #universe .franchise-ranking-signal{display:block!important;margin:0 10px 10px!important}
-html.bb-mobile #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #universe .franchise-universe-card{display:block!important;width:100%!important;min-width:0!important}
-html.bb-mobile #universe .franchise-universe-table-wrap{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;position:relative}
-html.bb-mobile #universe .franchise-universe-table{width:max-content!important;min-width:1120px!important;table-layout:auto!important}
-html.bb-mobile #universe .franchise-universe-table th,html.bb-mobile #universe .franchise-universe-table td{display:table-cell!important;padding:9px 8px!important;font-size:8px!important;white-space:nowrap!important;width:auto!important}
-html.bb-mobile #universe .franchise-universe-table th:first-child,html.bb-mobile #universe .franchise-universe-table td:first-child{position:sticky!important;left:0!important;z-index:3;background:#101827!important}
-html.bb-mobile #universe .franchise-universe-table th:nth-child(2),html.bb-mobile #universe .franchise-universe-table td:nth-child(2){position:sticky!important;left:42px!important;z-index:3;background:#101827!important;min-width:145px!important}
-html.bb-mobile #universe .season-2026-card-note{display:block!important}
-html.bb-mobile #universe .franchise-compare-controls{grid-template-columns:1fr!important}
-/* Keep Division Explorer. */
-html.bb-mobile #divisions{display:block!important}
-html.bb-mobile #divisions + .divider{display:block!important}
-html.bb-mobile #divisions .division-grid{grid-template-columns:1fr 1fr!important;gap:9px!important}
-/* Keep full live controls and cards. */
-html.bb-mobile #live .section-subtitle{display:block!important}
-html.bb-mobile #live .live-indicator{display:flex!important}
-html.bb-mobile #live .live-header>.live-tab{display:inline-flex!important}
-html.bb-mobile #live .live-game{grid-template-columns:minmax(0,1fr) 86px minmax(0,1fr)!important;min-height:94px!important}
-/* Preserve both projected standings and schedule in Live Season Center. */
-html.bb-mobile #season2026 .season-center-status{display:flex!important}
-html.bb-mobile #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-html.bb-mobile #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card:first-child{display:block!important}
-html.bb-mobile #season2026 .season-2026-grid>.season-2026-card{width:100%!important;min-width:0!important}
-html.bb-mobile #season2026 .season-2026-standings,html.bb-mobile #season2026 .season-2026-schedule{max-height:none!important;overflow:visible!important}
-/* Team route: preserve information, stack desktop columns, scroll only wide tables/tabs. */
-html.bb-mobile .team-route-shell,html.bb-mobile .team-route-view{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-html.bb-mobile .team-route-shell .hero-grid,html.bb-mobile .team-route-shell .overview-grid,html.bb-mobile .team-route-shell .team-route-grid{grid-template-columns:1fr!important}
-html.bb-mobile .team-route-shell table{min-width:760px!important}
-html.bb-mobile .team-route-shell .table-wrap,html.bb-mobile .team-route-shell [class*="table-wrap"]{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;max-width:100%!important}
-html.bb-mobile .team-route-shell .tabs,html.bb-mobile .team-route-shell [class*="tabs"]{overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none}
-/* Never let nested panels steal the main vertical swipe. */
-html.bb-mobile #homeShell,html.bb-mobile .section,html.bb-mobile .franchise-universe-shell,html.bb-mobile .live-section,html.bb-mobile .season-2026-shell{overflow-y:visible!important;max-height:none!important}
-html.bb-mobile img{height:auto;object-fit:contain}
-}
-@media(max-width:350px){html.bb-mobile #teams .team-grid,html.bb-mobile #divisions .division-grid{grid-template-columns:1fr!important}}
-</style>
-
 </body>
 </html>
