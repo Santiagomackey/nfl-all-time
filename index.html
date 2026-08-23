@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="NFL All-Time Franchise Database - The definitive hub for every NFL franchise, season, game, and historical record since 1920.">
+<meta name="description" content="Blitzbook — the NFL history database for franchises, seasons, games, records, rankings, and live scores.">
 <meta name="theme-color" content="#0b1220">
-<title>NFL All-Time Franchise Database</title>
+<title>Blitzbook — NFL History Database</title>
 <link id="blitzbookFavicon" rel="icon" type="image/png">
 <link id="blitzbookTouchIcon" rel="apple-touch-icon">
 <script>
@@ -6197,6 +6197,7 @@ html { scroll-behavior: smooth; }
       <a href="#divisions" class="nav-link">Divisions</a>
       <a href="#live" class="nav-link">Game Center</a>
     </div>
+    <button class="bb-search-trigger" id="bbSearchTrigger" type="button" aria-label="Search Blitzbook">⌕ <span>Search</span><kbd>/</kbd></button>
     <div class="nav-right">
       <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
       <div class="nav-badge">
@@ -6430,6 +6431,13 @@ html { scroll-behavior: smooth; }
 <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
 <!--  DIVISION EXPLORER                                          -->
 <!-- Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â -->
+<section class="section bb-season-explorer" id="seasonExplorer">
+  <div class="container"><div class="bb-feature-shell">
+    <div class="section-header"><div class="section-title-group"><div class="section-eyebrow">History Engine</div><div class="section-title">Season Explorer</div><div class="section-subtitle">Jump into a season across the Blitzbook franchise archive. Pick a year, then open any franchise that has data for it.</div></div></div>
+    <div class="bb-season-tools"><label for="bbSeasonYear">Season</label><select id="bbSeasonYear"></select><input id="bbSeasonTeam" type="search" placeholder="Filter teams in this season…"><span id="bbSeasonCount"></span></div>
+    <div class="bb-season-grid" id="bbSeasonGrid"></div>
+  </div></div>
+</section><div class="divider"></div>
 <section class="section" id="divisions">
   <div class="container">
     <div class="section-header">
@@ -8711,6 +8719,38 @@ select option{background:#0d1625;color:#f5f7fb;}
   hostObserver.observe(document.documentElement,{subtree:true,childList:true});
   window.addEventListener('hashchange',() => setTimeout(scanFrames,0));
   window.addEventListener('load',scanFrames,{once:true});
+})();
+</script>
+
+
+<style id="blitzbookUpgradeStyles">
+.bb-search-trigger{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:#d9dfeb;border-radius:8px;padding:7px 10px;font:700 10px 'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;cursor:pointer}.bb-search-trigger kbd{border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:1px 5px;color:#8e9aae;background:#09111e}.bb-feature-shell{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px;background:linear-gradient(145deg,rgba(16,29,48,.86),rgba(8,14,25,.9));contain:layout paint}.bb-season-tools{display:grid;grid-template-columns:auto 140px minmax(220px,1fr) auto;gap:10px;align-items:center;margin:6px 0 18px}.bb-season-tools label,.bb-season-tools span{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8290a5}.bb-season-tools select,.bb-season-tools input{height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:#101a2a;color:#eef2f8;padding:0 12px;font:600 11px 'JetBrains Mono',monospace}.bb-season-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.bb-season-team{display:flex;align-items:center;gap:11px;text-align:left;padding:12px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.025);color:#eef2f8;cursor:pointer;transition:transform .15s ease,border-color .15s ease,background .15s ease}.bb-season-team:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.045)}.bb-season-team img{width:34px;height:34px;object-fit:contain}.bb-season-team strong{display:block;font:700 12px 'JetBrains Mono',monospace}.bb-season-team small{display:block;margin-top:3px;color:#7f8ba0;font-size:9px;text-transform:uppercase;letter-spacing:1px}.bb-search-overlay{position:fixed;inset:0;z-index:999999;background:rgba(2,5,11,.78);backdrop-filter:blur(10px);display:none;align-items:flex-start;justify-content:center;padding:11vh 16px}.bb-search-overlay.open{display:flex}.bb-search-box{width:min(720px,100%);border:1px solid rgba(255,255,255,.13);border-radius:16px;background:#0b1321;box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden}.bb-search-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid rgba(255,255,255,.08)}.bb-search-head input{flex:1;border:0;outline:0;background:transparent;color:#f4f6fa;font:600 15px 'JetBrains Mono',monospace}.bb-search-head button{border:1px solid rgba(255,255,255,.1);background:#111d2f;color:#aeb8c8;border-radius:7px;padding:7px 9px;cursor:pointer}.bb-search-results{max-height:58vh;overflow:auto;padding:8px}.bb-search-item{width:100%;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:11px;padding:10px;border:0;border-radius:9px;background:transparent;color:#eef2f8;text-align:left;cursor:pointer}.bb-search-item:hover,.bb-search-item.active{background:rgba(255,255,255,.06)}.bb-search-item img{width:32px;height:32px;object-fit:contain}.bb-search-item b{display:block;font-size:12px}.bb-search-item small{color:#77859a;font-size:9px;letter-spacing:1px;text-transform:uppercase}.bb-search-item em{font-style:normal;color:#69768a;font-size:9px}.bb-search-empty{padding:30px;text-align:center;color:#748196;font-size:11px}.franchise-universe-table-wrap{content-visibility:auto;contain-intrinsic-size:700px}.division-grid,.team-grid{content-visibility:auto;contain-intrinsic-size:800px}.team-card,.division-card,.live-game{will-change:auto!important}.team-card{transform:translateZ(0)}
+@media(max-width:900px){.bb-search-trigger span,.bb-search-trigger kbd{display:none}.bb-season-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bb-season-tools{grid-template-columns:1fr 1fr}.bb-season-tools label{display:none}.bb-season-tools span{grid-column:1/-1}.bb-feature-shell{padding:16px}}
+@media(max-width:520px){.bb-season-grid{grid-template-columns:1fr}.bb-season-tools{grid-template-columns:1fr}.bb-season-tools span{grid-column:auto}.bb-search-overlay{padding-top:8vh}.bb-search-item{grid-template-columns:34px 1fr}.bb-search-item em{display:none}}
+</style>
+<div class="bb-search-overlay" id="bbSearchOverlay" aria-hidden="true"><div class="bb-search-box" role="dialog" aria-modal="true" aria-label="Search Blitzbook"><div class="bb-search-head"><span>⌕</span><input id="bbGlobalSearch" type="search" autocomplete="off" placeholder="Search teams, seasons, Game Center, Universe…"><button id="bbSearchClose" type="button">ESC</button></div><div class="bb-search-results" id="bbSearchResults"></div></div></div>
+<script id="blitzbookUpgradeScript">
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+function slugFor(t){return typeof getTeamSlug==='function'?getTeamSlug(t):(String(t.url||'').replace(/database\.html$/,'')||t.short.toLowerCase().replace(/\s+/g,'-'));}
+function goTeam(t,year){const slug=slugFor(t); if(year) sessionStorage.setItem('blitzbookSeasonJump',String(year)); if(typeof routeToTeam==='function') routeToTeam(slug); else location.hash='team='+slug;}
+// Global command search
+const overlay=$('#bbSearchOverlay'), input=$('#bbGlobalSearch'), results=$('#bbSearchResults');
+const destinations=[['Universe','Rank and compare all 32 franchises','#universe'],['Game Center','Live, upcoming and recent NFL games','#live'],['Season Explorer','Browse the archive by year','#seasonExplorer'],['Division Explorer','Browse all eight divisions','#divisions'],['2026 Season Center','Standings and complete 2026 schedule','#season2026'],['All 32 Franchises','Team directory','#teams']];
+function openSearch(){overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');setTimeout(()=>input.focus(),0);renderSearch('');}
+function closeSearch(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');}
+function renderSearch(q){q=String(q||'').trim().toLowerCase();let html='';const year=/^(19[2-9]\d|20[0-2]\d)$/.test(q)?Number(q):null;const teams=TEAMS.filter(t=>!q||[t.name,t.short,t.conf,t.div].join(' ').toLowerCase().includes(q)).slice(0,10);teams.forEach(t=>{html+=`<button class="bb-search-item" data-team="${slugFor(t)}"><img src="${t.logo}" alt=""><span><b>${t.name}</b><small>${t.conf} ${t.div} · since ${t.since}</small></span><em>Team →</em></button>`});if(year){html+=`<button class="bb-search-item" data-season="${year}"><span>◷</span><span><b>${year} Season</b><small>Open Season Explorer</small></span><em>Season →</em></button>`}destinations.filter(d=>!q||(d[0]+' '+d[1]).toLowerCase().includes(q)).slice(0,5).forEach(d=>{html+=`<button class="bb-search-item" data-anchor="${d[2]}"><span>↗</span><span><b>${d[0]}</b><small>${d[1]}</small></span><em>Open →</em></button>`});results.innerHTML=html||'<div class="bb-search-empty">No exact result. Try a team name, a season like 1985, “Universe”, or “Game Center”.</div>';}
+$('#bbSearchTrigger')?.addEventListener('click',openSearch);$('#bbSearchClose')?.addEventListener('click',closeSearch);overlay?.addEventListener('click',e=>{if(e.target===overlay)closeSearch()});input?.addEventListener('input',e=>renderSearch(e.target.value));document.addEventListener('keydown',e=>{if(e.key==='/'&&!/input|textarea|select/i.test(document.activeElement?.tagName||'')){e.preventDefault();openSearch()}if(e.key==='Escape'&&overlay.classList.contains('open'))closeSearch()});results?.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.team){const t=TEAMS.find(x=>slugFor(x)===b.dataset.team);closeSearch();if(t)goTeam(t)}else if(b.dataset.season){closeSearch();$('#bbSeasonYear').value=b.dataset.season;renderSeason();document.querySelector('#seasonExplorer')?.scrollIntoView({behavior:'smooth'})}else if(b.dataset.anchor){closeSearch();document.querySelector(b.dataset.anchor)?.scrollIntoView({behavior:'smooth'})}});
+// Season Explorer: only exposes teams whose franchise archive begins by selected year; actual season content is loaded from that team's own database.
+const yearSel=$('#bbSeasonYear'), teamFilter=$('#bbSeasonTeam'), seasonGrid=$('#bbSeasonGrid'), seasonCount=$('#bbSeasonCount');
+if(yearSel){for(let y=2026;y>=1920;y--){const o=document.createElement('option');o.value=y;o.textContent=y;yearSel.appendChild(o)}yearSel.value='2026'}
+function renderSeason(){if(!yearSel||!seasonGrid)return;const y=Number(yearSel.value),q=(teamFilter?.value||'').toLowerCase();const eligible=TEAMS.filter(t=>Number(t.since)<=y&&(!q||(t.name+' '+t.short).toLowerCase().includes(q)));seasonCount.textContent=`${eligible.length} current franchises with archive coverage by ${y}`;seasonGrid.innerHTML=eligible.map(t=>`<button class="bb-season-team" data-season-team="${slugFor(t)}"><img src="${t.logo}" alt=""><span><strong>${t.name}</strong><small>${t.conf} ${t.div} · open ${y}</small></span></button>`).join('')||'<div class="bb-search-empty">No matching franchise.</div>';}
+yearSel?.addEventListener('change',renderSeason);teamFilter?.addEventListener('input',renderSeason);seasonGrid?.addEventListener('click',e=>{const b=e.target.closest('[data-season-team]');if(!b)return;const t=TEAMS.find(x=>slugFor(x)===b.dataset.seasonTeam);if(t)goTeam(t,yearSel.value)});renderSeason();
+// When a team route is opened from Season Explorer, select that season where the unified route exposes a season filter.
+const originalBind=window.bindTeamRouteInteractions; if(typeof originalBind==='function'){window.bindTeamRouteInteractions=function(){const r=originalBind.apply(this,arguments);const y=sessionStorage.getItem('blitzbookSeasonJump');if(y){sessionStorage.removeItem('blitzbookSeasonJump');setTimeout(()=>{const sel=document.querySelector('#teamGameSeasonFilter');if(sel&&[...sel.options].some(o=>o.value===y)){sel.value=y;sel.dispatchEvent(new Event('change',{bubbles:true}))}},120)}return r;}}
+// Keep comparison blank on every fresh home navigation.
+window.addEventListener('hashchange',()=>{if(!location.hash||location.hash==='#'){['#franchiseCompareSearchA','#franchiseCompareSearchB'].forEach(id=>{const n=$(id);if(n)n.value=''});const r=$('#franchiseCompareResult');if(r)r.innerHTML='<div class="universe-empty">Choose two teams to start the comparison.</div>'}});
 })();
 </script>
 
