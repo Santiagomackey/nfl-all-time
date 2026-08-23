@@ -8527,6 +8527,193 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
 </div>
 
 
+
+<!-- BLITZBOOK DESKTOP VISUAL-STABILITY PATCH — 2026-08-23 -->
+<style id="blitzbook-desktop-visual-fix">
+/* Keep the existing design, but prevent low-contrast / invisible UI states. */
+:root{
+  --text-1:#f5f7fb;
+  --text-2:#c8d1dc;
+  --text-3:#91a0b3;
+}
+body{color:var(--text-1);}
+input,select,textarea,button{color:inherit;}
+input::placeholder,textarea::placeholder{color:#8290a4!important;opacity:1!important;}
+select option{background:#0d1625;color:#f5f7fb;}
+.filter-label,.panel-note,.section-subtitle,.season-2026-card-note,
+.franchise-universe-card-note,.live-note,.grid-count{color:var(--text-3)!important;}
+.franchise-universe-table th,.franchise-universe-table td,
+.season-2026-table th,.season-2026-table td{visibility:visible;}
+.modal.open,.modal[aria-hidden="false"]{visibility:visible!important;opacity:1!important;}
+.modal.open .modal-body,.modal[aria-hidden="false"] .modal-body{color:#f5f7fb;}
+.team-card-front,.team-card-back{visibility:visible;}
+.team-logo img,.season-2026-team-logo,.live-game-logo{opacity:1!important;visibility:visible!important;}
+/* Featured Games is intentionally removed from every team route. */
+.team-route-view .featured-games,
+.team-route-view #featuredGames,
+.team-route-view [data-section="featured-games"],
+.team-route-view [data-featured-games]{display:none!important;}
+</style>
+<script id="blitzbook-team-page-visual-fix">
+(function(){
+  'use strict';
+
+  const norm = value => String(value || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'');
+
+  function isFeaturedText(value){
+    const key = norm(value);
+    return key.includes('featuredgames') ||
+      key.includes('featuredgame') ||
+      key.includes('openahighlightedgameandlandonitsexactrowintheseasontable');
+  }
+
+  function removeFeaturedGames(doc){
+    if(!doc) return;
+
+    doc.querySelectorAll(
+      '.featured-games,#featuredGames,[data-section="featured-games"],[data-featured-games]'
+    ).forEach(node => node.remove());
+
+    const headings = doc.querySelectorAll(
+      'h1,h2,h3,h4,h5,.panel-title,.section-title,.card-title,.feature-title,.title,.minihead,.eyebrow'
+    );
+    headings.forEach(heading => {
+      if(!isFeaturedText(heading.textContent)) return;
+      const wrapper = heading.closest(
+        'section,article,.panel,.card,.section,.feature-panel,.module,.widget,.block,.content-panel'
+      ) || heading.parentElement || heading;
+      if(!wrapper.closest('#matchModal,#modalBody,.modal-body,[role="dialog"]')) wrapper.remove();
+    });
+
+    [...doc.querySelectorAll('section,article,.panel,.card,.section,.feature-panel,.module,.widget,.block,.content-panel')]
+      .forEach(node => {
+        if(!node.isConnected || node.closest('#matchModal,#modalBody,.modal-body,[role="dialog"]')) return;
+        const text = String(node.textContent || '').slice(0,900);
+        if(isFeaturedText(text)) node.remove();
+      });
+  }
+
+  function readableChannel(rgb){
+    const m = String(rgb||'').match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    if(!m) return null;
+    const [r,g,b] = m.slice(1).map(Number);
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  }
+
+  function ensureReadable(doc){
+    if(!doc?.documentElement) return;
+
+    let style = doc.getElementById('blitzbook-route-visibility-fix');
+    if(!style){
+      style = doc.createElement('style');
+      style.id = 'blitzbook-route-visibility-fix';
+      style.textContent = `
+        :root{
+          --text:#f5f7fb;
+          --muted:#b7c1cf;
+        }
+        body{color:var(--text)!important;}
+        p,li,td,th,label,.copy,.sub,.panel-note,.micro-detail-note{
+          text-shadow:none;
+        }
+        input,select,textarea{
+          color:#f5f7fb!important;
+          border-color:color-mix(in srgb,var(--accent,#d8b03e) 35%,rgba(255,255,255,.15))!important;
+        }
+        input::placeholder,textarea::placeholder{color:#9aa7b8!important;opacity:1!important;}
+        select option{background:#0a101b!important;color:#f5f7fb!important;}
+        button,a,[role="button"]{visibility:visible;}
+        img,svg{visibility:visible;opacity:1;}
+        table{color:#eef3f9;}
+        th{color:#b9c4d2;}
+        td{color:#e8edf4;}
+        .panel,.card,.stat,.stat-card,.hero-panel,.toolbar,.table-wrap,.season-strip{
+          border-color:color-mix(in srgb,var(--accent,#d8b03e) 22%,rgba(255,255,255,.10));
+        }
+        .featured-games,#featuredGames,[data-section="featured-games"],[data-featured-games]{
+          display:none!important;
+        }
+      `;
+      (doc.head || doc.documentElement).appendChild(style);
+    }
+
+    /* Repair only genuinely unreadable text: transparent or nearly identical to its background. */
+    const candidates = doc.querySelectorAll(
+      'p,span,small,strong,b,em,label,button,a,td,th,h1,h2,h3,h4,.copy,.sub,.panel-note,.stat-label,.stat-value'
+    );
+    candidates.forEach(el => {
+      if(!el.isConnected || el.children.length > 4) return;
+      const cs = doc.defaultView?.getComputedStyle(el);
+      if(!cs || cs.display === 'none' || cs.visibility === 'hidden') return;
+      if(Number(cs.opacity) === 0) el.style.opacity = '1';
+
+      const fg = readableChannel(cs.color);
+      let parent = el.parentElement;
+      let bg = null;
+      while(parent && bg == null){
+        const pcs = doc.defaultView?.getComputedStyle(parent);
+        if(pcs && pcs.backgroundColor && pcs.backgroundColor !== 'rgba(0, 0, 0, 0)' && pcs.backgroundColor !== 'transparent'){
+          bg = readableChannel(pcs.backgroundColor);
+        }
+        parent = parent.parentElement;
+      }
+      if(fg != null && bg != null && Math.abs(fg-bg) < 20){
+        el.style.color = bg < 128 ? '#f4f7fb' : '#101622';
+      }
+    });
+  }
+
+  function stabilizeTeamDocument(doc){
+    if(!doc?.documentElement) return;
+    removeFeaturedGames(doc);
+    ensureReadable(doc);
+
+    if(doc.__blitzbookVisualObserver) return;
+    let queued = false;
+    const observer = new MutationObserver(() => {
+      if(queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        removeFeaturedGames(doc);
+        ensureReadable(doc);
+      });
+    });
+    observer.observe(doc.documentElement,{subtree:true,childList:true});
+    doc.__blitzbookVisualObserver = observer;
+  }
+
+  function scanFrames(){
+    document.querySelectorAll('iframe').forEach(frame => {
+      try{
+        const doc = frame.contentDocument;
+        if(doc) stabilizeTeamDocument(doc);
+        if(!frame.dataset.blitzbookVisualBound){
+          frame.dataset.blitzbookVisualBound = '1';
+          frame.addEventListener('load',() => {
+            try{ stabilizeTeamDocument(frame.contentDocument); }catch(_){}
+          });
+        }
+      }catch(_){}
+    });
+
+    /* Also cover non-iframe portable team routes. */
+    if(document.body.classList.contains('team-route-active')){
+      removeFeaturedGames(document);
+    }
+  }
+
+  scanFrames();
+  const hostObserver = new MutationObserver(scanFrames);
+  hostObserver.observe(document.documentElement,{subtree:true,childList:true});
+  window.addEventListener('hashchange',() => setTimeout(scanFrames,0));
+  window.addEventListener('load',scanFrames,{once:true});
+})();
+</script>
+
 </body>
 </html>`;
 }
