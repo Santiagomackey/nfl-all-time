@@ -14924,5 +14924,256 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<!-- =========================================================
+     BLITZBOOK SEASON DATABASE V3 — DENSE + VERIFIED
+     ========================================================= -->
+<style id="bb-season-db-v3-style">
+/* Hide/remove the older full-screen version when V3 exists */
+#bbSeasonDb.bb-v2-retired{display:none!important}
+#bbSeasonDbV3{
+  position:fixed;inset:0;z-index:30000;display:none;flex-direction:column;
+  background:#060b13;color:#f4f7fb
+}
+#bbSeasonDbV3.open{display:flex}
+.bb-s3-top{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  min-height:58px;padding:8px 12px;border-bottom:1px solid #1e2a3d;background:#08101c
+}
+.bb-s3-close{width:40px;height:40px;border:1px solid #263349;border-radius:9px;background:#111b2b;color:#fff;font-size:21px;cursor:pointer}
+.bb-s3-title{min-width:0}
+.bb-s3-title b{display:block;font:700 18px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.6px}
+.bb-s3-title span{display:block;margin-top:3px;color:#75869b;font-size:6px;letter-spacing:.9px;text-transform:uppercase}
+.bb-s3-controls{display:flex;gap:6px}.bb-s3-controls select,.bb-s3-controls input{
+ height:39px;border:1px solid #263349;border-radius:8px;background:#101a2a;color:#fff;padding:0 9px
+}
+.bb-s3-controls select{min-width:120px}.bb-s3-controls input{width:80px}
+.bb-s3-controls button{height:39px;border:1px solid #76162c;border-radius:8px;background:#3c0f1d;color:#fff;padding:0 11px;font:800 7px 'JetBrains Mono',monospace;text-transform:uppercase}
+.bb-s3-tabs{display:flex;gap:5px;padding:7px 12px;border-bottom:1px solid #1c2738;background:#09111d;overflow-x:auto}
+.bb-s3-tab{flex:0 0 auto;min-height:32px;padding:7px 10px;border:1px solid #263349;border-radius:7px;background:#101927;color:#8998ab;font:800 7px 'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer}
+.bb-s3-tab.active{border-color:#9a1734;background:#3a0e1c;color:#fff}
+.bb-s3-scroll{flex:1;overflow:auto;padding:10px 12px 18px}
+.bb-s3-inner{width:min(1240px,100%);margin:auto}
+.bb-s3-panel{display:none}.bb-s3-panel.active{display:block}
+.bb-s3-loading,.bb-s3-error{padding:38px;text-align:center;color:#7c8ca0;border:1px dashed #263349;border-radius:10px}
+
+/* Dense overview */
+.bb-s3-overview-top{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:8px}
+.bb-s3-card{border:1px solid #202d40;border-radius:10px;background:#0d1624;overflow:hidden}
+.bb-s3-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid #1c2839}
+.bb-s3-card-head b{font:700 12px 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.bb-s3-card-head span{color:#718297;font-size:6px;letter-spacing:.8px;text-transform:uppercase}
+.bb-s3-champ{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px}
+.bb-s3-champ img{width:60px;height:60px;object-fit:contain}
+.bb-s3-champ h2{margin:0;font:700 24px/1 'Oswald',sans-serif;text-transform:uppercase}
+.bb-s3-champ p{margin:4px 0 0;color:#8595a8;font-size:7px}
+.bb-s3-champ-record{text-align:right}.bb-s3-champ-record strong{display:block;font:700 20px 'Oswald',sans-serif}.bb-s3-champ-record span{color:#75869a;font-size:6px;text-transform:uppercase}
+.bb-s3-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:8px}
+.bb-s3-kpi{border:1px solid #1e2a3c;border-radius:7px;background:#0a1320;padding:8px}
+.bb-s3-kpi span{display:block;color:#708195;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-s3-kpi strong{display:block;margin-top:3px;font-size:9px;line-height:1.25}
+.bb-s3-section-title{display:flex;align-items:center;justify-content:space-between;margin:12px 0 6px;padding:0 1px}
+.bb-s3-section-title b{font:700 14px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-s3-section-title span{color:#6f8094;font-size:6px;text-transform:uppercase;letter-spacing:.7px}
+.bb-s3-teamstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.bb-s3-statleader{min-width:0;border:1px solid #1f2b3e;border-radius:8px;background:#0c1523;padding:8px}
+.bb-s3-statleader .lab{color:#718196;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-s3-statleader .team{display:flex;align-items:center;gap:6px;margin-top:6px;min-width:0}
+.bb-s3-statleader img{width:26px;height:26px;object-fit:contain}
+.bb-s3-statleader b{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-s3-statleader strong{display:block;margin-top:6px;font:700 16px 'Oswald',sans-serif}
+
+/* Local player leader cards */
+.bb-s3-leadergrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.bb-s3-leadercard{border:1px solid #202d40;border-radius:9px;background:#0d1624;overflow:hidden}
+.bb-s3-leaderhead{display:flex;justify-content:space-between;padding:8px 9px;border-bottom:1px solid #1b2738}
+.bb-s3-leaderhead b{font:700 11px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-s3-leaderhead span{color:#718297;font-size:5px;text-transform:uppercase}
+.bb-s3-leaderrow{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px 9px;border-bottom:1px solid #182334}
+.bb-s3-leaderrow:last-child{border-bottom:0}
+.bb-s3-rank{color:#718297;font:700 10px 'Oswald',sans-serif}
+.bb-s3-pname{min-width:0}.bb-s3-pname b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bb-s3-pname span{display:block;color:#748499;font-size:5px;margin-top:2px}
+.bb-s3-pval{text-align:right}.bb-s3-pval strong{display:block;font:700 13px 'Oswald',sans-serif}.bb-s3-pval span{display:block;color:#718297;font-size:5px;text-transform:uppercase}
+
+/* Road */
+.bb-s3-road{display:grid;gap:6px}
+.bb-s3-game{display:grid;grid-template-columns:115px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid #202d40;border-radius:8px;background:#0c1523;padding:8px}
+.bb-s3-game .round{color:#d4ac50;font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase}
+.bb-s3-game .match{display:flex;align-items:center;gap:7px;min-width:0}.bb-s3-game .match img{width:27px;height:27px;object-fit:contain}.bb-s3-game .match b{font-size:8px}
+.bb-s3-game .score{font:700 13px 'Oswald',sans-serif}.bb-s3-game .score.win{color:#69d5a7}
+
+/* Teams */
+.bb-s3-search{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
+.bb-s3-search input{height:36px;border:1px solid #263349;border-radius:7px;background:#101927;color:#fff;padding:0 10px}.bb-s3-search span{display:flex;align-items:center;color:#718297;font-size:6px}
+.bb-s3-tablewrap{overflow:auto;border:1px solid #202d40;border-radius:8px}
+.bb-s3-table{width:100%;min-width:960px;border-collapse:collapse}
+.bb-s3-table th,.bb-s3-table td{padding:7px 8px;border-bottom:1px solid #182334;font-size:7px;white-space:nowrap;text-align:center}
+.bb-s3-table th{position:sticky;top:0;background:#0a1320;color:#7c8ca0;text-transform:uppercase;z-index:2}
+.bb-s3-table th:nth-child(2),.bb-s3-table td:nth-child(2){text-align:left}
+.bb-s3-teamcell{display:flex;align-items:center;gap:6px}.bb-s3-teamcell img{width:22px;height:22px;object-fit:contain}.bb-s3-teamcell button{border:0;background:none;color:#eef3f8;padding:0;font-weight:700;cursor:pointer}
+
+/* Postseason source state */
+.bb-s3-source{font-size:6px;color:#63d1a1;text-transform:uppercase;letter-spacing:.7px}
+.bb-s3-source.warn{color:#d6a94b}
+@media(max-width:900px){
+ .bb-s3-overview-top{grid-template-columns:1fr}.bb-s3-teamstats{grid-template-columns:repeat(2,minmax(0,1fr))}.bb-s3-leadergrid{grid-template-columns:1fr 1fr}
+ .bb-s3-top{grid-template-columns:auto 1fr}.bb-s3-controls{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .bb-s3-scroll{padding:8px}.bb-s3-teamstats{grid-template-columns:1fr 1fr}.bb-s3-leadergrid{grid-template-columns:1fr}
+ .bb-s3-champ{grid-template-columns:54px 1fr}.bb-s3-champ-record{grid-column:1/-1;text-align:left}.bb-s3-game{grid-template-columns:1fr auto}.bb-s3-game .round{grid-column:1/-1}
+}
+</style>
+
+<script id="bb-season-db-v3-script">
+(function(){
+'use strict';
+if(window.__BB_SEASON_DB_V3__)return;
+window.__BB_SEASON_DB_V3__=true;
+
+var cacheS3=new Map(),postCacheS3=new Map(),yearS3=2025,tabS3='overview',rowsS3=[],champS3=null,postS3=[];
+function S(v){return String(v==null?'':v)} function L(v){return S(v).toLowerCase()} function N(v){var n=Number(v);return Number.isFinite(n)?n:null}
+function E(v){return S(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function A(v){return Array.isArray(v)?v:(v==null?[]:[v])} function K(v){return L(v).replace(/[^a-z0-9]+/g,'')}
+function metaS3(slug){return TEAMS.find(function(t){return t.slug===slug})||null}
+function seasonS3(d,y){return A(d&&d.seasons).find(function(x){return Number(x&&x.year)===Number(y)})||null}
+function recS3(s){var m=S(s&&s.record).match(/(\d+)\s*[-–]\s*(\d+)(?:\s*[-–]\s*(\d+))?/);return m?{w:+m[1],l:+m[2],t:+(m[3]||0)}:{w:N(s&&s.wins)||0,l:N(s&&s.losses)||0,t:N(s&&s.ties)||0}}
+function pctS3(r){var g=r.w+r.l+r.t;return g?(r.w+r.t*.5)/g:0} function pctTxtS3(x){return Number(x||0).toFixed(3).replace(/^0/,'')}
+function logoS3(m,d){return d&&d.identity&&d.identity.assets&&d.identity.assets.logo||m&&m.logo||''}
+function nameS3(m,d){return d&&d.identity&&(d.identity.fullName||d.identity.teamName)||m&&m.name||'NFL Team'}
+function statS3(s,aliases){var o=s&&s.teamStats||{},ks=Object.keys(o);for(var i=0;i<aliases.length;i++){var a=K(aliases[i]),k=ks.find(function(x){return K(x)===a});if(k!=null&&o[k]!=null&&o[k]!=='')return o[k]}return ''}
+function numS3(v){var m=S(v).replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
+
+async function loadRowsS3(y){
+ if(cacheS3.has(y))return cacheS3.get(y);
+ var p=Promise.all(TEAMS.map(async function(m){try{var d=await loadTeamData(m.slug),s=seasonS3(d,y);if(!s)return null;var r=recS3(s);return {meta:m,data:d,season:s,rec:r,pct:pctS3(r),name:nameS3(m,d),logo:logoS3(m,d)}}catch(e){return null}})).then(function(r){return r.filter(Boolean)});
+ cacheS3.set(y,p);return p;
+}
+function leaderTeamS3(rows,label,aliases,mode){
+ var best=null;rows.forEach(function(r){var raw=statS3(r.season,aliases),v=numS3(raw);if(v==null)return;if(!best||(mode==='min'?v<best.v:v>best.v))best={r:r,v:v,raw:raw,label:label}});return best;
+}
+function playerLeadersLocalS3(rows,metric){
+ var out=[];
+ rows.forEach(function(r){A(r.season&&r.season.leaders).forEach(function(x){if(K(x&&x.metric)!==K(metric))return;var v=numS3(x&&x.value);if(v==null)return;out.push({name:S(x.name||'Player'),value:v,raw:S(x.value),team:r.name,slug:r.meta.slug})})});
+ return out.sort(function(a,b){return b.value-a.value}).slice(0,10);
+}
+
+/* canonical postseason from ESPN */
+async function espnFetchS3(url){
+ try{var r=await fetch('/api/espn?url='+encodeURIComponent(url),{cache:'no-store'});if(r.ok)return await r.json()}catch(e){}
+ try{var d=await fetch(url,{cache:'no-store'});if(d.ok)return await d.json()}catch(e){}
+ return null;
+}
+async function postseasonS3(y){
+ if(postCacheS3.has(y))return postCacheS3.get(y);
+ var p=(async function(){
+   var events=[];
+   for(var w=1;w<=5;w++){
+     var url='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season='+y+'&dates='+y+'&seasontype=3&week='+w+'&limit=100';
+     var data=await espnFetchS3(url);
+     A(data&&data.events).forEach(function(e){if(!events.some(function(x){return S(x.id)===S(e.id)}))events.push(e)});
+   }
+   events=events.filter(function(e){return Number(e&&e.season&&e.season.year||y)===Number(y)});
+   return events.sort(function(a,b){return new Date(a.date||0)-new Date(b.date||0)});
+ })();
+ postCacheS3.set(y,p);return p;
+}
+function compS3(e){return e&&e.competitions&&e.competitions[0]||null}
+function teamsEventS3(e){return A(compS3(e)&&compS3(e).competitors)}
+function eventRoundS3(e){
+ var c=compS3(e),notes=A(c&&c.notes).map(function(n){return n&&n.headline}).filter(Boolean).join(' ');
+ return notes||e&&e.week&&e.week.text||e&&e.name||'Postseason';
+}
+function isSuperBowlS3(e){return /super bowl/i.test(eventRoundS3(e)+' '+S(e&&e.name)+' '+S(e&&e.shortName))}
+function winnerS3(e){return teamsEventS3(e).find(function(c){return c&&c.winner===true})||null}
+function loserS3(e){return teamsEventS3(e).find(function(c){return c&&c.winner===false})||null}
+function slugCompS3(c){
+ var ab=S(c&&c.team&&c.team.abbreviation).toLowerCase();
+ var map={'phi':'eagles','ne':'patriots','kc':'chiefs','sf':'49ers','tb':'buccaneers','lar':'rams','cin':'bengals','bal':'ravens','den':'broncos','sea':'seahawks','gb':'packers','nyg':'giants','ind':'colts','pit':'steelers','no':'saints','ari':'cardinals','car':'panthers','atl':'falcons','min':'vikings','dal':'cowboys','wsh':'commanders','was':'commanders','lv':'raiders','oak':'raiders','sd':'chargers','lac':'chargers','ten':'titans','hou':'texans','jax':'jaguars','mia':'dolphins','buf':'bills','nyj':'jets','cle':'browns','det':'lions','chi':'bears'};
+ return map[ab]||ab;
+}
+function championFromPostS3(events,y){
+ var sb=events.find(isSuperBowlS3);
+ if(!sb)sb=events.slice().reverse().find(function(e){return winnerS3(e)&&!/pro bowl/i.test(S(e.name)+' '+eventRoundS3(e))});
+ var w=winnerS3(sb);if(!w)return null;
+ return {slug:slugCompS3(w),event:sb,competitor:w};
+}
+function roadS3(events,slug){
+ return events.filter(function(e){return teamsEventS3(e).some(function(c){return slugCompS3(c)===slug})&&!/pro bowl/i.test(S(e.name)+' '+eventRoundS3(e))});
+}
+
+function removeOldS3(){
+ var old=document.getElementById('bbSeasonDb');if(old)old.classList.add('bb-v2-retired');
+}
+function buildS3(){
+ if(document.getElementById('bbSeasonDbV3'))return;
+ var db=document.createElement('div');db.id='bbSeasonDbV3';
+ db.innerHTML='<div class="bb-s3-top"><button class="bb-s3-close" type="button">×</button><div class="bb-s3-title"><b id="bbS3Title">NFL Season Database</b><span>Champion · leaders · team stats · postseason road</span></div><div class="bb-s3-controls"><select id="bbS3Year"></select><input id="bbS3Quick" type="number" min="1920" max="2026"><button id="bbS3Load" type="button">Load</button></div></div><div class="bb-s3-tabs"><button class="bb-s3-tab active" data-s3tab="overview">Overview</button><button class="bb-s3-tab" data-s3tab="leaders">Player Leaders</button><button class="bb-s3-tab" data-s3tab="teams">Teams & Stats</button><button class="bb-s3-tab" data-s3tab="road">Championship Road</button></div><div class="bb-s3-scroll"><div id="bbS3Body" class="bb-s3-inner"></div></div>';
+ document.body.appendChild(db);
+ var sel=db.querySelector('#bbS3Year');for(var y=2026;y>=1920;y--){var o=document.createElement('option');o.value=y;o.textContent=y+' NFL Season';sel.appendChild(o)}
+ function close(){db.classList.remove('open');document.body.style.overflow=''}
+ db.querySelector('.bb-s3-close').onclick=close;db.querySelector('#bbS3Load').onclick=function(){var y=Math.max(1920,Math.min(2026,Number(db.querySelector('#bbS3Quick').value)||Number(sel.value)));sel.value=y;db.querySelector('#bbS3Quick').value=y;renderS3(y)}
+ sel.onchange=function(){db.querySelector('#bbS3Quick').value=sel.value;renderS3(Number(sel.value))};db.querySelector('#bbS3Quick').onkeydown=function(e){if(e.key==='Enter')db.querySelector('#bbS3Load').click()}
+ db.querySelectorAll('[data-s3tab]').forEach(function(b){b.onclick=function(){tabS3=b.dataset.s3tab;syncTabsS3()}});
+}
+function syncTabsS3(){document.querySelectorAll('[data-s3tab]').forEach(function(b){b.classList.toggle('active',b.dataset.s3tab===tabS3)});document.querySelectorAll('.bb-s3-panel').forEach(function(p){p.classList.toggle('active',p.dataset.s3panel===tabS3)})}
+function champCardS3(c,y,source){
+ if(!c)return '<div class="bb-s3-card"><div class="bb-s3-card-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span class="bb-s3-source warn">not resolved</span></div><div class="bb-s3-champ"><img src="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png"><div><h2>'+(y>=2026?'TBD':'Unavailable')+'</h2><p>Blitzbook could not verify the title game for this season.</p></div></div></div>';
+ return '<div class="bb-s3-card"><div class="bb-s3-card-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span class="bb-s3-source">'+E(source)+'</span></div><div class="bb-s3-champ"><img src="'+E(c.logo)+'"><div><h2>'+E(c.name)+'</h2><p>'+E(c.season.playoffResult&& !/missed/i.test(c.season.playoffResult)?c.season.playoffResult:'Verified from postseason scoreboard')+'</p></div><div class="bb-s3-champ-record"><strong>'+E(c.season.record||c.rec.w+'-'+c.rec.l)+'</strong><span>regular season</span></div></div></div>';
+}
+function kpiCardS3(rows,c,y){
+ var best=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w})[0];
+ var k=[['Teams',rows.length],['Best Record',best?best.name+' '+S(best.season.record):'—'],['Champion',c?c.name:(y>=2026?'TBD':'—')],['Era',y>=1970?'Post-merger NFL':y>=1966?'Super Bowl era':'Pre-Super Bowl']];
+ return '<div class="bb-s3-card"><div class="bb-s3-card-head"><b>Season Snapshot</b><span>'+y+'</span></div><div class="bb-s3-kpis">'+k.map(function(x){return '<div class="bb-s3-kpi"><span>'+E(x[0])+'</span><strong>'+E(x[1])+'</strong></div>'}).join('')+'</div></div>';
+}
+function teamStatsS3(rows){
+ var defs=[['Most Points',['PTS','Points For','PF'],'max'],['Most Total Yards',['YDS','Total Yards','Yards'],'max'],['Most Pass Yards',['PASS YDS','Passing Yards'],'max'],['Most Rush Yards',['RUSH YDS','Rushing Yards'],'max'],['Best Scoring Defense',['PTS ALLOWED','PA','Points Against'],'min'],['Most Sacks',['SACKS','SCK','Sacks'],'max'],['Most Takeaways',['TAKEAWAYS','Takeaways'],'max'],['Best Point Diff',['DIFF','Point Differential'],'max']];
+ var ls=defs.map(function(d){return leaderTeamS3(rows,d[0],d[1],d[2])}).filter(Boolean);
+ return '<div class="bb-s3-section-title"><b>Team Statistical Leaders</b><span>franchise season data</span></div><div class="bb-s3-teamstats">'+ls.map(function(x){return '<div class="bb-s3-statleader"><div class="lab">'+E(x.label)+'</div><div class="team"><img src="'+E(x.r.logo)+'"><b>'+E(x.r.name)+'</b></div><strong>'+E(x.raw)+'</strong></div>'}).join('')+'</div>';
+}
+function playerCardS3(title,label,rows){
+ return '<div class="bb-s3-leadercard"><div class="bb-s3-leaderhead"><b>'+E(title)+'</b><span>'+E(label)+'</span></div>'+ (rows.length?rows.slice(0,10).map(function(r,i){return '<div class="bb-s3-leaderrow"><div class="bb-s3-rank">'+(i+1)+'</div><div class="bb-s3-pname"><b>'+E(r.name)+'</b><span>'+E(r.team)+'</span></div><div class="bb-s3-pval"><strong>'+E(r.raw)+'</strong><span>'+E(label)+'</span></div></div>'}).join(''):'<div style="padding:18px;text-align:center;color:#718297;font-size:7px">No data stored for this category.</div>')+'</div>';
+}
+function leadersS3(rows){
+ var pass=playerLeadersLocalS3(rows,'PASS YDS'),rush=playerLeadersLocalS3(rows,'RUSH YDS'),rec=playerLeadersLocalS3(rows,'REC YDS');
+ return '<div class="bb-s3-section-title"><b>League Player Leaders</b><span>aggregated from all 32 franchise season files</span></div><div class="bb-s3-leadergrid">'+playerCardS3('Passing Yards','PASS YDS',pass)+playerCardS3('Rushing Yards','RUSH YDS',rush)+playerCardS3('Top Receivers','REC YDS',rec)+'</div>';
+}
+function roadHtmlS3(events,c){
+ if(!c)return '<div class="bb-s3-error">No verified champion, so no championship road can be built.</div>';
+ var games=roadS3(events,c.meta.slug);
+ if(!games.length)return '<div class="bb-s3-error">Champion verified, but postseason games were not returned by the feed.</div>';
+ return '<div class="bb-s3-section-title"><b>Road to the '+(yearS3>=1966?'Super Bowl':'NFL Title')+'</b><span>'+E(c.name)+'</span></div><div class="bb-s3-road">'+games.map(function(e){var comps=teamsEventS3(e),me=comps.find(function(x){return slugCompS3(x)===c.meta.slug}),opp=comps.find(function(x){return slugCompS3(x)!==c.meta.slug});var win=me&&me.winner===true;return '<div class="bb-s3-game"><div class="round">'+E(eventRoundS3(e))+'</div><div class="match"><img src="'+E(opp&&opp.team&&opp.team.logo||'')+'"><b>'+E((me&&me.homeAway==='away'?'@ ':'vs ')+(opp&&opp.team&&(opp.team.shortDisplayName||opp.team.displayName)||'Opponent'))+'</b></div><div class="score '+(win?'win':'')+'">'+E((me&&me.score!=null?me.score:'—')+' - '+(opp&&opp.score!=null?opp.score:'—'))+'</div></div>'}).join('')+'</div>';
+}
+function teamsTableS3(rows){
+ var sorted=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w||a.rec.l-b.rec.l});
+ return '<div class="bb-s3-search"><input id="bbS3Search" type="search" placeholder="Search team, division, record, playoff result…"><span id="bbS3Count">'+sorted.length+' teams</span></div><div class="bb-s3-tablewrap"><table class="bb-s3-table"><thead><tr><th>#</th><th>Team</th><th>Conf</th><th>Div</th><th>Record</th><th>Pct</th><th>Playoff Result*</th><th>PTS</th><th>YDS</th><th>PASS</th><th>RUSH</th></tr></thead><tbody id="bbS3Rows">'+sorted.map(function(r,i){return '<tr data-q="'+E(L(r.name+' '+r.meta.conf+' '+r.meta.div+' '+S(r.season.record)+' '+S(r.season.playoffResult)))+'"><td>'+(i+1)+'</td><td><div class="bb-s3-teamcell"><img src="'+E(r.logo)+'"><button type="button" data-s3team="'+E(r.meta.slug)+'">'+E(r.name)+'</button></div></td><td>'+E(r.meta.conf||'—')+'</td><td>'+E(r.meta.div||'—')+'</td><td>'+E(r.season.record||r.rec.w+'-'+r.rec.l)+'</td><td>'+E(pctTxtS3(r.pct))+'</td><td>'+E(r.season.playoffResult||'—')+'</td><td>'+E(statS3(r.season,['PTS'])||'—')+'</td><td>'+E(statS3(r.season,['YDS'])||'—')+'</td><td>'+E(statS3(r.season,['PASS YDS'])||'—')+'</td><td>'+E(statS3(r.season,['RUSH YDS'])||'—')+'</td></tr>'}).join('')+'</tbody></table></div><div style="margin-top:5px;color:#65768b;font-size:6px">* Some legacy franchise playoff-result fields are known to be incomplete; champion and championship road above use the verified postseason feed.</div>';
+}
+function bindS3(){
+ document.querySelectorAll('[data-s3team]').forEach(function(b){b.onclick=function(){closeS3();routeToTeam(b.dataset.s3team)}});var q=document.getElementById('bbS3Search');if(q)q.oninput=function(){var x=L(q.value),n=0;document.querySelectorAll('#bbS3Rows tr').forEach(function(r){var ok=!x||S(r.dataset.q).indexOf(x)!==-1;r.style.display=ok?'':'none';if(ok)n++});document.getElementById('bbS3Count').textContent=n+' teams'};
+}
+function closeS3(){var db=document.getElementById('bbSeasonDbV3');if(db)db.classList.remove('open');document.body.style.overflow=''}
+async function renderS3(y){
+ yearS3=Number(y);var body=document.getElementById('bbS3Body');document.getElementById('bbS3Title').textContent=y+' NFL Season Database';body.innerHTML='<div class="bb-s3-loading">Building '+y+' season…</div>';
+ try{
+   var pair=await Promise.all([loadRowsS3(y),postseasonS3(y)]),rows=pair[0],events=pair[1],ch=championFromPostS3(events,y),c=ch?rows.find(function(r){return r.meta.slug===ch.slug}):null;
+   rowsS3=rows;champS3=c;postS3=events;
+   body.innerHTML='<section class="bb-s3-panel active" data-s3panel="overview"><div class="bb-s3-overview-top">'+champCardS3(c,y,events.length?'ESPN postseason':'Unavailable')+kpiCardS3(rows,c,y)+'</div>'+teamStatsS3(rows)+'</section><section class="bb-s3-panel" data-s3panel="leaders">'+leadersS3(rows)+'</section><section class="bb-s3-panel" data-s3panel="teams">'+teamsTableS3(rows)+'</section><section class="bb-s3-panel" data-s3panel="road">'+roadHtmlS3(events,c)+'</section>';
+   bindS3();syncTabsS3();
+ }catch(e){console.error(e);body.innerHTML='<div class="bb-s3-error">Could not build this season. Try reloading Blitzbook.</div>'}
+}
+function openS3(y){
+ buildS3();removeOldS3();var db=document.getElementById('bbSeasonDbV3');db.classList.add('open');document.body.style.overflow='hidden';var yy=Math.max(1920,Math.min(2026,Number(y)||2025));db.querySelector('#bbS3Year').value=yy;db.querySelector('#bbS3Quick').value=yy;renderS3(yy)
+}
+function initS3(){
+ removeOldS3();buildS3();
+ /* Hijack the compact launcher's Open button to V3 */
+ var openBtn=document.getElementById('bbSeasonLaunchOpen'),sel=document.getElementById('bbSeasonLaunchYear');
+ if(openBtn&&sel)openBtn.onclick=function(){openS3(Number(sel.value))};
+ window.openSeasonExplorer=openS3;
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(initS3,0)},{once:true});else setTimeout(initS3,0);
+})();
+</script>
+
 </body>
 </html>
