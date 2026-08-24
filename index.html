@@ -15175,5 +15175,320 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<!-- =========================================================
+     BLITZBOOK SEASON ARCHIVE V4 — CLEAN / COMPACT / SINGLE-SCROLL
+     ========================================================= -->
+<style id="bb-season-v4-style">
+/* retire all previous season archive launchers/databases */
+#bbSeasonDbLauncher,
+#seasonArchiveExplorer,
+#bbHistoryV2,
+#blitzbookHistoryTools,
+#bbSeasonDb,
+#bbSeasonDbV3{display:none!important}
+
+/* tiny launcher on homepage */
+#bbSeasonV4Launcher{padding:16px 0!important}
+.bb-v4-launch{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:11px 13px;border:1px solid rgba(255,255,255,.08);border-radius:12px;
+  background:linear-gradient(180deg,rgba(14,24,39,.94),rgba(9,15,25,.97));
+}
+.bb-v4-launch-left{display:flex;align-items:center;gap:10px;min-width:0}
+.bb-v4-launch-icon{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.08);background:#121d2d;
+  font:700 14px 'Oswald',sans-serif;color:#d9e0e9;flex:0 0 auto
+}
+.bb-v4-launch-copy{min-width:0}
+.bb-v4-launch-copy b{display:block;font:700 14px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.6px}
+.bb-v4-launch-copy span{display:block;margin-top:3px;color:#78899e;font-size:6px;letter-spacing:.7px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-v4-launch button{
+  flex:0 0 auto;height:34px;padding:0 11px;border:1px solid rgba(187,30,60,.45);border-radius:8px;
+  background:rgba(99,13,31,.28);color:#fff;font:800 7px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.8px;cursor:pointer
+}
+.bb-v4-launch button:hover{background:rgba(132,17,40,.38)}
+
+/* full season archive */
+#bbSeasonV4{
+  position:fixed;inset:0;z-index:40000;display:none;background:#060b13;color:#f4f7fb;
+  overflow:hidden
+}
+#bbSeasonV4.open{display:block}
+.bb-v4-shell{height:100%;display:grid;grid-template-rows:auto auto minmax(0,1fr)}
+.bb-v4-top{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  min-height:56px;padding:8px 12px;border-bottom:1px solid #1d293b;background:#08101b
+}
+.bb-v4-close{width:39px;height:39px;border:1px solid #263349;border-radius:9px;background:#111b2b;color:#fff;font-size:20px;cursor:pointer}
+.bb-v4-title{min-width:0}
+.bb-v4-title b{display:block;font:700 17px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.6px}
+.bb-v4-title span{display:block;margin-top:3px;color:#74859a;font-size:6px;letter-spacing:.8px;text-transform:uppercase}
+.bb-v4-year{display:flex;align-items:center;gap:6px}
+.bb-v4-year select{
+  height:37px;min-width:120px;border:1px solid #263349;border-radius:8px;background:#101a2a;color:#fff;padding:0 9px;font-size:9px
+}
+.bb-v4-tabs{
+  display:flex;gap:5px;overflow-x:auto;padding:7px 12px;border-bottom:1px solid #1b2738;background:#09111c;scrollbar-width:none
+}
+.bb-v4-tabs::-webkit-scrollbar{display:none}
+.bb-v4-tab{
+  flex:0 0 auto;height:31px;padding:0 9px;border:1px solid #253247;border-radius:7px;
+  background:#101927;color:#8291a4;font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.7px;cursor:pointer
+}
+.bb-v4-tab.active{border-color:#8f1731;background:#36101d;color:#fff}
+
+/* ONE and only one vertical scroll area */
+.bb-v4-content{min-height:0;overflow-y:auto;overflow-x:hidden;padding:10px 12px 18px;overscroll-behavior:contain}
+.bb-v4-inner{width:min(1160px,100%);margin:0 auto}
+.bb-v4-panel{display:none}.bb-v4-panel.active{display:block}
+.bb-v4-loading,.bb-v4-error{padding:36px;text-align:center;border:1px dashed #263349;border-radius:10px;color:#7a8a9d}
+
+/* compact overview */
+.bb-v4-overview{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:8px}
+.bb-v4-card{border:1px solid #202c3e;border-radius:10px;background:#0d1624;overflow:hidden}
+.bb-v4-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid #1a2636}
+.bb-v4-head b{font:700 11px 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.bb-v4-head span{color:#708195;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v4-champ{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px}
+.bb-v4-champ img{width:50px;height:50px;object-fit:contain}
+.bb-v4-champ h2{margin:0;font:700 22px/1 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v4-champ p{margin:4px 0 0;color:#8291a4;font-size:7px}
+.bb-v4-champ .record{text-align:right}.bb-v4-champ .record strong{display:block;font:700 18px 'Oswald',sans-serif}.bb-v4-champ .record span{display:block;color:#708195;font-size:5px;text-transform:uppercase}
+.bb-v4-kpis{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px}
+.bb-v4-kpi{border:1px solid #1d293a;border-radius:7px;background:#0a1320;padding:8px}
+.bb-v4-kpi span{display:block;color:#6f8094;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v4-kpi strong{display:block;margin-top:3px;font-size:8px;line-height:1.25}
+
+/* reliable leader tiles */
+.bb-v4-section-title{display:flex;align-items:center;justify-content:space-between;margin:11px 0 6px}
+.bb-v4-section-title b{font:700 13px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v4-section-title span{color:#6f8094;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v4-teamleaders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.bb-v4-tile{min-width:0;border:1px solid #1f2b3d;border-radius:8px;background:#0c1523;padding:8px}
+.bb-v4-tile .lab{color:#6e7f93;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v4-tile .row{display:flex;align-items:center;gap:6px;margin-top:6px;min-width:0}
+.bb-v4-tile img{width:24px;height:24px;object-fit:contain}
+.bb-v4-tile b{font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-v4-tile strong{display:block;margin-top:5px;font:700 14px 'Oswald',sans-serif}
+
+/* player leaders from local files only */
+.bb-v4-leaders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.bb-v4-leader{border:1px solid #202c3e;border-radius:9px;background:#0d1624;overflow:hidden}
+.bb-v4-leader-head{display:flex;justify-content:space-between;padding:8px 9px;border-bottom:1px solid #1a2636}
+.bb-v4-leader-head b{font:700 10px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v4-leader-head span{color:#708195;font-size:5px;text-transform:uppercase}
+.bb-v4-leader-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px 9px;border-bottom:1px solid #172334}
+.bb-v4-leader-row:last-child{border-bottom:0}
+.bb-v4-leader-row .rank{color:#6e7f93;font:700 9px 'Oswald',sans-serif}
+.bb-v4-leader-row .who{min-width:0}.bb-v4-leader-row .who b{display:block;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bb-v4-leader-row .who span{display:block;color:#708195;font-size:5px;margin-top:2px}
+.bb-v4-leader-row .val{text-align:right}.bb-v4-leader-row .val strong{display:block;font:700 12px 'Oswald',sans-serif}.bb-v4-leader-row .val span{display:block;color:#708195;font-size:5px}
+.bb-v4-empty{padding:18px;text-align:center;color:#718196;font-size:7px}
+
+/* teams table: ONLY horizontal scroll here */
+.bb-v4-filter{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
+.bb-v4-filter input{height:35px;border:1px solid #263349;border-radius:7px;background:#101927;color:#fff;padding:0 10px;font-size:8px}
+.bb-v4-filter span{display:flex;align-items:center;color:#708195;font-size:6px}
+.bb-v4-tablewrap{overflow-x:auto;overflow-y:hidden;border:1px solid #202c3e;border-radius:8px}
+.bb-v4-table{width:100%;min-width:900px;border-collapse:collapse}
+.bb-v4-table th,.bb-v4-table td{padding:7px 8px;border-bottom:1px solid #172334;font-size:7px;white-space:nowrap;text-align:center}
+.bb-v4-table th{background:#0a1320;color:#78889b;text-transform:uppercase}
+.bb-v4-table th:nth-child(2),.bb-v4-table td:nth-child(2){text-align:left}
+.bb-v4-teamcell{display:flex;align-items:center;gap:6px}.bb-v4-teamcell img{width:21px;height:21px;object-fit:contain}.bb-v4-teamcell button{border:0;background:none;color:#eef2f7;padding:0;font-weight:700;cursor:pointer}
+
+/* playoff road */
+.bb-v4-road{display:grid;gap:6px}
+.bb-v4-game{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid #202c3e;border-radius:8px;background:#0c1523;padding:8px}
+.bb-v4-game .round{color:#d3a84c;font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase}
+.bb-v4-game .match{display:flex;align-items:center;gap:6px;min-width:0}.bb-v4-game .match img{width:25px;height:25px;object-fit:contain}.bb-v4-game .match b{font-size:7px}
+.bb-v4-game .score{font:700 12px 'Oswald',sans-serif}.bb-v4-game .score.win{color:#67d4a5}
+
+/* no nested vertical scrolls anywhere in V4 */
+#bbSeasonV4 *{scrollbar-gutter:auto}
+#bbSeasonV4 .bb-v4-card,
+#bbSeasonV4 .bb-v4-leader,
+#bbSeasonV4 .bb-v4-road{overflow:visible}
+@media(max-width:900px){
+  .bb-v4-overview{grid-template-columns:1fr}
+  .bb-v4-teamleaders{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bb-v4-leaders{grid-template-columns:1fr 1fr}
+  .bb-v4-top{grid-template-columns:auto 1fr}.bb-v4-year{grid-column:1/-1}
+}
+@media(max-width:600px){
+  .bb-v4-launch-copy span{display:none}
+  .bb-v4-leaders{grid-template-columns:1fr}
+  .bb-v4-teamleaders{grid-template-columns:1fr 1fr}
+  .bb-v4-champ{grid-template-columns:46px 1fr}.bb-v4-champ .record{grid-column:1/-1;text-align:left}
+  .bb-v4-game{grid-template-columns:1fr auto}.bb-v4-game .round{grid-column:1/-1}
+}
+</style>
+
+<script id="bb-season-v4-script">
+(function(){
+'use strict';
+if(window.__BB_SEASON_V4__)return;
+window.__BB_SEASON_V4__=true;
+
+var cache4=new Map(),post4=new Map(),yr4=2025,tab4='overview';
+function s4(v){return String(v==null?'':v)}
+function l4(v){return s4(v).toLowerCase()}
+function n4(v){var n=Number(v);return Number.isFinite(n)?n:null}
+function a4(v){return Array.isArray(v)?v:(v==null?[]:[v])}
+function e4(v){return s4(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function k4(v){return l4(v).replace(/[^a-z0-9]+/g,'')}
+function rec4(x){var m=s4(x&&x.record).match(/(\d+)\s*[-–]\s*(\d+)(?:\s*[-–]\s*(\d+))?/);return m?{w:+m[1],l:+m[2],t:+(m[3]||0)}:{w:n4(x&&x.wins)||0,l:n4(x&&x.losses)||0,t:n4(x&&x.ties)||0}}
+function pct4(r){var g=r.w+r.l+r.t;return g?(r.w+r.t*.5)/g:0}
+function pcttxt4(v){return Number(v||0).toFixed(3).replace(/^0/,'')}
+function stat4(season,aliases){
+  var o=season&&season.teamStats||{},ks=Object.keys(o||{});
+  for(var i=0;i<aliases.length;i++){var a=k4(aliases[i]),key=ks.find(function(x){return k4(x)===a});if(key!=null&&o[key]!=null&&o[key]!=='')return o[key]}
+  return ''
+}
+function numstat4(v){var m=s4(v).replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
+function season4(d,y){return a4(d&&d.seasons).find(function(x){return Number(x&&x.year)===Number(y)})||null}
+function logo4(m,d){return d&&d.identity&&d.identity.assets&&d.identity.assets.logo||m&&m.logo||''}
+function name4(m,d){return d&&d.identity&&(d.identity.fullName||d.identity.teamName)||m&&m.name||'NFL Team'}
+
+async function rows4(y){
+  if(cache4.has(y))return cache4.get(y);
+  var p=Promise.all(TEAMS.map(async function(m){
+    try{
+      var d=await loadTeamData(m.slug),ss=season4(d,y);if(!ss)return null;
+      var r=rec4(ss);return {meta:m,data:d,season:ss,rec:r,pct:pct4(r),name:name4(m,d),logo:logo4(m,d)}
+    }catch(e){return null}
+  })).then(function(x){return x.filter(Boolean)});
+  cache4.set(y,p);return p
+}
+function localPlayer4(rows,metric){
+  var out=[];
+  rows.forEach(function(r){
+    a4(r.season&&r.season.leaders).forEach(function(x){
+      if(k4(x&&x.metric)!==k4(metric))return;
+      var v=numstat4(x&&x.value);if(v==null)return;
+      out.push({name:s4(x.name||'Player'),raw:s4(x.value),v:v,team:r.name})
+    })
+  });
+  return out.sort(function(a,b){return b.v-a.v}).slice(0,10)
+}
+function teamLead4(rows,label,aliases,mode){
+  var best=null;
+  rows.forEach(function(r){
+    var raw=stat4(r.season,aliases),v=numstat4(raw);if(v==null)return;
+    if(!best||(mode==='min'?v<best.v:v>best.v))best={r:r,raw:raw,v:v,label:label}
+  });
+  return best
+}
+
+/* postseason */
+async function fetch4(url){
+  try{var p=await fetch('/api/espn?url='+encodeURIComponent(url),{cache:'no-store'});if(p.ok)return await p.json()}catch(e){}
+  try{var d=await fetch(url,{cache:'no-store'});if(d.ok)return await d.json()}catch(e){}
+  return null
+}
+async function postSeason4(y){
+  if(post4.has(y))return post4.get(y);
+  var p=(async function(){
+    var events=[];
+    for(var w=1;w<=5;w++){
+      var u='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season='+y+'&seasontype=3&week='+w+'&limit=100';
+      var d=await fetch4(u);
+      a4(d&&d.events).forEach(function(ev){if(!events.some(function(x){return s4(x.id)===s4(ev.id)}))events.push(ev)})
+    }
+    return events.sort(function(a,b){return new Date(a.date||0)-new Date(b.date||0)})
+  })();
+  post4.set(y,p);return p
+}
+function comp4(e){return e&&e.competitions&&e.competitions[0]||null}
+function comps4(e){return a4(comp4(e)&&comp4(e).competitors)}
+function round4(e){var c=comp4(e),notes=a4(c&&c.notes).map(function(n){return n&&n.headline}).filter(Boolean).join(' ');return notes||e&&e.week&&e.week.text||e&&e.name||'Postseason'}
+function isSB4(e){return /super bowl/i.test(round4(e)+' '+s4(e&&e.name)+' '+s4(e&&e.shortName))}
+function win4(e){return comps4(e).find(function(c){return c&&c.winner===true})||null}
+function abbrSlug4(c){
+  var ab=s4(c&&c.team&&c.team.abbreviation).toLowerCase();
+  var M={phi:'eagles',ne:'patriots',kc:'chiefs',sf:'49ers',tb:'buccaneers',lar:'rams',cin:'bengals',bal:'ravens',den:'broncos',sea:'seahawks',gb:'packers',nyg:'giants',ind:'colts',pit:'steelers',no:'saints',ari:'cardinals',car:'panthers',atl:'falcons',min:'vikings',dal:'cowboys',wsh:'commanders',was:'commanders',lv:'raiders',oak:'raiders',sd:'chargers',lac:'chargers',ten:'titans',hou:'texans',jax:'jaguars',mia:'dolphins',buf:'bills',nyj:'jets',cle:'browns',det:'lions',chi:'bears'};
+  return M[ab]||ab
+}
+function champFromPost4(events){
+  var sb=events.find(isSB4)||events.slice().reverse().find(function(e){return win4(e)&&!/pro bowl/i.test(s4(e.name)+' '+round4(e))});
+  var w=win4(sb);return w?{slug:abbrSlug4(w),event:sb}:null
+}
+function road4(events,slug){return events.filter(function(e){return comps4(e).some(function(c){return abbrSlug4(c)===slug})&&!/pro bowl/i.test(s4(e.name)+' '+round4(e))})}
+
+/* UI */
+function buildLauncher4(){
+  if(document.getElementById('bbSeasonV4Launcher'))return;
+  var anchor=document.getElementById('divisions')||document.getElementById('live');if(!anchor||!anchor.parentNode)return;
+  var sec=document.createElement('section');sec.id='bbSeasonV4Launcher';sec.className='section';
+  sec.innerHTML='<div class="container"><div class="bb-v4-launch"><div class="bb-v4-launch-left"><div class="bb-v4-launch-icon">S</div><div class="bb-v4-launch-copy"><b>Season Archive</b><span>Champion · player leaders · team stats · postseason</span></div></div><button id="bbV4Open" type="button">Explore Seasons →</button></div></div>';
+  anchor.parentNode.insertBefore(sec,anchor);
+  document.getElementById('bbV4Open').onclick=function(){open4(2025)}
+}
+function buildDb4(){
+  if(document.getElementById('bbSeasonV4'))return;
+  var db=document.createElement('div');db.id='bbSeasonV4';
+  db.innerHTML='<div class="bb-v4-shell"><div class="bb-v4-top"><button class="bb-v4-close" type="button">×</button><div class="bb-v4-title"><b id="bbV4Title">NFL Season Archive</b><span>Blitzbook historical season database</span></div><div class="bb-v4-year"><select id="bbV4Year"></select></div></div><div class="bb-v4-tabs"><button class="bb-v4-tab active" data-v4tab="overview">Overview</button><button class="bb-v4-tab" data-v4tab="leaders">Player Leaders</button><button class="bb-v4-tab" data-v4tab="teams">Teams</button><button class="bb-v4-tab" data-v4tab="road">Championship Road</button></div><div class="bb-v4-content"><div id="bbV4Body" class="bb-v4-inner"></div></div></div>';
+  document.body.appendChild(db);
+  var sel=db.querySelector('#bbV4Year');for(var y=2026;y>=1920;y--){var o=document.createElement('option');o.value=y;o.textContent=y+' NFL Season';sel.appendChild(o)}
+  db.querySelector('.bb-v4-close').onclick=close4;
+  sel.onchange=function(){render4(Number(sel.value))}
+  db.querySelectorAll('[data-v4tab]').forEach(function(b){b.onclick=function(){tab4=b.dataset.v4tab;sync4()}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&db.classList.contains('open'))close4()})
+}
+function close4(){var db=document.getElementById('bbSeasonV4');if(db)db.classList.remove('open');document.body.style.overflow=''}
+function sync4(){document.querySelectorAll('[data-v4tab]').forEach(function(b){b.classList.toggle('active',b.dataset.v4tab===tab4)});document.querySelectorAll('.bb-v4-panel').forEach(function(p){p.classList.toggle('active',p.dataset.v4panel===tab4)})}
+function champCard4(c,y,postOk){
+  if(!c)return '<div class="bb-v4-card"><div class="bb-v4-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span>'+(y>=2026?'pending':'not verified')+'</span></div><div class="bb-v4-champ"><img src="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png"><div><h2>'+(y>=2026?'TBD':'Unavailable')+'</h2><p>No verified championship result available.</p></div></div></div>';
+  return '<div class="bb-v4-card"><div class="bb-v4-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span>'+(postOk?'verified postseason':'Blitzbook data')+'</span></div><div class="bb-v4-champ"><img src="'+e4(c.logo)+'"><div><h2>'+e4(c.name)+'</h2><p>'+e4(c.season.playoffResult&&!/missed/i.test(c.season.playoffResult)?c.season.playoffResult:'Championship season')+'</p></div><div class="record"><strong>'+e4(c.season.record||c.rec.w+'-'+c.rec.l)+'</strong><span>regular season</span></div></div></div>'
+}
+function kpis4(rows,c,y){
+  var best=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w})[0];
+  var list=[['Teams',rows.length],['Best record',best?best.name+' '+s4(best.season.record):'—'],['Champion',c?c.name:(y>=2026?'TBD':'—')],['Era',y>=1970?'Post-merger':y>=1966?'Super Bowl era':'Pre-Super Bowl']];
+  return '<div class="bb-v4-card"><div class="bb-v4-head"><b>Season Snapshot</b><span>'+y+'</span></div><div class="bb-v4-kpis">'+list.map(function(x){return '<div class="bb-v4-kpi"><span>'+e4(x[0])+'</span><strong>'+e4(x[1])+'</strong></div>'}).join('')+'</div></div>'
+}
+function teamTiles4(rows){
+  var defs=[['Most Points',['PTS','Points For','PF'],'max'],['Total Yards',['YDS','Total Yards'],'max'],['Pass Yards',['PASS YDS','Passing Yards'],'max'],['Rush Yards',['RUSH YDS','Rushing Yards'],'max'],['Best Defense',['PTS ALLOWED','PA'],'min'],['Sacks',['SACKS','SCK'],'max'],['Takeaways',['TAKEAWAYS'],'max'],['Point Diff',['DIFF','Point Differential'],'max']];
+  var ls=defs.map(function(d){return teamLead4(rows,d[0],d[1],d[2])}).filter(Boolean);
+  if(!ls.length)return '';
+  return '<div class="bb-v4-section-title"><b>Team Leaders</b><span>only stats present in source files</span></div><div class="bb-v4-teamleaders">'+ls.map(function(x){return '<div class="bb-v4-tile"><div class="lab">'+e4(x.label)+'</div><div class="row"><img src="'+e4(x.r.logo)+'"><b>'+e4(x.r.name)+'</b></div><strong>'+e4(x.raw)+'</strong></div>'}).join('')+'</div>'
+}
+function leaderCard4(title,label,rows){
+  return '<div class="bb-v4-leader"><div class="bb-v4-leader-head"><b>'+e4(title)+'</b><span>'+e4(label)+'</span></div>'+(rows.length?rows.map(function(r,i){return '<div class="bb-v4-leader-row"><div class="rank">'+(i+1)+'</div><div class="who"><b>'+e4(r.name)+'</b><span>'+e4(r.team)+'</span></div><div class="val"><strong>'+e4(r.raw)+'</strong><span>'+e4(label)+'</span></div></div>'}).join(''):'<div class="bb-v4-empty">No reliable data stored.</div>')+'</div>'
+}
+function leadersHtml4(rows){
+  return '<div class="bb-v4-section-title"><b>Player Leaders</b><span>from Blitzbook franchise season files</span></div><div class="bb-v4-leaders">'+leaderCard4('Passing Yards','PASS YDS',localPlayer4(rows,'PASS YDS'))+leaderCard4('Rushing Yards','RUSH YDS',localPlayer4(rows,'RUSH YDS'))+leaderCard4('Receiving Yards','REC YDS',localPlayer4(rows,'REC YDS'))+'</div>'
+}
+function table4(rows){
+  var sorted=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w||a.rec.l-b.rec.l});
+  return '<div class="bb-v4-filter"><input id="bbV4Filter" type="search" placeholder="Search team, division, record…"><span id="bbV4Count">'+sorted.length+' teams</span></div><div class="bb-v4-tablewrap"><table class="bb-v4-table"><thead><tr><th>#</th><th>Team</th><th>Conf</th><th>Div</th><th>Record</th><th>Pct</th><th>Playoff Result*</th><th>PTS</th><th>YDS</th><th>PASS</th><th>RUSH</th></tr></thead><tbody id="bbV4Rows">'+sorted.map(function(r,i){return '<tr data-q="'+e4(l4(r.name+' '+r.meta.conf+' '+r.meta.div+' '+s4(r.season.record)))+'"><td>'+(i+1)+'</td><td><div class="bb-v4-teamcell"><img src="'+e4(r.logo)+'"><button type="button" data-v4team="'+e4(r.meta.slug)+'">'+e4(r.name)+'</button></div></td><td>'+e4(r.meta.conf||'—')+'</td><td>'+e4(r.meta.div||'—')+'</td><td>'+e4(r.season.record||r.rec.w+'-'+r.rec.l)+'</td><td>'+e4(pcttxt4(r.pct))+'</td><td>'+e4(r.season.playoffResult||'—')+'</td><td>'+e4(stat4(r.season,['PTS'])||'—')+'</td><td>'+e4(stat4(r.season,['YDS'])||'—')+'</td><td>'+e4(stat4(r.season,['PASS YDS'])||'—')+'</td><td>'+e4(stat4(r.season,['RUSH YDS'])||'—')+'</td></tr>'}).join('')+'</tbody></table></div><div style="margin-top:5px;color:#66778c;font-size:5px">* Legacy playoff-result text can be incomplete. Champion above uses postseason verification when available.</div>'
+}
+function roadHtml4(events,c){
+  if(!c)return '<div class="bb-v4-error">No verified champion, so no championship road can be shown.</div>';
+  var games=road4(events,c.meta.slug);if(!games.length)return '<div class="bb-v4-error">Champion identified, but game-by-game postseason data is unavailable.</div>';
+  return '<div class="bb-v4-section-title"><b>Championship Road</b><span>'+e4(c.name)+'</span></div><div class="bb-v4-road">'+games.map(function(ev){var comps=a4(comp4(ev)&&comp4(ev).competitors),me=comps.find(function(x){return abbrSlug4(x)===c.meta.slug}),opp=comps.find(function(x){return abbrSlug4(x)!==c.meta.slug}),win=me&&me.winner===true;return '<div class="bb-v4-game"><div class="round">'+e4(round4(ev))+'</div><div class="match"><img src="'+e4(opp&&opp.team&&opp.team.logo||'')+'"><b>'+e4((me&&me.homeAway==='away'?'@ ':'vs ')+(opp&&opp.team&&(opp.team.shortDisplayName||opp.team.displayName)||'Opponent'))+'</b></div><div class="score '+(win?'win':'')+'">'+e4((me&&me.score!=null?me.score:'—')+' - '+(opp&&opp.score!=null?opp.score:'—'))+'</div></div>'}).join('')+'</div>'
+}
+function bind4(){
+  document.querySelectorAll('[data-v4team]').forEach(function(b){b.onclick=function(){close4();routeToTeam(b.dataset.v4team)}});
+  var f=document.getElementById('bbV4Filter');if(f)f.oninput=function(){var q=l4(f.value),n=0;document.querySelectorAll('#bbV4Rows tr').forEach(function(r){var yes=!q||s4(r.dataset.q).indexOf(q)!==-1;r.style.display=yes?'':'none';if(yes)n++});document.getElementById('bbV4Count').textContent=n+' teams'}
+}
+async function render4(y){
+  yr4=Number(y);var body=document.getElementById('bbV4Body');document.getElementById('bbV4Title').textContent=y+' NFL Season Archive';body.innerHTML='<div class="bb-v4-loading">Loading '+y+'…</div>';
+  try{
+    var pair=await Promise.all([rows4(y),postSeason4(y)]),rows=pair[0],events=pair[1],ch=champFromPost4(events),c=ch?rows.find(function(r){return r.meta.slug===ch.slug}):null;
+    body.innerHTML='<section class="bb-v4-panel active" data-v4panel="overview"><div class="bb-v4-overview">'+champCard4(c,y,events.length>0)+kpis4(rows,c,y)+'</div>'+teamTiles4(rows)+'</section><section class="bb-v4-panel" data-v4panel="leaders">'+leadersHtml4(rows)+'</section><section class="bb-v4-panel" data-v4panel="teams">'+table4(rows)+'</section><section class="bb-v4-panel" data-v4panel="road">'+roadHtml4(events,c)+'</section>';
+    bind4();sync4();document.querySelector('.bb-v4-content').scrollTop=0
+  }catch(e){console.error(e);body.innerHTML='<div class="bb-v4-error">Could not load this season. Try again.</div>'}
+}
+function open4(y){
+  buildDb4();var db=document.getElementById('bbSeasonV4');db.classList.add('open');document.body.style.overflow='hidden';var yy=Math.max(1920,Math.min(2026,Number(y)||2025));db.querySelector('#bbV4Year').value=yy;render4(yy)
+}
+function init4(){
+  buildLauncher4();buildDb4();
+  window.openSeasonExplorer=open4;
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init4,0)},{once:true});else setTimeout(init4,0);
+})();
+</script>
+
 </body>
 </html>
