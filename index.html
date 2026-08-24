@@ -13326,5 +13326,564 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- INLINE_RENDERED_TEAM_PAGES_START -->
 <!-- External rendered team pages load from nfl_all_time/data/browser-pages/*.js -->
 <!-- INLINE_RENDERED_TEAM_PAGES_END -->
+
+<!-- =========================================================
+     BLITZBOOK ENHANCEMENT SUITE V1
+     Safe root-level modules only. No legacy template editing.
+     ========================================================= -->
+<style id="bb-enhancement-suite-style">
+/* ---------- Global polish / performance ---------- */
+#teams .team-card,
+#divisions .division-card,
+#universe .franchise-universe-card,
+#season2026 .season-2026-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 260px;
+}
+.franchise-universe-table-wrap,
+.season-2026-schedule,
+.season-2026-standings-wrap {
+  scrollbar-gutter: stable;
+}
+.bb-enhance-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:36px;padding:8px 11px;border:1px solid rgba(255,255,255,.11);
+  border-radius:8px;background:rgba(255,255,255,.035);color:var(--text-2,#cbd5e1);
+  font:800 8px 'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+.bb-enhance-button:hover{background:rgba(255,255,255,.065);border-color:rgba(255,255,255,.18)}
+.bb-enhance-button:active{transform:translateY(1px)}
+.bb-enhance-button.primary{border-color:rgba(204,20,53,.45);background:rgba(133,12,38,.25);color:#fff}
+
+/* ---------- Global Search ---------- */
+.bb-global-search-trigger{margin-left:auto}
+.bb-search-overlay{
+  position:fixed;inset:0;z-index:20000;display:none;align-items:flex-start;justify-content:center;
+  padding:9vh 18px 24px;background:rgba(2,4,9,.84);backdrop-filter:blur(16px);
+}
+.bb-search-overlay.open{display:flex}
+.bb-search-panel{
+  width:min(780px,100%);max-height:80vh;overflow:hidden;
+  border:1px solid rgba(255,255,255,.13);border-radius:16px;
+  background:linear-gradient(180deg,#101827,#09111d);box-shadow:0 34px 100px rgba(0,0,0,.6);
+}
+.bb-search-head{display:grid;grid-template-columns:1fr auto;gap:9px;padding:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.bb-search-input{
+  width:100%;height:48px;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  background:#111c2c;color:#f7f9fc;padding:0 14px;font-size:14px;outline:none;
+}
+.bb-search-input:focus{border-color:rgba(204,20,53,.7);box-shadow:0 0 0 3px rgba(204,20,53,.10)}
+.bb-search-close{
+  width:48px;height:48px;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  background:#111c2c;color:#fff;font-size:21px;cursor:pointer;
+}
+.bb-search-caption{padding:9px 13px;color:var(--text-3,#8d9caf);font-size:9px;border-bottom:1px solid rgba(255,255,255,.06)}
+.bb-search-results{max-height:60vh;overflow:auto;padding:8px}
+.bb-search-result{
+  width:100%;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center;
+  padding:10px;border:1px solid transparent;border-radius:10px;background:transparent;color:#fff;text-align:left;cursor:pointer;
+}
+.bb-search-result:hover,.bb-search-result:focus{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.085);outline:none}
+.bb-search-result img{width:36px;height:36px;object-fit:contain}
+.bb-search-result strong{display:block;font-size:12px}
+.bb-search-result small{display:block;margin-top:3px;color:#8d9caf;font-size:8px}
+.bb-search-result-kind{font-size:7px!important;color:#e34d66!important;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.bb-search-empty{padding:30px;text-align:center;color:#8290a4;font-size:11px}
+
+/* ---------- New History tools ---------- */
+.bb-history-tools{padding:38px 0}
+.bb-history-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(320px,.82fr);gap:12px}
+.bb-history-panel{
+  min-width:0;border:1px solid rgba(255,255,255,.09);border-radius:15px;
+  background:linear-gradient(180deg,rgba(15,26,43,.96),rgba(8,14,24,.98));overflow:hidden;
+}
+.bb-history-head{padding:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.bb-history-kicker{color:#d82d4c;font-size:7px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.bb-history-head h2{font-family:'Oswald',sans-serif;font-size:25px;letter-spacing:1px;text-transform:uppercase;margin:5px 0}
+.bb-history-head p{color:var(--text-3,#8d9caf);font-size:9px;line-height:1.5;margin:0}
+.bb-history-controls{display:grid;grid-template-columns:135px minmax(0,1fr) auto;gap:8px;padding:11px;border-bottom:1px solid rgba(255,255,255,.07)}
+.bb-history-controls select,.bb-history-controls input{
+  width:100%;height:41px;border:1px solid rgba(255,255,255,.10);border-radius:8px;
+  background:#111b2a;color:#fff;padding:0 11px;outline:none;
+}
+.bb-history-count{display:flex;align-items:center;white-space:nowrap;color:#8290a4;font-size:8px;padding:0 5px}
+.bb-season-team-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:10px;max-height:410px;overflow:auto}
+.bb-season-team{
+  position:relative;min-width:0;padding:9px;border:1px solid rgba(255,255,255,.07);border-radius:9px;
+  background:#0c1523;color:#fff;text-align:left;cursor:pointer;overflow:hidden;
+}
+.bb-season-team::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--team-color,#c91435)}
+.bb-season-team:hover{border-color:color-mix(in srgb,var(--team-color,#c91435) 42%,rgba(255,255,255,.09))}
+.bb-season-team img{width:29px;height:29px;object-fit:contain;display:block;margin-bottom:7px}
+.bb-season-team strong{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-season-team span{display:block;margin-top:3px;color:#8190a3;font-size:6px;letter-spacing:.7px;text-transform:uppercase}
+
+.bb-time-body{padding:11px}
+.bb-time-year{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+.bb-time-year input{
+  height:42px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:#111b2a;color:#fff;padding:0 11px;
+}
+.bb-time-snapshot{
+  border:1px solid rgba(255,255,255,.07);border-radius:10px;background:#0c1523;padding:12px;
+}
+.bb-time-big{font-family:'Oswald',sans-serif;font-size:34px;line-height:1;color:#fff}
+.bb-time-label{margin-top:4px;color:#8d9caf;font-size:7px;letter-spacing:1px;text-transform:uppercase}
+.bb-time-list{display:grid;gap:6px;margin-top:11px;max-height:284px;overflow:auto}
+.bb-time-row{
+  display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;
+  border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(255,255,255,.02);padding:7px;color:#fff;text-align:left;cursor:pointer;
+}
+.bb-time-row img{width:26px;height:26px;object-fit:contain}
+.bb-time-row b{font-size:9px}.bb-time-row span{color:#8190a3;font-size:7px}
+
+/* ---------- Universe polish ---------- */
+.bb-universe-toolbar{
+  display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 10px 10px;flex-wrap:wrap;
+}
+.bb-universe-top10 .franchise-universe-table tbody tr:nth-child(n+11){display:none}
+.franchise-universe-table-wrap{position:relative}
+.franchise-universe-table th:first-child,.franchise-universe-table td:first-child{
+  position:sticky;left:0;z-index:3;background:#0d1624;
+}
+
+/* ---------- Team universal shell ---------- */
+.bb-team-shell-bar{
+  position:sticky;top:0;z-index:1500;display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  gap:10px;align-items:center;min-height:58px;padding:8px 12px;
+  border-bottom:1px solid rgba(255,255,255,.10);background:rgba(5,11,22,.95);backdrop-filter:blur(14px);
+}
+.bb-team-shell-brand{display:flex;align-items:center;gap:9px;min-width:0}
+.bb-team-shell-brand img{width:36px;height:36px;object-fit:contain}
+.bb-team-shell-copy{min-width:0}
+.bb-team-shell-copy b{display:block;font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-team-shell-copy span{display:block;color:#8190a4;font-size:7px;letter-spacing:1px;text-transform:uppercase}
+.bb-team-shell-actions{display:flex;gap:6px}
+body.team-route-active #teamRouteView{overflow:auto}
+
+/* ---------- Game detail enhancement ---------- */
+.bb-game-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:12px 0 0}
+.bb-game-copy-toast{
+  position:fixed;z-index:25000;right:18px;bottom:18px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;background:#101827;color:#fff;font-size:9px;box-shadow:0 16px 42px rgba(0,0,0,.45);
+}
+
+/* ---------- Responsive ---------- */
+@media(max-width:900px){
+  .bb-global-search-trigger{display:none}
+  .bb-history-grid{grid-template-columns:1fr}
+  .bb-season-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bb-history-controls{grid-template-columns:1fr}
+  .bb-team-shell-bar{grid-template-columns:auto minmax(0,1fr)}
+  .bb-team-shell-actions{grid-column:1/-1}
+}
+@media(max-width:520px){
+  .bb-search-overlay{padding:4vh 10px 14px}
+  .bb-season-team-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+
+<script id="bb-enhancement-suite-script">
+(function(){
+'use strict';
+if(window.__BLITZBOOK_ENHANCEMENT_SUITE__) return;
+window.__BLITZBOOK_ENHANCEMENT_SUITE__ = true;
+
+function txt(v){ return String(v == null ? '' : v); }
+function low(v){ return txt(v).toLowerCase().trim(); }
+function teams(){ return Array.isArray(window.TEAMS) ? window.TEAMS : []; }
+function slugOf(t){ return t && (t.slug || (t.short ? txt(t.short).toLowerCase() : '')); }
+function teamName(t){ return t && (t.name || t.fullName || t.teamName || t.short || slugOf(t)) || 'NFL Team'; }
+function teamMeta(t){ return [t && t.conf, t && t.div].filter(Boolean).join(' ') || 'NFL franchise'; }
+function teamLogo(t){ return t && t.logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png'; }
+function teamColor(t){
+  var fallback = window.TEAM_COMPACT_FALLBACK && slugOf(t) ? window.TEAM_COMPACT_FALLBACK[slugOf(t)] : null;
+  return fallback && fallback.p || '#c91435';
+}
+function goTeam(slug){
+  if(!slug) return;
+  if(typeof window.routeToTeam === 'function') window.routeToTeam(slug);
+  else window.location.hash = '#team=' + encodeURIComponent(slug);
+}
+
+/* ========== GLOBAL SEARCH ========== */
+function createGlobalSearch(){
+  if(document.getElementById('bbGlobalSearchOverlay')) return;
+
+  var overlay = document.createElement('div');
+  overlay.id = 'bbGlobalSearchOverlay';
+  overlay.className = 'bb-search-overlay';
+  overlay.setAttribute('aria-hidden','true');
+
+  var panel = document.createElement('div');
+  panel.className = 'bb-search-panel';
+  panel.setAttribute('role','dialog');
+  panel.setAttribute('aria-modal','true');
+  panel.setAttribute('aria-label','Blitzbook global search');
+
+  var head = document.createElement('div');
+  head.className = 'bb-search-head';
+  var input = document.createElement('input');
+  input.id = 'bbGlobalSearchInput';
+  input.className = 'bb-search-input';
+  input.type = 'search';
+  input.placeholder = 'Search teams, seasons, games...';
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'bb-search-close';
+  closeBtn.type = 'button';
+  closeBtn.textContent = '×';
+  closeBtn.setAttribute('aria-label','Close search');
+  head.appendChild(input); head.appendChild(closeBtn);
+
+  var caption = document.createElement('div');
+  caption.className = 'bb-search-caption';
+  caption.textContent = 'Search the Blitzbook universe. Press / anywhere to open.';
+
+  var results = document.createElement('div');
+  results.id = 'bbGlobalSearchResults';
+  results.className = 'bb-search-results';
+
+  panel.appendChild(head); panel.appendChild(caption); panel.appendChild(results); overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+
+  function close(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  function open(){
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    render('');
+    setTimeout(function(){ input.focus(); },0);
+  }
+  function resultButton(kind,label,meta,logo,action){
+    var b = document.createElement('button');
+    b.className = 'bb-search-result'; b.type = 'button';
+    var img = document.createElement('img'); img.src = logo || 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png'; img.alt = '';
+    var copy = document.createElement('span');
+    var strong = document.createElement('strong'); strong.textContent = label;
+    var small = document.createElement('small'); small.textContent = meta;
+    copy.appendChild(strong); copy.appendChild(small);
+    var k = document.createElement('small'); k.className='bb-search-result-kind'; k.textContent=kind;
+    b.appendChild(img); b.appendChild(copy); b.appendChild(k);
+    b.addEventListener('click',function(){ close(); action(); });
+    return b;
+  }
+  function collectGames(query){
+    var rows = [];
+    try{
+      var cache = window.liveGamesCache || {};
+      Object.keys(cache).forEach(function(key){
+        (cache[key] || []).forEach(function(g){
+          var label = txt(g.awayName || g.awayShort || 'Away') + ' vs ' + txt(g.homeName || g.homeShort || 'Home');
+          var hay = low(label + ' ' + txt(g.week) + ' ' + txt(g.statusTxt) + ' ' + txt(g.displayDate));
+          if(query && hay.indexOf(query) === -1) return;
+          rows.push({game:g,label:label,meta:[g.week,g.displayDate,g.statusTxt].filter(Boolean).join(' · ')});
+        });
+      });
+    }catch(e){}
+    return rows;
+  }
+  function render(value){
+    var q = low(value);
+    results.innerHTML = '';
+    var count = 0;
+    teams().forEach(function(t){
+      var hay = low(teamName(t) + ' ' + txt(t.short) + ' ' + teamMeta(t) + ' ' + slugOf(t));
+      if(q && hay.indexOf(q) === -1) return;
+      results.appendChild(resultButton('Team',teamName(t),teamMeta(t),teamLogo(t),function(){goTeam(slugOf(t));}));
+      count++;
+    });
+
+    var y = Number(q);
+    if(q && Number.isFinite(y) && y >= 1920 && y <= 2026){
+      results.insertBefore(resultButton('Season',String(y) + ' NFL Season','Open Season Explorer','https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png',function(){openSeasonExplorer(y);}),results.firstChild);
+      count++;
+    }
+
+    if(q.length >= 2){
+      collectGames(q).slice(0,8).forEach(function(row){
+        results.appendChild(resultButton('Game',row.label,row.meta,'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png',function(){
+          if(typeof window.openGame === 'function') window.openGame(row.game);
+          else document.getElementById('live') && document.getElementById('live').scrollIntoView({behavior:'smooth'});
+        }));
+        count++;
+      });
+    }
+    if(!count){
+      var empty=document.createElement('div');empty.className='bb-search-empty';empty.textContent='No Blitzbook result found.';results.appendChild(empty);
+    }
+  }
+
+  input.addEventListener('input',function(){render(input.value);});
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',function(e){if(e.target===overlay) close();});
+  document.addEventListener('keydown',function(e){
+    var tag = e.target && e.target.tagName || '';
+    if(e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey && !/INPUT|TEXTAREA|SELECT/.test(tag)){
+      e.preventDefault(); open();
+    } else if(e.key==='Escape' && overlay.classList.contains('open')) close();
+  });
+
+  var nav = document.querySelector('.topnav-inner');
+  if(nav){
+    var trigger = document.createElement('button');
+    trigger.type='button'; trigger.className='bb-enhance-button bb-global-search-trigger'; trigger.textContent='Search /';
+    trigger.addEventListener('click',open);
+    var mobile = nav.querySelector('.mobile-menu-btn');
+    nav.insertBefore(trigger,mobile || null);
+  }
+  window.openBlitzbookSearch = open;
+}
+
+/* ========== SEASON EXPLORER + TIME MACHINE ========== */
+var historyState = {year:2026,query:''};
+
+function activeByYear(t,year){
+  var since = Number(t && t.since || 0);
+  return !since || since <= year;
+}
+function renderSeasonTeams(){
+  var grid=document.getElementById('bbSeasonExplorerGrid');
+  var count=document.getElementById('bbSeasonExplorerCount');
+  if(!grid) return;
+  grid.innerHTML='';
+  var rows=teams().filter(function(t){
+    if(!activeByYear(t,historyState.year)) return false;
+    if(!historyState.query) return true;
+    return low(teamName(t)+' '+teamMeta(t)).indexOf(historyState.query)!==-1;
+  });
+  rows.forEach(function(t){
+    var b=document.createElement('button');b.type='button';b.className='bb-season-team';
+    b.style.setProperty('--team-color',teamColor(t));
+    var img=document.createElement('img');img.src=teamLogo(t);img.alt='';
+    var strong=document.createElement('strong');strong.textContent=teamName(t);
+    var span=document.createElement('span');span.textContent=historyState.year+' archive';
+    b.appendChild(img);b.appendChild(strong);b.appendChild(span);
+    b.addEventListener('click',function(){
+      try{localStorage.setItem('blitzbook-preferred-season',String(historyState.year));}catch(e){}
+      goTeam(slugOf(t));
+    });
+    grid.appendChild(b);
+  });
+  if(count) count.textContent=rows.length+' franchises';
+}
+function renderTimeMachine(){
+  var big=document.getElementById('bbTimeMachineYearDisplay');
+  var list=document.getElementById('bbTimeMachineList');
+  if(!big || !list) return;
+  var year=historyState.year;
+  big.textContent=String(year);
+  list.innerHTML='';
+  var rows=teams().filter(function(t){return activeByYear(t,year);});
+  rows.forEach(function(t){
+    var b=document.createElement('button');b.type='button';b.className='bb-time-row';
+    var img=document.createElement('img');img.src=teamLogo(t);img.alt='';
+    var n=document.createElement('b');n.textContent=teamName(t);
+    var meta=document.createElement('span');meta.textContent='Since '+txt(t.since || '—');
+    b.appendChild(img);b.appendChild(n);b.appendChild(meta);
+    b.addEventListener('click',function(){goTeam(slugOf(t));});
+    list.appendChild(b);
+  });
+}
+function setHistoryYear(year){
+  year=Math.max(1920,Math.min(2026,Number(year)||2026));
+  historyState.year=year;
+  var select=document.getElementById('bbSeasonExplorerYear');
+  var input=document.getElementById('bbTimeMachineYear');
+  if(select) select.value=String(year);
+  if(input) input.value=String(year);
+  renderSeasonTeams();renderTimeMachine();
+}
+function openSeasonExplorer(year){
+  setHistoryYear(year || historyState.year);
+  var node=document.getElementById('blitzbookHistoryTools');
+  if(node) node.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function createHistoryTools(){
+  if(document.getElementById('blitzbookHistoryTools')) return;
+  var divisions=document.getElementById('divisions');
+  if(!divisions || !divisions.parentNode) return;
+
+  var sec=document.createElement('section');
+  sec.id='blitzbookHistoryTools';sec.className='section bb-history-tools';
+  sec.innerHTML =
+    '<div class="container">'+
+      '<div class="section-header"><div class="section-title-group">'+
+        '<div class="section-eyebrow">History Tools</div>'+
+        '<div class="section-title">Explore NFL History</div>'+
+        '<div class="section-subtitle">Jump to any season or rewind the franchise directory through time.</div>'+
+      '</div></div>'+
+      '<div class="bb-history-grid">'+
+        '<div class="bb-history-panel">'+
+          '<div class="bb-history-head"><div class="bb-history-kicker">Season Explorer</div><h2>Pick a Season</h2><p>Choose 1920–2026, filter franchises, then jump into the team archive. Blitzbook never invents missing historical statistics.</p></div>'+
+          '<div class="bb-history-controls"><select id="bbSeasonExplorerYear"></select><input id="bbSeasonExplorerSearch" type="search" placeholder="Filter franchises..."><div id="bbSeasonExplorerCount" class="bb-history-count"></div></div>'+
+          '<div id="bbSeasonExplorerGrid" class="bb-season-team-grid"></div>'+
+        '</div>'+
+        '<div class="bb-history-panel">'+
+          '<div class="bb-history-head"><div class="bb-history-kicker">NFL Time Machine</div><h2>Rewind the League</h2><p>See which current Blitzbook franchise histories had already begun by a selected year, then open their archives.</p></div>'+
+          '<div class="bb-time-body">'+
+            '<div class="bb-time-year"><input id="bbTimeMachineYear" type="number" min="1920" max="2026" value="2026"><button id="bbTimeMachineGo" class="bb-enhance-button primary" type="button">Travel</button></div>'+
+            '<div class="bb-time-snapshot"><div id="bbTimeMachineYearDisplay" class="bb-time-big">2026</div><div class="bb-time-label">Selected season</div><div id="bbTimeMachineList" class="bb-time-list"></div></div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+  divisions.parentNode.insertBefore(sec,divisions);
+
+  var select=document.getElementById('bbSeasonExplorerYear');
+  for(var year=2026;year>=1920;year--){
+    var o=document.createElement('option');o.value=String(year);o.textContent=String(year)+' Season';select.appendChild(o);
+  }
+  select.value='2026';
+  select.addEventListener('change',function(){setHistoryYear(select.value);});
+  document.getElementById('bbSeasonExplorerSearch').addEventListener('input',function(e){historyState.query=low(e.target.value);renderSeasonTeams();});
+  document.getElementById('bbTimeMachineGo').addEventListener('click',function(){setHistoryYear(document.getElementById('bbTimeMachineYear').value);});
+  document.getElementById('bbTimeMachineYear').addEventListener('keydown',function(e){if(e.key==='Enter')setHistoryYear(e.target.value);});
+  setHistoryYear(2026);
+  window.openSeasonExplorer=openSeasonExplorer;
+}
+
+/* ========== FRANCHISE UNIVERSE POLISH ========== */
+function polishUniverse(){
+  var shell=document.querySelector('#universe .franchise-universe-shell');
+  if(!shell || document.getElementById('bbUniverseToolbar')) return;
+  var toolbar=document.createElement('div');toolbar.id='bbUniverseToolbar';toolbar.className='bb-universe-toolbar';
+
+  var top=document.createElement('button');top.type='button';top.className='bb-enhance-button';top.textContent='Top 10';
+  var all=document.createElement('button');all.type='button';all.className='bb-enhance-button';all.textContent='All 32';
+  var compare=document.createElement('button');compare.type='button';compare.className='bb-enhance-button';compare.textContent='Comparison';
+  top.addEventListener('click',function(){shell.classList.add('bb-universe-top10');});
+  all.addEventListener('click',function(){shell.classList.remove('bb-universe-top10');});
+  compare.addEventListener('click',function(){
+    var target=document.querySelector('#universe .franchise-compare-card,#universe [class*="comparison"]');
+    if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+  toolbar.appendChild(top);toolbar.appendChild(all);toolbar.appendChild(compare);
+
+  var grid=shell.querySelector('.franchise-universe-grid');
+  if(grid) shell.insertBefore(toolbar,grid); else shell.appendChild(toolbar);
+}
+
+/* ========== CONSISTENT TEAM PAGE SHELL ========== */
+function currentRouteTeam(){
+  var slug = null;
+  try{
+    if(typeof window.getRouteTeamSlug==='function') slug=window.getRouteTeamSlug();
+  }catch(e){}
+  if(!slug){
+    var m=(window.location.hash||'').match(/#team=([^&]+)/i);
+    if(m) slug=decodeURIComponent(m[1]);
+  }
+  return teams().find(function(t){return slugOf(t)===slug;}) || null;
+}
+function updateTeamShell(){
+  var view=document.getElementById('teamRouteView');
+  if(!view) return;
+  var active=document.body.classList.contains('team-route-active') && !view.hidden;
+  var old=document.getElementById('bbTeamShellBar');
+  if(!active){ if(old) old.remove(); return; }
+  var t=currentRouteTeam();
+  if(!t) return;
+
+  if(!old){
+    old=document.createElement('div');old.id='bbTeamShellBar';old.className='bb-team-shell-bar';
+    var home=document.createElement('button');home.type='button';home.className='bb-enhance-button';home.textContent='← Home';
+    home.addEventListener('click',function(){if(typeof window.routeHome==='function')window.routeHome();});
+    var brand=document.createElement('div');brand.className='bb-team-shell-brand';
+    var img=document.createElement('img');img.className='bb-team-shell-logo';img.alt='';
+    var copy=document.createElement('div');copy.className='bb-team-shell-copy';
+    var b=document.createElement('b');b.className='bb-team-shell-name';
+    var span=document.createElement('span');span.className='bb-team-shell-meta';
+    copy.appendChild(b);copy.appendChild(span);brand.appendChild(img);brand.appendChild(copy);
+    var actions=document.createElement('div');actions.className='bb-team-shell-actions';
+    var search=document.createElement('button');search.type='button';search.className='bb-enhance-button';search.textContent='Search';search.addEventListener('click',function(){window.openBlitzbookSearch && window.openBlitzbookSearch();});
+    var uni=document.createElement('button');uni.type='button';uni.className='bb-enhance-button';uni.textContent='Universe';uni.addEventListener('click',function(){if(typeof window.routeHome==='function')window.routeHome('#universe');});
+    actions.appendChild(search);actions.appendChild(uni);
+    old.appendChild(home);old.appendChild(brand);old.appendChild(actions);
+    view.insertBefore(old,view.firstChild);
+  }
+  old.querySelector('.bb-team-shell-logo').src=teamLogo(t);
+  old.querySelector('.bb-team-shell-name').textContent=teamName(t);
+  old.querySelector('.bb-team-shell-meta').textContent=teamMeta(t)+' · Since '+txt(t.since || '—');
+}
+var routeObserver=null;
+function observeTeamRoute(){
+  if(routeObserver) return;
+  routeObserver=new MutationObserver(function(){updateTeamShell();});
+  routeObserver.observe(document.body,{attributes:true,attributeFilter:['class']});
+  var view=document.getElementById('teamRouteView');
+  if(view) routeObserver.observe(view,{attributes:true,attributeFilter:['hidden'],childList:true});
+  window.addEventListener('hashchange',function(){setTimeout(updateTeamShell,0);});
+  updateTeamShell();
+}
+
+/* ========== GAME CENTER ENHANCEMENTS ========== */
+function toast(message){
+  var old=document.querySelector('.bb-game-copy-toast');if(old)old.remove();
+  var n=document.createElement('div');n.className='bb-game-copy-toast';n.textContent=message;document.body.appendChild(n);
+  setTimeout(function(){n.remove();},1800);
+}
+function enhanceGameModal(){
+  var body=document.getElementById('blitzGameModalBody');
+  if(!body || body.querySelector('.bb-game-actions')) return;
+  var score=body.querySelector('.blitz-game-scoreboard');
+  if(!score) return;
+  var actions=document.createElement('div');actions.className='bb-game-actions';
+  var copy=document.createElement('button');copy.type='button';copy.className='bb-enhance-button';copy.textContent='Copy matchup';
+  copy.addEventListener('click',function(){
+    var text=(document.getElementById('blitzGameModalTitle') && document.getElementById('blitzGameModalTitle').textContent || 'Blitzbook game')+' — '+score.textContent.replace(/\s+/g,' ').trim();
+    if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){toast('Matchup copied');});}
+    else toast('Copy unavailable');
+  });
+  var live=document.createElement('button');live.type='button';live.className='bb-enhance-button';live.textContent='Game Center';
+  live.addEventListener('click',function(){
+    var close=document.querySelector('#blitzGameModal .blitz-game-close,[data-blitz-game-close]');
+    if(close)close.click();
+    document.getElementById('live') && document.getElementById('live').scrollIntoView({behavior:'smooth'});
+  });
+  actions.appendChild(copy);actions.appendChild(live);
+  score.parentNode.insertBefore(actions,score.nextSibling);
+}
+var gameObserver=null;
+function observeGameModal(){
+  if(gameObserver) return;
+  gameObserver=new MutationObserver(function(){enhanceGameModal();});
+  gameObserver.observe(document.body,{subtree:true,childList:true});
+  enhanceGameModal();
+}
+
+/* ========== HOME CLEAN STATE ========== */
+function ensureCleanComparison(){
+  try{
+    if(window.franchiseUniverseState){
+      window.franchiseUniverseState.compareA='';
+      window.franchiseUniverseState.compareB='';
+    }
+    var a=document.getElementById('franchiseCompareSearchA');
+    var b=document.getElementById('franchiseCompareSearchB');
+    if(a && document.activeElement!==a) a.value='';
+    if(b && document.activeElement!==b) b.value='';
+    if(typeof window.renderFranchiseComparison==='function') window.renderFranchiseComparison();
+  }catch(e){}
+}
+
+/* ========== INIT ========== */
+function init(){
+  createGlobalSearch();
+  createHistoryTools();
+  polishUniverse();
+  observeTeamRoute();
+  observeGameModal();
+  ensureCleanComparison();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+else init();
+})();
+</script>
+
 </body>
 </html>
