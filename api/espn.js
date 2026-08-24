@@ -1,55 +1,32 @@
-export default async function handler(req, res) {
-  const { type, team, event } = req.query || {};
-  const base = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl';
-
-  const cleanTeam = String(team || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cleanEvent = String(event || '').replace(/[^0-9]/g, '');
-
-  let urls = [];
-  let cache = 's-maxage=10, stale-while-revalidate=20';
-
-  if (type === 'roster') {
-    if (!cleanTeam) return res.status(400).json({ error: 'Missing team' });
-    urls = [
-      `${base}/teams/${cleanTeam}/roster`,
-      `${base}/teams/${cleanTeam}?enable=roster,projection,stats`
-    ];
-    cache = 's-maxage=1800, stale-while-revalidate=3600';
-  } else if (type === 'summary') {
-    if (!cleanEvent) return res.status(400).json({ error: 'Missing event' });
-    urls = [`${base}/summary?event=${cleanEvent}`];
-    cache = 's-maxage=5, stale-while-revalidate=5';
-  } else if (type === 'scoreboard') {
-    urls = [`${base}/scoreboard`];
-    cache = 's-maxage=5, stale-while-revalidate=5';
-  } else if (type === 'teams') {
-    urls = [`${base}/teams?limit=32`];
-    cache = 's-maxage=3600, stale-while-revalidate=7200';
-  } else {
-    return res.status(400).json({ error: 'Unsupported type' });
+module.exports = async function handler(req, res) {
+  const raw = String(req.query.url || '');
+  let target;
+  try { target = new URL(raw); } catch {
+    res.status(400).json({ error: 'Invalid URL' }); return;
   }
-
-  const failures = [];
-  for (const url of urls) {
-    try {
-      const upstream = await fetch(url, {
-        headers: {
-          'accept': 'application/json,text/plain,*/*',
-          'user-agent': 'Blitzbook/1.0'
-        }
-      });
-      if (!upstream.ok) {
-        failures.push(`${upstream.status} ${url}`);
-        continue;
-      }
-      const data = await upstream.json();
-      res.setHeader('Cache-Control', cache);
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      return res.status(200).json(data);
-    } catch (error) {
-      failures.push(String(error?.message || error));
-    }
+  const allowed = new Set([
+    'site.api.espn.com',
+    'site.web.api.espn.com',
+    'sports.core.api.espn.com',
+    'cdn.espn.com'
+  ]);
+  if (!allowed.has(target.hostname)) {
+    res.status(403).json({ error: 'Host not allowed' }); return;
   }
-
-  return res.status(502).json({ error: 'ESPN upstream unavailable', failures });
-}
+  try {
+    const response = await fetch(target.toString(), {
+      headers: {
+        'accept': 'application/json,text/plain,*/*',
+        'user-agent': 'Mozilla/5.0 Blitzbook/1.0'
+      },
+      cache: 'no-store'
+    });
+    const body = await response.text();
+    res.status(response.status);
+    res.setHeader('content-type', response.headers.get('content-type') || 'application/json; charset=utf-8');
+    res.setHeader('cache-control', 'public, s-maxage=60, stale-while-revalidate=300');
+    res.send(body);
+  } catch (error) {
+    res.status(502).json({ error: 'ESPN request failed' });
+  }
+};
