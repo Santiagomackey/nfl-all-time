@@ -13913,5 +13913,159 @@ window.addEventListener('nfl-live-data-updated',function(){setTimeout(function()
 function init(){createPlayers();playerModal();setTimeout(function(){decorateSeason();repairTeam()},700);timer=setInterval(function(){if(document.hidden)return;var live=(window.NFL_LIVE_DATA&&window.NFL_LIVE_DATA.games||[]).some(function(g){return g.status==='live'});if(live)forceRefresh()},15000)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
+
+<!-- BLITZBOOK ESPN PROXY + PLAYERS RELIABILITY PATCH -->
+<style id="bb-espn-proxy-style">
+#bbPlayerTeam{color:#f5f7fb!important;background:#111b2b!important}
+#bbPlayerTeam option,#bbPlayerPosition option{color:#f5f7fb!important;background:#111b2b!important}
+.bb-player-retry{margin:12px auto 0;display:flex}
+.bb-player-source-note{padding:7px 11px;border-top:1px solid rgba(255,255,255,.06);color:#6fd7a8;font-size:7px;letter-spacing:.8px;text-transform:uppercase}
+</style>
+<script id="bb-espn-proxy-script">
+(function(){
+'use strict';
+if(window.__BB_ESPN_PROXY_PATCH__) return;
+window.__BB_ESPN_PROXY_PATCH__=true;
+
+var PROXY='/api/espn';
+var directRoster='https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/';
+var directSummary='https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=';
+var directScoreboard='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+
+function jfetch(url,opts){return fetch(url,Object.assign({cache:'no-store'},opts||{})).then(function(r){if(!r.ok) throw new Error('HTTP '+r.status);return r.json();});}
+function teamAbbrFromSlug(slug){
+  var t=(Array.isArray(window.TEAMS)?window.TEAMS:[]).find(function(x){return x.slug===slug;});
+  if(!t)return slug;
+  var m=String(t.logo||'').match(/\/([a-z0-9]+)\.png/i);
+  return m?m[1].toLowerCase():String(t.short||slug).toLowerCase().replace(/[^a-z0-9]+/g,'');
+}
+function normalizeRosterPayload(p){
+  if(!p||typeof p!=='object')return p;
+  if(Array.isArray(p.athletes))return p;
+  if(p.team&&Array.isArray(p.team.athletes))return Object.assign({},p,{athletes:p.team.athletes});
+  if(Array.isArray(p.roster))return Object.assign({},p,{athletes:p.roster});
+  if(p.team&&Array.isArray(p.team.roster))return Object.assign({},p,{athletes:p.team.roster});
+  if(p.data&&Array.isArray(p.data.athletes))return Object.assign({},p,{athletes:p.data.athletes});
+  return p;
+}
+async function reliableRoster(slug){
+  var ab=teamAbbrFromSlug(slug), errors=[];
+  var urls=[
+    PROXY+'?type=roster&team='+encodeURIComponent(ab),
+    directRoster+encodeURIComponent(ab)+'/roster',
+    directRoster+encodeURIComponent(ab)+'?enable=roster,projection,stats'
+  ];
+  for(var i=0;i<urls.length;i++){
+    try{
+      var data=normalizeRosterPayload(await jfetch(urls[i]));
+      var groups=(data&&data.athletes)||[];
+      var count=Array.isArray(groups)?groups.reduce(function(n,g){return n+(Array.isArray(g&&g.items)?g.items.length:(g&&g.id?1:0));},0):0;
+      if(count>0)return data;
+      errors.push('empty '+urls[i]);
+    }catch(e){errors.push(String(e&&e.message||e));}
+  }
+  throw new Error('Roster unavailable: '+errors.join(' | '));
+}
+
+/* Replace the fragile Players Hub roster loader. */
+try{
+  if(typeof fetchRoster==='function'){
+    fetchRoster=async function(slug){
+      try{
+        if(typeof rosterCache!=='undefined') rosterCache.delete(slug);
+        var data=await reliableRoster(slug);
+        if(typeof rosterCache!=='undefined') rosterCache.set(slug,data);
+        return data;
+      }catch(e){
+        if(typeof rosterCache!=='undefined') rosterCache.delete(slug);
+        throw e;
+      }
+    };
+  }
+}catch(e){console.warn('Could not replace roster loader',e);}
+
+/* Use same-origin proxy for game summaries too. Live summaries are intentionally not sticky-cached. */
+try{
+  if(typeof fetchGameSummary==='function'){
+    var originalSummary=fetchGameSummary;
+    fetchGameSummary=async function(eventId){
+      if(!eventId)return null;
+      try{
+        var data=await jfetch(PROXY+'?type=summary&event='+encodeURIComponent(eventId));
+        if(typeof liveSummaryCache!=='undefined') liveSummaryCache.set(eventId,data);
+        return data;
+      }catch(e){
+        try{return await originalSummary(eventId);}catch(_){return null;}
+      }
+    };
+  }
+}catch(e){console.warn('Could not install proxy summary loader',e);}
+
+/* Use proxy for the scoreboard; processGames still owns normalization/UI updates. */
+try{
+  if(typeof fetchLiveGames==='function'){
+    fetchLiveGames=async function(){
+      var data;
+      try{data=await jfetch(PROXY+'?type=scoreboard');}
+      catch(e){data=await jfetch(directScoreboard);}
+      var events=Array.isArray(data&&data.events)?data.events:[];
+      var games=await Promise.all(events.map(async function(event){
+        var game=typeof normalizeEvent==='function'?normalizeEvent(event):null;
+        if(!game)return null;
+        if(typeof isLiveGameFor2026Season==='function'&&!isLiveGameFor2026Season(game))return null;
+        if(game.status==='final'||game.status==='live'){
+          var summary=await fetchGameSummary(game.id);
+          var competition=event&&event.competitions&&event.competitions[0];
+          var competitors=competition&&competition.competitors||[];
+          var away=competitors.find(function(c){return c.homeAway==='away';})||competitors[0];
+          var home=competitors.find(function(c){return c.homeAway==='home';})||competitors[1];
+          if(typeof extractLiveStats==='function')game.stats={away:extractLiveStats(summary,away),home:extractLiveStats(summary,home)};
+        }
+        return game;
+      }));
+      return games.filter(Boolean);
+    };
+  }
+}catch(e){console.warn('Could not install proxy scoreboard loader',e);}
+
+function ensurePlayerSelect(){
+  var sel=document.getElementById('bbPlayerTeam');
+  if(!sel)return;
+  if(sel.options.length===0){
+    (Array.isArray(window.TEAMS)?window.TEAMS:[]).slice().sort(function(a,b){return String(a.name).localeCompare(String(b.name));}).forEach(function(t){
+      var o=document.createElement('option');o.value=t.slug;o.textContent=t.name;sel.appendChild(o);
+    });
+  }
+  if(!sel.value&&sel.options.length)sel.selectedIndex=0;
+  if(sel.options.length&&(!sel.options[sel.selectedIndex]||!sel.options[sel.selectedIndex].textContent.trim()))sel.selectedIndex=0;
+}
+function addRetryButton(){
+  var host=document.getElementById('bbPlayerGroups');
+  if(!host||host.querySelector('.bb-player-retry'))return;
+  if(!/could not be reached|unavailable/i.test(host.textContent||''))return;
+  var b=document.createElement('button');b.type='button';b.className='bb-enhance-button primary bb-player-retry';b.textContent='Retry roster';
+  b.onclick=function(){ensurePlayerSelect();if(typeof renderRoster==='function')renderRoster();};
+  host.appendChild(b);
+}
+function bootPlayers(){
+  ensurePlayerSelect();
+  var sel=document.getElementById('bbPlayerTeam');
+  if(sel&&sel.value&&typeof renderRoster==='function')setTimeout(function(){renderRoster();},50);
+  var host=document.getElementById('bbPlayerGroups');
+  if(host){new MutationObserver(addRetryButton).observe(host,{childList:true,subtree:true});addRetryButton();}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(bootPlayers,250);},{once:true});else setTimeout(bootPlayers,250);
+
+/* Force a fresh scoreboard/summary cycle every 15s during a live game. */
+setInterval(function(){
+  if(document.hidden)return;
+  var live=(window.NFL_LIVE_DATA&&window.NFL_LIVE_DATA.games||[]).some(function(g){return g.status==='live';});
+  if(!live)return;
+  try{if(typeof liveSummaryCache!=='undefined')liveSummaryCache.clear();}catch(e){}
+  if(typeof loadLiveGames==='function')loadLiveGames().catch(function(){});
+},15000);
+})();
+</script>
+
 </body>
 </html>
