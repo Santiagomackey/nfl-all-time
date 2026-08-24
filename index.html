@@ -15490,5 +15490,450 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+<!-- =========================================================
+     BLITZBOOK FINISHED PRODUCT PASS V5
+     Season Archive + Discover + Records Board
+     ========================================================= -->
+<style id="bb-v5-style">
+/* Retire older custom season views, keep original site untouched */
+#bbSeasonDbLauncher,#seasonArchiveExplorer,#bbHistoryV2,#blitzbookHistoryTools,#bbSeasonDb,#bbSeasonDbV3,#bbSeasonV4{display:none!important}
+
+/* ---------- HOME: compact Season Archive launcher ---------- */
+#bbSeasonV5Launcher{padding:14px 0!important}
+.bb-v5-season-launch{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:56px;padding:9px 11px;border:1px solid rgba(255,255,255,.075);
+  border-radius:11px;background:linear-gradient(180deg,rgba(14,24,39,.92),rgba(9,15,25,.97))
+}
+.bb-v5-season-copy{display:flex;align-items:center;gap:10px;min-width:0}
+.bb-v5-season-icon{
+  width:34px;height:34px;display:grid;place-items:center;flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.09);border-radius:9px;background:#121d2d;
+  font:700 13px 'Oswald',sans-serif;color:#e8edf4
+}
+.bb-v5-season-copy b{display:block;font:700 14px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.55px}
+.bb-v5-season-copy span{display:block;margin-top:3px;color:#76879c;font-size:6px;letter-spacing:.7px;text-transform:uppercase}
+.bb-v5-season-open{
+  height:34px;padding:0 11px;border:1px solid rgba(194,28,58,.45);border-radius:8px;
+  background:rgba(98,13,31,.27);color:#fff;font:800 7px 'JetBrains Mono',monospace;
+  text-transform:uppercase;letter-spacing:.75px;cursor:pointer
+}
+.bb-v5-season-open:hover{background:rgba(137,16,42,.38)}
+
+/* ---------- DISCOVER STRIP ---------- */
+#bbDiscover{padding:8px 0 20px}
+.bb-discover{
+  display:grid;grid-template-columns:minmax(0,1fr) repeat(4,auto);gap:7px;align-items:center;
+  padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:#0b1421
+}
+.bb-discover-copy{min-width:0;padding:0 5px}
+.bb-discover-copy b{display:block;font:700 12px 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.45px}
+.bb-discover-copy span{display:block;margin-top:2px;color:#6f8195;font-size:6px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v5-action{
+  min-height:34px;padding:7px 9px;border:1px solid #243149;border-radius:8px;background:#101927;color:#d6dde7;
+  font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.7px;cursor:pointer;white-space:nowrap
+}
+.bb-v5-action:hover{border-color:#354862;background:#131f31}
+
+/* ---------- SEASON ARCHIVE V5 ---------- */
+#bbSeasonV5{
+  position:fixed;inset:0;z-index:45000;display:none;background:#060b13;color:#f5f7fb;overflow:hidden
+}
+#bbSeasonV5.open{display:block}
+.bb-v5-shell{height:100%;display:grid;grid-template-rows:auto auto minmax(0,1fr)}
+.bb-v5-top{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  min-height:56px;padding:8px 12px;border-bottom:1px solid #1c2839;background:#08101b
+}
+.bb-v5-close{width:39px;height:39px;border:1px solid #263349;border-radius:9px;background:#111b2b;color:#fff;font-size:20px;cursor:pointer}
+.bb-v5-title{min-width:0}
+.bb-v5-title b{display:block;font:700 17px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.55px}
+.bb-v5-title span{display:block;margin-top:3px;color:#718297;font-size:6px;text-transform:uppercase;letter-spacing:.75px}
+.bb-v5-top-controls{display:flex;gap:6px;align-items:center}
+.bb-v5-top-controls button,.bb-v5-top-controls select{
+  height:37px;border:1px solid #263349;border-radius:8px;background:#101927;color:#fff;padding:0 9px;font-size:8px
+}
+.bb-v5-top-controls button{width:37px;padding:0;cursor:pointer}
+.bb-v5-tabs{
+  display:flex;gap:5px;overflow-x:auto;padding:7px 12px;border-bottom:1px solid #1a2637;background:#09111c;scrollbar-width:none
+}
+.bb-v5-tabs::-webkit-scrollbar{display:none}
+.bb-v5-tab{
+  flex:0 0 auto;height:31px;padding:0 9px;border:1px solid #253247;border-radius:7px;background:#101927;color:#8291a4;
+  font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.7px;cursor:pointer
+}
+.bb-v5-tab.active{border-color:#8f1731;background:#36101d;color:#fff}
+.bb-v5-content{min-height:0;overflow-y:auto;overflow-x:hidden;padding:10px 12px 18px;overscroll-behavior:contain}
+.bb-v5-inner{width:min(1180px,100%);margin:auto}
+.bb-v5-panel{display:none}.bb-v5-panel.active{display:block}
+.bb-v5-loading,.bb-v5-error{padding:34px;text-align:center;color:#78899d;border:1px dashed #263349;border-radius:10px}
+
+/* Common cards */
+.bb-v5-card{border:1px solid #202c3e;border-radius:10px;background:#0d1624;overflow:hidden}
+.bb-v5-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #1a2636}
+.bb-v5-card-head b{font:700 11px 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.45px}
+.bb-v5-card-head span{color:#708195;font-size:5px;text-transform:uppercase;letter-spacing:.7px}
+.bb-v5-section-title{display:flex;align-items:center;justify-content:space-between;margin:11px 0 6px}
+.bb-v5-section-title b{font:700 13px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v5-section-title span{color:#6d7e92;font-size:5px;text-transform:uppercase;letter-spacing:.65px}
+
+/* Overview */
+.bb-v5-overview-top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:8px}
+.bb-v5-champ{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px}
+.bb-v5-champ img{width:52px;height:52px;object-fit:contain}
+.bb-v5-champ h2{margin:0;font:700 22px/1 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v5-champ p{margin:4px 0 0;color:#8291a4;font-size:7px}
+.bb-v5-champ .record{text-align:right}
+.bb-v5-champ .record strong{display:block;font:700 17px 'Oswald',sans-serif}
+.bb-v5-champ .record span{display:block;color:#708195;font-size:5px;text-transform:uppercase}
+.bb-v5-kpis{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px}
+.bb-v5-kpi{border:1px solid #1d293a;border-radius:7px;background:#0a1320;padding:8px}
+.bb-v5-kpi span{display:block;color:#6f8094;font-size:5px;text-transform:uppercase;letter-spacing:.65px}
+.bb-v5-kpi strong{display:block;margin-top:3px;font-size:8px;line-height:1.25}
+.bb-v5-teamleaders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.bb-v5-tile{min-width:0;border:1px solid #1f2b3d;border-radius:8px;background:#0c1523;padding:8px}
+.bb-v5-tile .lab{color:#6e7f93;font-size:5px;text-transform:uppercase;letter-spacing:.65px}
+.bb-v5-tile .row{display:flex;align-items:center;gap:6px;margin-top:6px;min-width:0}
+.bb-v5-tile img{width:24px;height:24px;object-fit:contain}
+.bb-v5-tile b{font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-v5-tile strong{display:block;margin-top:5px;font:700 14px 'Oswald',sans-serif}
+
+/* Leaders */
+.bb-v5-leaders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.bb-v5-leader{border:1px solid #202c3e;border-radius:9px;background:#0d1624;overflow:hidden}
+.bb-v5-leader-head{display:flex;justify-content:space-between;padding:8px 9px;border-bottom:1px solid #1a2636}
+.bb-v5-leader-head b{font:700 10px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v5-leader-head span{color:#708195;font-size:5px;text-transform:uppercase}
+.bb-v5-leader-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px 9px;border-bottom:1px solid #172334}
+.bb-v5-leader-row:last-child{border-bottom:0}
+.bb-v5-leader-row .rank{color:#6e7f93;font:700 9px 'Oswald',sans-serif}
+.bb-v5-leader-row .who{min-width:0}.bb-v5-leader-row .who b{display:block;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bb-v5-leader-row .who span{display:block;color:#708195;font-size:5px;margin-top:2px}
+.bb-v5-leader-row .val{text-align:right}.bb-v5-leader-row .val strong{display:block;font:700 12px 'Oswald',sans-serif}.bb-v5-leader-row .val span{display:block;color:#708195;font-size:5px}
+.bb-v5-empty{padding:18px;text-align:center;color:#718196;font-size:7px}
+
+/* Standings */
+.bb-v5-standings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bb-v5-standings-group{border:1px solid #202c3e;border-radius:9px;background:#0d1624;overflow:hidden}
+.bb-v5-standings-group h3{margin:0;padding:8px 9px;border-bottom:1px solid #1a2636;font:700 10px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-v5-standing-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;gap:7px;align-items:center;padding:7px 9px;border-bottom:1px solid #172334}
+.bb-v5-standing-row:last-child{border-bottom:0}
+.bb-v5-standing-row img{width:22px;height:22px;object-fit:contain}
+.bb-v5-standing-row b{font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bb-v5-standing-row span{font-size:6px;color:#718196}
+.bb-v5-standing-row strong{font:700 9px 'Oswald',sans-serif}
+
+/* Teams table */
+.bb-v5-filter{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
+.bb-v5-filter input{height:35px;border:1px solid #263349;border-radius:7px;background:#101927;color:#fff;padding:0 10px;font-size:8px}
+.bb-v5-filter span{display:flex;align-items:center;color:#708195;font-size:6px}
+.bb-v5-tablewrap{overflow-x:auto;overflow-y:hidden;border:1px solid #202c3e;border-radius:8px}
+.bb-v5-table{width:100%;min-width:960px;border-collapse:collapse}
+.bb-v5-table th,.bb-v5-table td{padding:7px 8px;border-bottom:1px solid #172334;font-size:7px;white-space:nowrap;text-align:center}
+.bb-v5-table th{background:#0a1320;color:#78889b;text-transform:uppercase}
+.bb-v5-table th:nth-child(2),.bb-v5-table td:nth-child(2){text-align:left}
+.bb-v5-teamcell{display:flex;align-items:center;gap:6px}.bb-v5-teamcell img{width:21px;height:21px;object-fit:contain}.bb-v5-teamcell button{border:0;background:none;color:#eef2f7;padding:0;font-weight:700;cursor:pointer}
+
+/* Playoff road */
+.bb-v5-road{display:grid;gap:6px}
+.bb-v5-game{display:grid;grid-template-columns:115px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid #202c3e;border-radius:8px;background:#0c1523;padding:8px}
+.bb-v5-game .round{color:#d3a84c;font:800 6px 'JetBrains Mono',monospace;text-transform:uppercase}
+.bb-v5-game .match{display:flex;align-items:center;gap:6px;min-width:0}.bb-v5-game .match img{width:25px;height:25px;object-fit:contain}.bb-v5-game .match b{font-size:7px}
+.bb-v5-game .score{font:700 12px 'Oswald',sans-serif}.bb-v5-game .score.win{color:#67d4a5}
+
+/* Records */
+.bb-v5-records{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.bb-v5-record{border:1px solid #202c3e;border-radius:9px;background:#0d1624;padding:9px}
+.bb-v5-record .lab{color:#718196;font-size:5px;text-transform:uppercase;letter-spacing:.65px}
+.bb-v5-record b{display:block;margin-top:5px;font-size:8px}
+.bb-v5-record strong{display:block;margin-top:4px;font:700 15px 'Oswald',sans-serif}
+
+/* ---------- ALL-TIME RECORDS BOARD ---------- */
+#bbRecordsBoard{
+  position:fixed;inset:0;z-index:44000;display:none;background:rgba(3,7,13,.86);backdrop-filter:blur(14px);padding:5vh 14px
+}
+#bbRecordsBoard.open{display:flex;justify-content:center;align-items:flex-start}
+.bb-records-modal{
+  width:min(980px,100%);max-height:90vh;overflow:auto;border:1px solid #263349;border-radius:13px;background:#09111d
+}
+.bb-records-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid #1c2839}
+.bb-records-top b{display:block;font:700 17px 'Oswald',sans-serif;text-transform:uppercase}
+.bb-records-top span{display:block;color:#718196;font-size:6px;margin-top:3px;text-transform:uppercase}
+.bb-records-top button{width:38px;height:38px;border:1px solid #263349;border-radius:8px;background:#111b2b;color:#fff;font-size:19px;cursor:pointer}
+.bb-records-body{padding:10px}
+.bb-record-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.bb-record-card{border:1px solid #202c3e;border-radius:9px;background:#0d1624;padding:9px}
+.bb-record-card .lab{color:#718196;font-size:5px;text-transform:uppercase;letter-spacing:.65px}
+.bb-record-card b{display:block;margin-top:5px;font-size:8px}
+.bb-record-card strong{display:block;margin-top:4px;font:700 16px 'Oswald',sans-serif}
+.bb-record-card span{display:block;margin-top:3px;color:#718196;font-size:6px}
+
+@media(max-width:900px){
+ .bb-discover{grid-template-columns:1fr 1fr 1fr}.bb-discover-copy{grid-column:1/-1}
+ .bb-v5-overview-top{grid-template-columns:1fr}.bb-v5-teamleaders{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bb-v5-leaders,.bb-v5-records,.bb-record-grid{grid-template-columns:1fr 1fr}
+ .bb-v5-standings-grid{grid-template-columns:1fr}
+ .bb-v5-top{grid-template-columns:auto 1fr}.bb-v5-top-controls{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .bb-v5-season-copy span,.bb-discover-copy span{display:none}
+ .bb-discover{grid-template-columns:1fr 1fr}
+ .bb-discover-copy{grid-column:1/-1}
+ .bb-v5-leaders,.bb-v5-records,.bb-record-grid{grid-template-columns:1fr}
+ .bb-v5-teamleaders{grid-template-columns:1fr 1fr}
+ .bb-v5-champ{grid-template-columns:46px 1fr}.bb-v5-champ .record{grid-column:1/-1;text-align:left}
+ .bb-v5-game{grid-template-columns:1fr auto}.bb-v5-game .round{grid-column:1/-1}
+}
+</style>
+
+<script id="bb-v5-script">
+(function(){
+'use strict';
+if(window.__BB_V5_FINISHED__)return;
+window.__BB_V5_FINISHED__=true;
+
+var cache5=new Map(),postCache5=new Map(),year5=2025,tab5='overview',allRows5=null;
+
+function S5(v){return String(v==null?'':v)}
+function L5(v){return S5(v).toLowerCase()}
+function N5(v){var n=Number(v);return Number.isFinite(n)?n:null}
+function A5(v){return Array.isArray(v)?v:(v==null?[]:[v])}
+function E5(v){return S5(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function K5(v){return L5(v).replace(/[^a-z0-9]+/g,'')}
+function season5(d,y){return A5(d&&d.seasons).find(function(x){return Number(x&&x.year)===Number(y)})||null}
+function rec5(x){var m=S5(x&&x.record).match(/(\d+)\s*[-–]\s*(\d+)(?:\s*[-–]\s*(\d+))?/);return m?{w:+m[1],l:+m[2],t:+(m[3]||0)}:{w:N5(x&&x.wins)||0,l:N5(x&&x.losses)||0,t:N5(x&&x.ties)||0}}
+function pct5(r){var g=r.w+r.l+r.t;return g?(r.w+r.t*.5)/g:0}
+function pctText5(v){return Number(v||0).toFixed(3).replace(/^0/,'')}
+function logo5(m,d){return d&&d.identity&&d.identity.assets&&d.identity.assets.logo||m&&m.logo||''}
+function name5(m,d){return d&&d.identity&&(d.identity.fullName||d.identity.teamName)||m&&m.name||'NFL Team'}
+function stat5(season,aliases){
+  var o=season&&season.teamStats||{},ks=Object.keys(o||{});
+  for(var i=0;i<aliases.length;i++){var a=K5(aliases[i]),k=ks.find(function(x){return K5(x)===a});if(k!=null&&o[k]!=null&&o[k]!=='')return o[k]}
+  return ''
+}
+function numStat5(v){var m=S5(v).replace(/,/g,'').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):null}
+
+async function rows5(y){
+  if(cache5.has(y))return cache5.get(y);
+  var p=Promise.all(TEAMS.map(async function(m){
+    try{
+      var d=await loadTeamData(m.slug),ss=season5(d,y);if(!ss)return null;
+      var r=rec5(ss);return {meta:m,data:d,season:ss,rec:r,pct:pct5(r),name:name5(m,d),logo:logo5(m,d)}
+    }catch(e){return null}
+  })).then(function(x){return x.filter(Boolean)});
+  cache5.set(y,p);return p
+}
+function localPlayer5(rows,metric){
+  var out=[];
+  rows.forEach(function(r){
+    A5(r.season&&r.season.leaders).forEach(function(x){
+      if(K5(x&&x.metric)!==K5(metric))return;
+      var v=numStat5(x&&x.value);if(v==null)return;
+      out.push({name:S5(x.name||'Player'),raw:S5(x.value),value:v,team:r.name})
+    })
+  });
+  return out.sort(function(a,b){return b.value-a.value}).slice(0,10)
+}
+function teamLead5(rows,label,aliases,mode){
+  var best=null;
+  rows.forEach(function(r){
+    var raw=stat5(r.season,aliases),v=numStat5(raw);if(v==null)return;
+    if(!best||(mode==='min'?v<best.value:v>best.value))best={row:r,raw:raw,value:v,label:label}
+  });
+  return best
+}
+
+/* postseason */
+async function fetch5(url){
+  try{var p=await fetch('/api/espn?url='+encodeURIComponent(url),{cache:'no-store'});if(p.ok)return await p.json()}catch(e){}
+  try{var d=await fetch(url,{cache:'no-store'});if(d.ok)return await d.json()}catch(e){}
+  return null
+}
+async function postseason5(y){
+  if(postCache5.has(y))return postCache5.get(y);
+  var p=(async function(){
+    var events=[];
+    for(var w=1;w<=5;w++){
+      var u='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season='+y+'&seasontype=3&week='+w+'&limit=100';
+      var d=await fetch5(u);
+      A5(d&&d.events).forEach(function(ev){if(!events.some(function(x){return S5(x.id)===S5(ev.id)}))events.push(ev)})
+    }
+    return events.sort(function(a,b){return new Date(a.date||0)-new Date(b.date||0)})
+  })();
+  postCache5.set(y,p);return p
+}
+function comp5(e){return e&&e.competitions&&e.competitions[0]||null}
+function comps5(e){return A5(comp5(e)&&comp5(e).competitors)}
+function round5(e){var c=comp5(e),notes=A5(c&&c.notes).map(function(n){return n&&n.headline}).filter(Boolean).join(' ');return notes||e&&e.week&&e.week.text||e&&e.name||'Postseason'}
+function isSB5(e){return /super bowl/i.test(round5(e)+' '+S5(e&&e.name)+' '+S5(e&&e.shortName))}
+function win5(e){return comps5(e).find(function(c){return c&&c.winner===true})||null}
+function slug5(c){
+  var ab=S5(c&&c.team&&c.team.abbreviation).toLowerCase();
+  var M={phi:'eagles',ne:'patriots',kc:'chiefs',sf:'49ers',tb:'buccaneers',lar:'rams',cin:'bengals',bal:'ravens',den:'broncos',sea:'seahawks',gb:'packers',nyg:'giants',ind:'colts',pit:'steelers',no:'saints',ari:'cardinals',car:'panthers',atl:'falcons',min:'vikings',dal:'cowboys',wsh:'commanders',was:'commanders',lv:'raiders',oak:'raiders',sd:'chargers',lac:'chargers',ten:'titans',hou:'texans',jax:'jaguars',mia:'dolphins',buf:'bills',nyj:'jets',cle:'browns',det:'lions',chi:'bears'};
+  return M[ab]||ab
+}
+function champPost5(events){
+  var sb=events.find(isSB5)||events.slice().reverse().find(function(e){return win5(e)&&!/pro bowl/i.test(S5(e.name)+' '+round5(e))});
+  var w=win5(sb);return w?{slug:slug5(w),event:sb}:null
+}
+function road5(events,slug){return events.filter(function(e){return comps5(e).some(function(c){return slug5(c)===slug})&&!/pro bowl/i.test(S5(e.name)+' '+round5(e))})}
+
+/* homepage */
+function buildHome5(){
+  if(document.getElementById('bbSeasonV5Launcher'))return;
+  var anchor=document.getElementById('divisions')||document.getElementById('live');
+  if(!anchor||!anchor.parentNode)return;
+
+  var season=document.createElement('section');season.id='bbSeasonV5Launcher';season.className='section';
+  season.innerHTML='<div class="container"><div class="bb-v5-season-launch"><div class="bb-v5-season-copy"><div class="bb-v5-season-icon">S</div><div><b>Season Archive</b><span>Champion · standings · leaders · playoffs · records</span></div></div><button class="bb-v5-season-open" id="bbOpenSeasonV5" type="button">Explore Seasons →</button></div></div>';
+  anchor.parentNode.insertBefore(season,anchor);
+
+  var discover=document.createElement('section');discover.id='bbDiscover';discover.innerHTML='<div class="container"><div class="bb-discover"><div class="bb-discover-copy"><b>Discover Blitzbook</b><span>Jump somewhere interesting</span></div><button class="bb-v5-action" id="bbRandomTeam" type="button">Random Team</button><button class="bb-v5-action" id="bbRandomSeason" type="button">Random Season</button><button class="bb-v5-action" id="bbOpenRecords" type="button">Records Board</button><button class="bb-v5-action" id="bbOpenSearchV5" type="button">Search</button></div></div>';
+  season.parentNode.insertBefore(discover,season.nextSibling);
+
+  document.getElementById('bbOpenSeasonV5').onclick=function(){openSeason5(2025)};
+  document.getElementById('bbRandomTeam').onclick=function(){var t=TEAMS[Math.floor(Math.random()*TEAMS.length)];if(t)routeToTeam(t.slug)};
+  document.getElementById('bbRandomSeason').onclick=function(){openSeason5(1920+Math.floor(Math.random()*107))};
+  document.getElementById('bbOpenRecords').onclick=openRecords5;
+  document.getElementById('bbOpenSearchV5').onclick=function(){
+    if(typeof window.openBlitzbookSearch==='function')window.openBlitzbookSearch();
+    else{var s=document.querySelector('.filter-search,#teamSearch');if(s){s.scrollIntoView({behavior:'smooth'});s.focus()}}
+  };
+}
+
+/* season archive */
+function buildSeason5(){
+  if(document.getElementById('bbSeasonV5'))return;
+  var db=document.createElement('div');db.id='bbSeasonV5';
+  db.innerHTML='<div class="bb-v5-shell"><div class="bb-v5-top"><button class="bb-v5-close" type="button">×</button><div class="bb-v5-title"><b id="bbV5Title">NFL Season Archive</b><span>Blitzbook historical season intelligence</span></div><div class="bb-v5-top-controls"><button id="bbPrevV5" type="button">‹</button><select id="bbYearV5"></select><button id="bbNextV5" type="button">›</button></div></div><div class="bb-v5-tabs"><button class="bb-v5-tab active" data-v5tab="overview">Overview</button><button class="bb-v5-tab" data-v5tab="standings">Standings</button><button class="bb-v5-tab" data-v5tab="leaders">Player Leaders</button><button class="bb-v5-tab" data-v5tab="teams">Teams & Stats</button><button class="bb-v5-tab" data-v5tab="road">Championship Road</button><button class="bb-v5-tab" data-v5tab="records">Season Records</button></div><div class="bb-v5-content"><div id="bbV5Body" class="bb-v5-inner"></div></div></div>';
+  document.body.appendChild(db);
+  var sel=db.querySelector('#bbYearV5');
+  for(var y=2026;y>=1920;y--){var o=document.createElement('option');o.value=y;o.textContent=y+' NFL Season';sel.appendChild(o)}
+  db.querySelector('.bb-v5-close').onclick=closeSeason5;
+  sel.onchange=function(){renderSeason5(Number(sel.value))};
+  db.querySelector('#bbPrevV5').onclick=function(){renderSeason5(Math.max(1920,year5-1))};
+  db.querySelector('#bbNextV5').onclick=function(){renderSeason5(Math.min(2026,year5+1))};
+  db.querySelectorAll('[data-v5tab]').forEach(function(b){b.onclick=function(){tab5=b.dataset.v5tab;syncTabs5()}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&db.classList.contains('open'))closeSeason5()});
+}
+function closeSeason5(){var db=document.getElementById('bbSeasonV5');if(db)db.classList.remove('open');document.body.style.overflow=''}
+function syncTabs5(){document.querySelectorAll('[data-v5tab]').forEach(function(b){b.classList.toggle('active',b.dataset.v5tab===tab5)});document.querySelectorAll('.bb-v5-panel').forEach(function(p){p.classList.toggle('active',p.dataset.v5panel===tab5)});var c=document.querySelector('.bb-v5-content');if(c)c.scrollTop=0}
+function champCard5(c,y,postOk){
+  if(!c)return '<div class="bb-v5-card"><div class="bb-v5-card-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span>'+(y>=2026?'pending':'not verified')+'</span></div><div class="bb-v5-champ"><img src="https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png"><div><h2>'+(y>=2026?'TBD':'Unavailable')+'</h2><p>No verified championship result available.</p></div></div></div>';
+  return '<div class="bb-v5-card"><div class="bb-v5-card-head"><b>'+(y>=1966?'Super Bowl Champion':'NFL Champion')+'</b><span>'+(postOk?'verified postseason':'Blitzbook data')+'</span></div><div class="bb-v5-champ"><img src="'+E5(c.logo)+'"><div><h2>'+E5(c.name)+'</h2><p>'+E5(c.season.playoffResult&&!/missed/i.test(c.season.playoffResult)?c.season.playoffResult:'Championship season')+'</p></div><div class="record"><strong>'+E5(c.season.record||c.rec.w+'-'+c.rec.l)+'</strong><span>regular season</span></div></div></div>'
+}
+function kpis5(rows,c,y,events){
+  var best=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w})[0];
+  var playoffTeams=new Set();events.forEach(function(e){comps5(e).forEach(function(x){var sl=slug5(x);if(sl)playoffTeams.add(sl)})});
+  var list=[['Teams',rows.length],['Best record',best?best.name+' '+S5(best.season.record):'—'],['Playoff teams',playoffTeams.size||'—'],['Champion',c?c.name:(y>=2026?'TBD':'—')],['Era',y>=1970?'Post-merger':y>=1966?'Super Bowl era':'Pre-Super Bowl'],['Postseason games',events.length||'—']];
+  return '<div class="bb-v5-card"><div class="bb-v5-card-head"><b>Season Snapshot</b><span>'+y+'</span></div><div class="bb-v5-kpis">'+list.map(function(x){return '<div class="bb-v5-kpi"><span>'+E5(x[0])+'</span><strong>'+E5(x[1])+'</strong></div>'}).join('')+'</div></div>'
+}
+function teamTiles5(rows){
+  var defs=[['Most Points',['PTS','Points For','PF'],'max'],['Total Yards',['YDS','Total Yards'],'max'],['Pass Yards',['PASS YDS','Passing Yards'],'max'],['Rush Yards',['RUSH YDS','Rushing Yards'],'max'],['Best Defense',['PTS ALLOWED','PA','Points Against'],'min'],['Sacks',['SACKS','SCK'],'max'],['Takeaways',['TAKEAWAYS','Takeaways'],'max'],['Point Diff',['DIFF','Point Differential'],'max']];
+  var ls=defs.map(function(d){return teamLead5(rows,d[0],d[1],d[2])}).filter(Boolean);
+  if(!ls.length)return '';
+  return '<div class="bb-v5-section-title"><b>Team Statistical Leaders</b><span>only stats present in source data</span></div><div class="bb-v5-teamleaders">'+ls.map(function(x){return '<div class="bb-v5-tile"><div class="lab">'+E5(x.label)+'</div><div class="row"><img src="'+E5(x.row.logo)+'"><b>'+E5(x.row.name)+'</b></div><strong>'+E5(x.raw)+'</strong></div>'}).join('')+'</div>'
+}
+function leaderCard5(title,label,rows){
+  return '<div class="bb-v5-leader"><div class="bb-v5-leader-head"><b>'+E5(title)+'</b><span>'+E5(label)+'</span></div>'+(rows.length?rows.map(function(r,i){return '<div class="bb-v5-leader-row"><div class="rank">'+(i+1)+'</div><div class="who"><b>'+E5(r.name)+'</b><span>'+E5(r.team)+'</span></div><div class="val"><strong>'+E5(r.raw)+'</strong><span>'+E5(label)+'</span></div></div>'}).join(''):'<div class="bb-v5-empty">No reliable data stored for this category.</div>')+'</div>'
+}
+function leaders5(rows){
+  return '<div class="bb-v5-section-title"><b>League Player Leaders</b><span>aggregated from franchise season files</span></div><div class="bb-v5-leaders">'+leaderCard5('Passing Yards','PASS YDS',localPlayer5(rows,'PASS YDS'))+leaderCard5('Rushing Yards','RUSH YDS',localPlayer5(rows,'RUSH YDS'))+leaderCard5('Receiving Yards','REC YDS',localPlayer5(rows,'REC YDS'))+'</div>'
+}
+function standings5(rows){
+  var groups={};
+  rows.forEach(function(r){var key=(r.meta.conf||'NFL')+' '+(r.meta.div||'');(groups[key]||(groups[key]=[])).push(r)});
+  var html=Object.keys(groups).sort().map(function(k){
+    var rs=groups[k].sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w});
+    return '<div class="bb-v5-standings-group"><h3>'+E5(k)+'</h3>'+rs.map(function(r,i){return '<div class="bb-v5-standing-row"><img src="'+E5(r.logo)+'"><b>'+E5(r.name)+'</b><span>'+E5(r.season.record||r.rec.w+'-'+r.rec.l)+'</span><strong>'+E5(pctText5(r.pct))+'</strong></div>'}).join('')+'</div>'
+  }).join('');
+  return '<div class="bb-v5-section-title"><b>Division Standings</b><span>regular season</span></div><div class="bb-v5-standings-grid">'+html+'</div>'
+}
+function teamsTable5(rows){
+  var sorted=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w||a.rec.l-b.rec.l});
+  return '<div class="bb-v5-filter"><input id="bbFilterV5" type="search" placeholder="Search team, division, record…"><span id="bbCountV5">'+sorted.length+' teams</span></div><div class="bb-v5-tablewrap"><table class="bb-v5-table"><thead><tr><th>#</th><th>Team</th><th>Conf</th><th>Div</th><th>Record</th><th>Pct</th><th>Playoff Result*</th><th>PTS</th><th>YDS</th><th>PASS</th><th>RUSH</th></tr></thead><tbody id="bbRowsV5">'+sorted.map(function(r,i){return '<tr data-q="'+E5(L5(r.name+' '+r.meta.conf+' '+r.meta.div+' '+S5(r.season.record)))+'"><td>'+(i+1)+'</td><td><div class="bb-v5-teamcell"><img src="'+E5(r.logo)+'"><button type="button" data-v5team="'+E5(r.meta.slug)+'">'+E5(r.name)+'</button></div></td><td>'+E5(r.meta.conf||'—')+'</td><td>'+E5(r.meta.div||'—')+'</td><td>'+E5(r.season.record||r.rec.w+'-'+r.rec.l)+'</td><td>'+E5(pctText5(r.pct))+'</td><td>'+E5(r.season.playoffResult||'—')+'</td><td>'+E5(stat5(r.season,['PTS'])||'—')+'</td><td>'+E5(stat5(r.season,['YDS'])||'—')+'</td><td>'+E5(stat5(r.season,['PASS YDS'])||'—')+'</td><td>'+E5(stat5(r.season,['RUSH YDS'])||'—')+'</td></tr>'}).join('')+'</tbody></table></div><div style="margin-top:5px;color:#66778c;font-size:5px">* Legacy playoff-result fields can be incomplete. Champion above uses postseason verification when available.</div>'
+}
+function roadHtml5(events,c){
+  if(!c)return '<div class="bb-v5-error">No verified champion, so no championship road can be shown.</div>';
+  var games=road5(events,c.meta.slug);if(!games.length)return '<div class="bb-v5-error">Champion identified, but game-by-game postseason data is unavailable.</div>';
+  return '<div class="bb-v5-section-title"><b>Championship Road</b><span>'+E5(c.name)+'</span></div><div class="bb-v5-road">'+games.map(function(ev){var comps=comps5(ev),me=comps.find(function(x){return slug5(x)===c.meta.slug}),opp=comps.find(function(x){return slug5(x)!==c.meta.slug}),win=me&&me.winner===true;return '<div class="bb-v5-game"><div class="round">'+E5(round5(ev))+'</div><div class="match"><img src="'+E5(opp&&opp.team&&opp.team.logo||'')+'"><b>'+E5((me&&me.homeAway==='away'?'@ ':'vs ')+(opp&&opp.team&&(opp.team.shortDisplayName||opp.team.displayName)||'Opponent'))+'</b></div><div class="score '+(win?'win':'')+'">'+E5((me&&me.score!=null?me.score:'—')+' - '+(opp&&opp.score!=null?opp.score:'—'))+'</div></div>'}).join('')+'</div>'
+}
+function records5(rows){
+  var best=rows.slice().sort(function(a,b){return b.pct-a.pct||b.rec.w-a.rec.w})[0];
+  var worst=rows.slice().sort(function(a,b){return a.pct-b.pct||a.rec.w-b.rec.w})[0];
+  var defs=[
+    ['Best Record',best?best.name:'—',best?S5(best.season.record):'—'],
+    ['Worst Record',worst?worst.name:'—',worst?S5(worst.season.record):'—']
+  ];
+  [['Most Points',['PTS'],'max'],['Most Yards',['YDS'],'max'],['Most Pass Yards',['PASS YDS'],'max'],['Most Rush Yards',['RUSH YDS'],'max'],['Best Defense',['PTS ALLOWED','PA'],'min']].forEach(function(d){
+    var x=teamLead5(rows,d[0],d[1],d[2]);if(x)defs.push([d[0],x.row.name,x.raw])
+  });
+  return '<div class="bb-v5-section-title"><b>Season Records</b><span>'+year5+'</span></div><div class="bb-v5-records">'+defs.map(function(x){return '<div class="bb-v5-record"><div class="lab">'+E5(x[0])+'</div><b>'+E5(x[1])+'</b><strong>'+E5(x[2])+'</strong></div>'}).join('')+'</div>'
+}
+function bindSeason5(){
+  document.querySelectorAll('[data-v5team]').forEach(function(b){b.onclick=function(){closeSeason5();routeToTeam(b.dataset.v5team)}});
+  var f=document.getElementById('bbFilterV5');
+  if(f)f.oninput=function(){var q=L5(f.value),n=0;document.querySelectorAll('#bbRowsV5 tr').forEach(function(r){var ok=!q||S5(r.dataset.q).indexOf(q)!==-1;r.style.display=ok?'':'none';if(ok)n++});document.getElementById('bbCountV5').textContent=n+' teams'}
+}
+async function renderSeason5(y){
+  year5=Math.max(1920,Math.min(2026,Number(y)||2025));
+  var db=document.getElementById('bbSeasonV5'),body=document.getElementById('bbV5Body');
+  db.querySelector('#bbYearV5').value=year5;document.getElementById('bbV5Title').textContent=year5+' NFL Season Archive';
+  body.innerHTML='<div class="bb-v5-loading">Loading '+year5+'…</div>';
+  try{
+    var pair=await Promise.all([rows5(year5),postseason5(year5)]),rows=pair[0],events=pair[1],cp=champPost5(events),c=cp?rows.find(function(r){return r.meta.slug===cp.slug}):null;
+    body.innerHTML='<section class="bb-v5-panel active" data-v5panel="overview"><div class="bb-v5-overview-top">'+champCard5(c,year5,events.length>0)+kpis5(rows,c,year5,events)+'</div>'+teamTiles5(rows)+'</section><section class="bb-v5-panel" data-v5panel="standings">'+standings5(rows)+'</section><section class="bb-v5-panel" data-v5panel="leaders">'+leaders5(rows)+'</section><section class="bb-v5-panel" data-v5panel="teams">'+teamsTable5(rows)+'</section><section class="bb-v5-panel" data-v5panel="road">'+roadHtml5(events,c)+'</section><section class="bb-v5-panel" data-v5panel="records">'+records5(rows)+'</section>';
+    bindSeason5();syncTabs5()
+  }catch(e){console.error(e);body.innerHTML='<div class="bb-v5-error">Could not load this season. Try again.</div>'}
+}
+function openSeason5(y){buildSeason5();var db=document.getElementById('bbSeasonV5');db.classList.add('open');document.body.style.overflow='hidden';renderSeason5(y||2025)}
+
+/* all-time records board */
+function buildRecords5(){
+  if(document.getElementById('bbRecordsBoard'))return;
+  var ov=document.createElement('div');ov.id='bbRecordsBoard';
+  ov.innerHTML='<div class="bb-records-modal"><div class="bb-records-top"><div><b>All-Time Records Board</b><span>Best single-season team marks stored in Blitzbook</span></div><button type="button">×</button></div><div id="bbRecordsBody" class="bb-records-body"><div class="bb-v5-loading">Building records…</div></div></div>';
+  document.body.appendChild(ov);
+  ov.querySelector('button').onclick=function(){ov.classList.remove('open')};
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('open')});
+}
+async function buildAllRows5(){
+  if(allRows5)return allRows5;
+  var all=[];
+  for(var y=1920;y<=2026;y++){
+    try{var rs=await rows5(y);rs.forEach(function(r){all.push({year:y,row:r})})}catch(e){}
+  }
+  allRows5=all;return all
+}
+async function openRecords5(){
+  buildRecords5();var ov=document.getElementById('bbRecordsBoard'),body=document.getElementById('bbRecordsBody');ov.classList.add('open');body.innerHTML='<div class="bb-v5-loading">Building all-time records…</div>';
+  var all=await buildAllRows5();
+  function seasonRecord(label,fn,mode){
+    var best=null;all.forEach(function(x){var v=fn(x);if(v==null)return;if(!best||(mode==='min'?v<best.value:v>best.value))best={value:v,x:x}});
+    return best?{label:label,team:best.x.row.name,year:best.x.year,value:best.value}:null
+  }
+  var recs=[
+    seasonRecord('Most Wins',function(x){return x.row.rec.w},'max'),
+    seasonRecord('Best Win %',function(x){return x.row.pct},'max'),
+    seasonRecord('Most Points',function(x){return numStat5(stat5(x.row.season,['PTS']))},'max'),
+    seasonRecord('Most Total Yards',function(x){return numStat5(stat5(x.row.season,['YDS']))},'max'),
+    seasonRecord('Most Pass Yards',function(x){return numStat5(stat5(x.row.season,['PASS YDS']))},'max'),
+    seasonRecord('Most Rush Yards',function(x){return numStat5(stat5(x.row.season,['RUSH YDS']))},'max'),
+    seasonRecord('Fewest Points Allowed',function(x){return numStat5(stat5(x.row.season,['PTS ALLOWED','PA']))},'min'),
+    seasonRecord('Most Sacks',function(x){return numStat5(stat5(x.row.season,['SACKS','SCK']))},'max'),
+    seasonRecord('Best Point Differential',function(x){return numStat5(stat5(x.row.season,['DIFF']))},'max')
+  ].filter(Boolean);
+  body.innerHTML='<div class="bb-record-grid">'+recs.map(function(r){return '<div class="bb-record-card"><div class="lab">'+E5(r.label)+'</div><b>'+E5(r.team)+'</b><strong>'+E5(r.label==='Best Win %'?pctText5(r.value):r.value)+'</strong><span>'+r.year+' season</span></div>'}).join('')+'</div><div style="margin-top:7px;color:#67788c;font-size:5px">Records only use statistics actually present in the Blitzbook season files.</div>'
+}
+
+/* init */
+function init5(){
+  buildHome5();buildSeason5();buildRecords5();
+  window.openSeasonExplorer=openSeason5;
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init5,0)},{once:true});else setTimeout(init5,0);
+})();
+</script>
+
 </body>
 </html>
