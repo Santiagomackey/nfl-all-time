@@ -14067,5 +14067,161 @@ setInterval(function(){
 })();
 </script>
 
+
+<!-- BLITZBOOK NINE-FEATURE ASSURANCE V1 -->
+<style id="bb-nine-feature-assurance-style">
+/* Discoverability without changing the established desktop identity. */
+.bb-feature-search-nav{margin-left:6px}
+.bb-feature-search-nav svg{width:12px;height:12px;opacity:.8}
+.bb-feature-status-pill{display:inline-flex;align-items:center;gap:5px;font-size:6px;letter-spacing:.9px;text-transform:uppercase;color:#79d9ad}
+.bb-feature-status-pill:before{content:'';width:5px;height:5px;border-radius:50%;background:#23c783;box-shadow:0 0 8px rgba(35,199,131,.7)}
+
+/* Universe toolbar should always sit visibly above the ranking/table zone. */
+#universe #bbUniverseToolbar{display:flex!important;justify-content:flex-end;gap:7px;flex-wrap:wrap;padding:0 10px 10px!important}
+#universe #bbUniverseToolbar .bb-enhance-button{display:inline-flex!important}
+#universe.bb-universe-top10 .franchise-universe-table tbody tr:nth-child(n+11),
+#universe .franchise-universe-shell.bb-universe-top10 .franchise-universe-table tbody tr:nth-child(n+11){display:none!important}
+
+/* Preserve full data on narrow screens; reorganize rather than remove. */
+@media(max-width:780px){
+  .hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  #universe .franchise-universe-grid{grid-template-columns:1fr!important}
+  #universe .franchise-universe-table-wrap,.season-2026-standings-wrap,.season-2026-schedule{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important}
+  #universe .franchise-universe-table{min-width:920px!important}
+  #season2026 .season-2026-grid{grid-template-columns:1fr!important}
+  #season2026 .season-2026-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .team-route-overview-grid,.team-route-detail-grid,.team-route-two-col,.team-route-hero-grid{grid-template-columns:1fr!important}
+  .team-route-table-wrap,.team-route-table-scroll{overflow-x:auto!important;overflow-y:visible!important}
+}
+@media(max-width:390px){
+  #teams .team-grid{grid-template-columns:1fr!important}
+  .hero-actions{grid-template-columns:1fr!important}
+}
+
+/* Small visual polish for game modal enhancement. */
+.bb-game-actions .bb-enhance-button{min-width:120px}
+</style>
+<script id="bb-nine-feature-assurance-script">
+(function(){
+'use strict';
+if(window.__BB_NINE_FEATURE_ASSURANCE__)return;
+window.__BB_NINE_FEATURE_ASSURANCE__=true;
+
+function byId(id){return document.getElementById(id)}
+function visible(el){return !!(el&&el.offsetParent!==null)}
+function later(fn,delay){return setTimeout(fn,delay||0)}
+
+/* 1. Global Search: make sure a visible desktop trigger exists even if the
+   original enhancement ran before the nav was ready. */
+function ensureSearchTrigger(){
+  if(document.querySelector('.bb-feature-search-nav,.bb-global-search-trigger'))return;
+  var nav=document.querySelector('.topnav-inner');
+  if(!nav)return;
+  var btn=document.createElement('button');
+  btn.type='button';btn.className='bb-enhance-button bb-feature-search-nav';btn.textContent='Search /';
+  btn.addEventListener('click',function(){
+    if(typeof window.openBlitzbookSearch==='function')window.openBlitzbookSearch();
+    else document.dispatchEvent(new KeyboardEvent('keydown',{key:'/'}));
+  });
+  var mobile=nav.querySelector('.mobile-menu-btn');nav.insertBefore(btn,mobile||null);
+}
+
+/* 2 + 3. Season Explorer + Time Machine: if the existing enhancement has not
+   mounted yet because Divisions was lazy, mount it as soon as the anchor exists. */
+function ensureHistoryTools(){
+  if(byId('blitzbookHistoryTools'))return;
+  if(typeof window.openSeasonExplorer==='function'){
+    try{window.openSeasonExplorer(2026);}catch(e){}
+    return;
+  }
+  /* createHistoryTools is lexical in the enhancement IIFE, so wait for normal init. */
+}
+
+/* 4. Universe controls: harden Top 10 / All 32 / Comparison after lazy init. */
+function ensureUniverseToolbar(){
+  var shell=document.querySelector('#universe .franchise-universe-shell');
+  if(!shell)return;
+  var toolbar=byId('bbUniverseToolbar');
+  if(!toolbar){
+    toolbar=document.createElement('div');toolbar.id='bbUniverseToolbar';toolbar.className='bb-universe-toolbar';
+    var top=document.createElement('button');top.type='button';top.className='bb-enhance-button';top.textContent='Top 10';
+    var all=document.createElement('button');all.type='button';all.className='bb-enhance-button';all.textContent='All 32';
+    var cmp=document.createElement('button');cmp.type='button';cmp.className='bb-enhance-button';cmp.textContent='Comparison';
+    top.onclick=function(){shell.classList.add('bb-universe-top10')};
+    all.onclick=function(){shell.classList.remove('bb-universe-top10')};
+    cmp.onclick=function(){var t=document.querySelector('#universe .franchise-compare-card,#universe .team-comparison,#universe [class*="comparison"]');if(t)t.scrollIntoView({behavior:'smooth',block:'center'})};
+    toolbar.appendChild(top);toolbar.appendChild(all);toolbar.appendChild(cmp);
+    var grid=shell.querySelector('.franchise-universe-grid');shell.insertBefore(toolbar,grid||shell.firstChild);
+  }
+}
+
+/* 5. Cleaner team pages: make sure the existing universal shell mounts after
+   asynchronous route rendering and remains above the actual team page. */
+function ensureTeamShell(){
+  if(!document.body.classList.contains('team-route-active'))return;
+  var view=byId('teamRouteView');if(!view)return;
+  if(byId('bbTeamShellBar'))return;
+  /* updateTeamShell is lexical, so force a harmless route-state mutation that its observer sees. */
+  view.setAttribute('data-bb-shell-ping',String(Date.now()));
+}
+
+/* 6. Game Center improvements: add actions even when the modal was rendered
+   through an alternate markup path. */
+function ensureGameActions(){
+  var modal=byId('blitzGameModal');if(!modal||!visible(modal))return;
+  var body=byId('blitzGameModalBody')||modal;
+  if(body.querySelector('.bb-game-actions'))return;
+  var host=body.querySelector('.blitz-game-scoreboard,.scoreboard,.match-scoreboard')||body.firstElementChild;
+  if(!host)return;
+  var actions=document.createElement('div');actions.className='bb-game-actions';
+  var copy=document.createElement('button');copy.type='button';copy.className='bb-enhance-button';copy.textContent='Copy matchup';
+  copy.onclick=function(){
+    var title=(byId('blitzGameModalTitle')&&byId('blitzGameModalTitle').textContent)||'Blitzbook game';
+    var details=(host.textContent||'').replace(/\\s+/g,' ').trim();
+    var value=title+' — '+details;
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(value);
+  };
+  var center=document.createElement('button');center.type='button';center.className='bb-enhance-button';center.textContent='Game Center';
+  center.onclick=function(){var c=modal.querySelector('.blitz-game-close,[data-blitz-game-close]');if(c)c.click();var live=byId('live');if(live)live.scrollIntoView({behavior:'smooth'})};
+  actions.appendChild(copy);actions.appendChild(center);host.parentNode.insertBefore(actions,host.nextSibling);
+}
+
+/* 8. Comparison must be genuinely empty only on initial boot. We wait until
+   the lazy Universe UI exists, clear defaults once, then never interfere with user choices. */
+var comparisonBootCleaned=false;
+function ensureCleanComparisonOnce(){
+  if(comparisonBootCleaned)return;
+  var inputs=Array.from(document.querySelectorAll('#universe .franchise-compare-search,#universe input[id*="Compare"],#universe input[placeholder*="team" i]'));
+  if(inputs.length<2)return;
+  comparisonBootCleaned=true;
+  try{
+    if(window.franchiseUniverseState){window.franchiseUniverseState.compareA='';window.franchiseUniverseState.compareB=''}
+    inputs.slice(0,2).forEach(function(input){input.value='';input.dispatchEvent(new Event('input',{bubbles:true}))});
+    if(typeof window.renderFranchiseComparison==='function')window.renderFranchiseComparison();
+  }catch(e){}
+}
+
+/* 7 + 9 are CSS/performance-oriented. Keep heavy below-fold panels lazy while
+   avoiding layout collapse. */
+function addPerformanceHints(){
+  document.querySelectorAll('#teams .team-card,#universe .franchise-universe-card,#season2026 .season-2026-card,.division-card').forEach(function(el){
+    el.style.contentVisibility='auto';
+    if(!el.style.containIntrinsicSize)el.style.containIntrinsicSize='240px';
+  });
+}
+
+function reconcile(){
+  ensureSearchTrigger();ensureHistoryTools();ensureUniverseToolbar();ensureTeamShell();ensureGameActions();ensureCleanComparisonOnce();addPerformanceHints();
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',reconcile,{once:true});else reconcile();
+var observer=new MutationObserver(function(){later(reconcile,0)});
+observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','aria-hidden']});
+window.addEventListener('hashchange',function(){later(reconcile,50)});
+window.addEventListener('load',function(){later(reconcile,100)});
+})();
+</script>
+
 </body>
 </html>
