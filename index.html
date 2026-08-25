@@ -15818,7 +15818,7 @@ function buildHome5(){
 function buildSeason5(){
   if(document.getElementById('bbSeasonV5'))return;
   var db=document.createElement('div');db.id='bbSeasonV5';
-  db.innerHTML='<div class="bb-v5-shell"><div class="bb-v5-top"><button class="bb-v5-close" type="button">×</button><div class="bb-v5-title"><b id="bbV5Title">NFL Season Archive</b><span>Blitzbook historical season intelligence</span></div><div class="bb-v5-top-controls"><button id="bbPrevV5" type="button">‹</button><select id="bbYearV5"></select><button id="bbNextV5" type="button">›</button></div></div><div class="bb-v5-tabs"><button class="bb-v5-tab active" data-v5tab="overview">Overview</button><button class="bb-v5-tab" data-v5tab="standings">Standings</button><button class="bb-v5-tab" data-v5tab="leaders">Player Leaders</button><button class="bb-v5-tab" data-v5tab="teams">Teams & Stats</button><button class="bb-v5-tab" data-v5tab="road">Championship Road</button><button class="bb-v5-tab" data-v5tab="records">Season Records</button></div><div class="bb-v5-content"><div id="bbV5Body" class="bb-v5-inner"></div></div></div>';
+  db.innerHTML='<div class="bb-v5-shell"><div class="bb-v5-top"><button class="bb-v5-close" type="button">×</button><div class="bb-v5-title"><b id="bbV5Title">NFL Season Archive</b><span>Blitzbook historical season intelligence</span></div><div class="bb-v5-top-controls"><button id="bbPrevV5" type="button">‹</button><select id="bbYearV5"></select><button id="bbNextV5" type="button">›</button></div></div><div class="bb-v5-tabs"><button class="bb-v5-tab active" data-v5tab="overview">Overview</button><button class="bb-v5-tab" data-v5tab="standings">Standings</button><button class="bb-v5-tab" data-v5tab="leaders">Player Leaders</button><button class="bb-v5-tab" data-v5tab="teams">Teams & Stats</button><button class="bb-v5-tab" data-v5tab="records">Season Records</button></div><div class="bb-v5-content"><div id="bbV5Body" class="bb-v5-inner"></div></div></div>';
   document.body.appendChild(db);
   var sel=db.querySelector('#bbYearV5');
   for(var y=2026;y>=1920;y--){var o=document.createElement('option');o.value=y;o.textContent=y+' NFL Season';sel.appendChild(o)}
@@ -15899,7 +15899,7 @@ async function renderSeason5(y){
       var cm=TEAMS.find(function(t){return t.slug===cp.slug});
       if(cm)c={meta:cm,data:{},season:{record:'—',playoffResult:'Canonical Super Bowl champion'},rec:{w:0,l:0,t:0},pct:0,name:cm.name,logo:cm.logo};
     }
-    body.innerHTML='<section class="bb-v5-panel active" data-v5panel="overview"><div class="bb-v5-overview-top">'+champCard5(c,year5,events.length>0)+kpis5(rows,c,year5,events)+'</div>'+teamTiles5(rows)+'</section><section class="bb-v5-panel" data-v5panel="standings">'+standings5(rows)+'</section><section class="bb-v5-panel" data-v5panel="leaders">'+leaders5(rows)+'</section><section class="bb-v5-panel" data-v5panel="teams">'+teamsTable5(rows)+'</section><section class="bb-v5-panel" data-v5panel="road">'+roadHtml5(events,c)+'</section><section class="bb-v5-panel" data-v5panel="records">'+records5(rows)+'</section>';
+    body.innerHTML='<section class="bb-v5-panel active" data-v5panel="overview"><div class="bb-v5-overview-top">'+champCard5(c,year5,events.length>0)+kpis5(rows,c,year5,events)+'</div>'+teamTiles5(rows)+'</section><section class="bb-v5-panel" data-v5panel="standings">'+standings5(rows)+'</section><section class="bb-v5-panel" data-v5panel="leaders">'+leaders5(rows)+'</section><section class="bb-v5-panel" data-v5panel="teams">'+teamsTable5(rows)+'</section><section class="bb-v5-panel" data-v5panel="records">'+records5(rows)+'</section>';
     bindSeason5();syncTabs5()
   }catch(e){console.error(e);body.innerHTML='<div class="bb-v5-error">Could not load this season. Try again.</div>'}
 }
@@ -16343,6 +16343,321 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(discover) discover.remove();
   });
   observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+
+<!-- BLITZBOOK V5.4 — champion theme + improved launcher -->
+<style id="bb-v54-style">
+/* Ensure Championship Road is gone even if older markup appears */
+#bbSeasonV5 [data-v5tab="road"],
+#bbSeasonV5 [data-v5panel="road"]{
+  display:none!important;
+}
+
+/* ---------- Homepage Season Archive launcher ---------- */
+#bbSeasonV5Launcher{
+  padding:22px 0!important;
+}
+#bbSeasonV5Launcher .bb-v5-season-launch{
+  position:relative;
+  overflow:hidden;
+  min-height:82px;
+  padding:15px 17px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 88% 50%,rgba(85,125,190,.13),transparent 30%),
+    radial-gradient(circle at 10% 50%,rgba(147,19,52,.13),transparent 32%),
+    linear-gradient(180deg,#101b2b,#0a1320);
+  box-shadow:0 12px 34px rgba(0,0,0,.16);
+}
+#bbSeasonV5Launcher .bb-v5-season-launch::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  background:linear-gradient(180deg,#d12242,#8f1731);
+}
+#bbSeasonV5Launcher .bb-v5-season-copy{
+  gap:13px;
+}
+#bbSeasonV5Launcher .bb-v5-season-icon{
+  width:48px;height:48px;
+  border-radius:12px;
+  background:linear-gradient(180deg,#17253a,#101a29);
+  border-color:rgba(255,255,255,.12);
+  font-size:19px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+#bbSeasonV5Launcher .bb-v5-season-copy b{
+  font-size:21px;
+  letter-spacing:.75px;
+}
+#bbSeasonV5Launcher .bb-v5-season-copy span{
+  margin-top:5px;
+  font-size:9px;
+  color:#95a4b7;
+  letter-spacing:.85px;
+}
+#bbSeasonV5Launcher .bb-v5-season-open{
+  position:relative;
+  z-index:1;
+  height:46px;
+  padding:0 17px;
+  border-radius:10px;
+  border-color:rgba(220,34,70,.60);
+  background:linear-gradient(180deg,rgba(132,15,40,.78),rgba(93,10,29,.86));
+  font-size:9px;
+  box-shadow:0 8px 22px rgba(111,10,34,.18);
+}
+#bbSeasonV5Launcher .bb-v5-season-open:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(180deg,rgba(158,19,48,.88),rgba(112,12,34,.92));
+}
+
+/* ---------- Champion-themed Season Overview ---------- */
+#bbSeasonV5{
+  --champ-primary:#0d1624;
+  --champ-secondary:#25364c;
+  --champ-accent:#c81e3a;
+  --champ-soft:rgba(200,30,58,.12);
+  --champ-border:rgba(200,30,58,.34);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"]{
+  position:relative;
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"]::before{
+  content:"";
+  position:absolute;
+  inset:-12px -12px auto -12px;
+  height:210px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 22%,var(--champ-soft),transparent 42%),
+    radial-gradient(circle at 86% 15%,color-mix(in srgb,var(--champ-secondary) 22%,transparent),transparent 40%);
+  opacity:.95;
+  z-index:0;
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] > *{
+  position:relative;
+  z-index:1;
+}
+
+/* Champion card */
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-card:first-child{
+  border-color:var(--champ-border);
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb,var(--champ-primary) 78%,#08101b),
+      color-mix(in srgb,var(--champ-secondary) 22%,#0d1624) 56%,
+      #0d1624);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 14px 34px rgba(0,0,0,.18);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-card:first-child .bb-v5-card-head{
+  border-bottom-color:color-mix(in srgb,var(--champ-accent) 25%,#1a2636);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-card:first-child .bb-v5-card-head b{
+  color:#fff;
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-card:first-child .bb-v5-card-head span{
+  color:color-mix(in srgb,var(--champ-accent) 60%,#d8e0e9);
+}
+#bbSeasonV5 .bb-v5-champ h2{
+  color:#fff;
+  text-shadow:0 2px 18px color-mix(in srgb,var(--champ-primary) 60%,transparent);
+}
+#bbSeasonV5 .bb-v5-champ img{
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.24));
+}
+
+/* Snapshot + team-leader cards receive subtle champion palette */
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-overview-top .bb-v5-card:nth-child(2){
+  border-color:color-mix(in srgb,var(--champ-secondary) 28%,#202c3e);
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--champ-secondary) 7%,#0d1624),
+      #0d1624);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-tile{
+  border-color:color-mix(in srgb,var(--champ-secondary) 20%,#1f2b3d);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-tile:hover{
+  border-color:var(--champ-border);
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-section-title b{
+  color:#fff;
+}
+#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-section-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  margin-left:12px;
+  background:linear-gradient(90deg,var(--champ-accent),transparent);
+  opacity:.55;
+}
+
+/* Tabs subtly use champion color */
+#bbSeasonV5 .bb-v5-tab.active{
+  border-color:var(--champ-accent);
+  background:color-mix(in srgb,var(--champ-primary) 72%,#1a0b12);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--champ-accent) 15%,transparent);
+}
+
+/* top bar year control receives team accent */
+#bbSeasonV5 .bb-v5-top-controls select:focus{
+  border-color:var(--champ-accent);
+}
+
+/* phone */
+@media(max-width:700px){
+  #bbSeasonV5Launcher .bb-v5-season-launch{
+    min-height:72px;
+    padding:13px 14px;
+  }
+  #bbSeasonV5Launcher .bb-v5-season-icon{
+    width:42px;height:42px;
+  }
+  #bbSeasonV5Launcher .bb-v5-season-copy b{
+    font-size:18px;
+  }
+  #bbSeasonV5Launcher .bb-v5-season-open{
+    height:42px;
+    padding:0 12px;
+  }
+}
+</style>
+
+<script id="bb-v54-script">
+(function(){
+'use strict';
+if(window.__BB_V54__) return;
+window.__BB_V54__=true;
+
+function teamPalette(slug){
+  var fallback = (window.TEAM_COMPACT_FALLBACK && window.TEAM_COMPACT_FALLBACK[slug]) || null;
+
+  /* hand-tuned fallbacks matching the team-page palette family */
+  var palettes={
+    eagles:{p:'#004C54',s:'#A5ACAF',a:'#ACC0C6'},
+    seahawks:{p:'#002244',s:'#69BE28',a:'#A5ACAF'},
+    chiefs:{p:'#E31837',s:'#FFB81C',a:'#FFB81C'},
+    patriots:{p:'#002244',s:'#C60C30',a:'#B0B7BC'},
+    ravens:{p:'#241773',s:'#9E7C0C',a:'#9E7C0C'},
+    steelers:{p:'#101820',s:'#FFB612',a:'#FFB612'},
+    packers:{p:'#203731',s:'#FFB612',a:'#FFB612'},
+    giants:{p:'#0B2265',s:'#A71930',a:'#A71930'},
+    broncos:{p:'#FB4F14',s:'#002244',a:'#FB4F14'},
+    colts:{p:'#002C5F',s:'#A2AAAD',a:'#A2AAAD'},
+    saints:{p:'#D3BC8D',s:'#101820',a:'#D3BC8D'},
+    buccaneers:{p:'#D50A0A',s:'#34302B',a:'#FF7900'},
+    rams:{p:'#003594',s:'#FFA300',a:'#FFA300'},
+    raiders:{p:'#000000',s:'#A5ACAF',a:'#A5ACAF'},
+    cowboys:{p:'#003594',s:'#869397',a:'#869397'},
+    dolphins:{p:'#008E97',s:'#FC4C02',a:'#FC4C02'},
+    '49ers':{p:'#AA0000',s:'#B3995D',a:'#B3995D'},
+    bears:{p:'#0B162A',s:'#C83803',a:'#C83803'},
+    commanders:{p:'#5A1414',s:'#FFB612',a:'#FFB612'},
+    jets:{p:'#125740',s:'#000000',a:'#125740'}
+  };
+
+  var p=palettes[slug] || {};
+  if(fallback){
+    p.p=p.p||fallback.p||fallback.primary;
+    p.s=p.s||fallback.s||fallback.secondary;
+    p.a=p.a||fallback.s||fallback.secondary;
+  }
+  return {
+    primary:p.p||'#0d1624',
+    secondary:p.s||'#25364c',
+    accent:p.a||p.s||'#c81e3a'
+  };
+}
+
+function hexToRgba(hex,alpha){
+  var h=String(hex||'').replace('#','').trim();
+  if(h.length===3)h=h.split('').map(function(c){return c+c}).join('');
+  if(!/^[0-9a-f]{6}$/i.test(h))return 'rgba(200,30,58,'+alpha+')';
+  var n=parseInt(h,16);
+  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+alpha+')';
+}
+
+function applyChampionTheme(){
+  var root=document.getElementById('bbSeasonV5');
+  if(!root)return;
+
+  var title=root.querySelector('.bb-v5-panel[data-v5panel="overview"] .bb-v5-champ h2');
+  if(!title)return;
+
+  var champion=(title.textContent||'').trim().toLowerCase();
+  var slug='';
+
+  try{
+    if(typeof TEAMS!=='undefined'){
+      var team=TEAMS.find(function(t){
+        var n=String(t.name||'').toLowerCase();
+        return n===champion || champion.indexOf(n)!==-1 || n.indexOf(champion)!==-1;
+      });
+      if(team)slug=team.slug;
+    }
+  }catch(e){}
+
+  if(!slug){
+    var map={
+      'philadelphia eagles':'eagles','seattle seahawks':'seahawks','kansas city chiefs':'chiefs',
+      'new england patriots':'patriots','baltimore ravens':'ravens','pittsburgh steelers':'steelers',
+      'green bay packers':'packers','new york giants':'giants','denver broncos':'broncos',
+      'indianapolis colts':'colts','new orleans saints':'saints','tampa bay buccaneers':'buccaneers',
+      'los angeles rams':'rams','st. louis rams':'rams','las vegas raiders':'raiders',
+      'oakland raiders':'raiders','dallas cowboys':'cowboys','miami dolphins':'dolphins',
+      'san francisco 49ers':'49ers','chicago bears':'bears','washington commanders':'commanders',
+      'washington redskins':'commanders','new york jets':'jets'
+    };
+    slug=map[champion]||'';
+  }
+
+  var pal=teamPalette(slug);
+  root.style.setProperty('--champ-primary',pal.primary);
+  root.style.setProperty('--champ-secondary',pal.secondary);
+  root.style.setProperty('--champ-accent',pal.accent);
+  root.style.setProperty('--champ-soft',hexToRgba(pal.primary,.18));
+  root.style.setProperty('--champ-border',hexToRgba(pal.accent,.40));
+}
+
+function cleanupRoad(){
+  document.querySelectorAll('#bbSeasonV5 [data-v5tab="road"],#bbSeasonV5 [data-v5panel="road"]').forEach(function(n){n.remove()});
+  if(typeof tab5!=='undefined' && tab5==='road'){
+    tab5='overview';
+    if(typeof syncTabs5==='function')syncTabs5();
+  }
+}
+
+function watch(){
+  cleanupRoad();
+  applyChampionTheme();
+
+  var db=document.getElementById('bbSeasonV5');
+  if(!db)return;
+
+  var body=db.querySelector('#bbV5Body');
+  if(body){
+    new MutationObserver(function(){
+      cleanupRoad();
+      requestAnimationFrame(applyChampionTheme);
+    }).observe(body,{childList:true,subtree:true});
+  }
+
+  var year=db.querySelector('#bbYearV5');
+  if(year)year.addEventListener('change',function(){setTimeout(applyChampionTheme,120)});
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(watch,60)},{once:true});
+}else{
+  setTimeout(watch,60);
+}
 })();
 </script>
 
