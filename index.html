@@ -16000,5 +16000,351 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 }
 </style>
 
+
+<!-- BLITZBOOK V5.3 — remove duplicate launcher/discover + readable archive -->
+<style id="bb-v53-cleanup-style">
+/* Remove the OLD non-working Season Archive launcher and Discover strip */
+#bbSeasonV4Launcher,
+#bbDiscover{
+  display:none!important;
+}
+
+/* V5 launcher is the only homepage Season Archive entry */
+#bbSeasonV5Launcher{
+  display:block!important;
+  padding:18px 0!important;
+}
+#bbSeasonV5Launcher .bb-v5-season-launch{
+  min-height:64px;
+  padding:12px 14px;
+}
+#bbSeasonV5Launcher .bb-v5-season-icon{
+  width:40px;height:40px;
+  font-size:16px;
+}
+#bbSeasonV5Launcher .bb-v5-season-copy b{
+  font-size:17px;
+}
+#bbSeasonV5Launcher .bb-v5-season-copy span{
+  font-size:8px;
+  line-height:1.4;
+}
+#bbSeasonV5Launcher .bb-v5-season-open{
+  height:40px;
+  padding:0 14px;
+  font-size:8px;
+}
+
+/* -------- Season Archive: homepage-like readable text -------- */
+#bbSeasonV5 .bb-v5-top{
+  min-height:66px;
+  padding:10px 16px;
+}
+#bbSeasonV5 .bb-v5-close{
+  width:44px;height:44px;
+  font-size:22px;
+}
+#bbSeasonV5 .bb-v5-title b{
+  font-size:23px;
+}
+#bbSeasonV5 .bb-v5-title span{
+  font-size:8px;
+  margin-top:4px;
+}
+#bbSeasonV5 .bb-v5-top-controls button,
+#bbSeasonV5 .bb-v5-top-controls select{
+  height:42px;
+  font-size:10px;
+}
+#bbSeasonV5 .bb-v5-top-controls button{
+  width:42px;
+}
+#bbSeasonV5 .bb-v5-tabs{
+  gap:7px;
+  padding:9px 16px;
+}
+#bbSeasonV5 .bb-v5-tab{
+  height:38px;
+  padding:0 12px;
+  font-size:8px;
+}
+
+/* Main archive spacing */
+#bbSeasonV5 .bb-v5-content{
+  padding:18px 20px 30px;
+}
+#bbSeasonV5 .bb-v5-inner{
+  width:min(1240px,100%);
+}
+
+/* Card headers */
+#bbSeasonV5 .bb-v5-card-head{
+  padding:13px 15px;
+}
+#bbSeasonV5 .bb-v5-card-head b{
+  font-size:17px;
+}
+#bbSeasonV5 .bb-v5-card-head span{
+  font-size:8px;
+}
+
+/* Champion */
+#bbSeasonV5 .bb-v5-champ{
+  grid-template-columns:88px minmax(0,1fr) auto;
+  gap:18px;
+  padding:20px 18px;
+}
+#bbSeasonV5 .bb-v5-champ img{
+  width:82px;height:82px;
+}
+#bbSeasonV5 .bb-v5-champ h2{
+  font-size:36px;
+}
+#bbSeasonV5 .bb-v5-champ p{
+  font-size:11px;
+  line-height:1.55;
+}
+#bbSeasonV5 .bb-v5-champ .record strong{
+  font-size:28px;
+}
+#bbSeasonV5 .bb-v5-champ .record span{
+  font-size:8px;
+}
+
+/* Snapshot */
+#bbSeasonV5 .bb-v5-kpis{
+  gap:10px;
+  padding:12px;
+}
+#bbSeasonV5 .bb-v5-kpi{
+  padding:13px;
+}
+#bbSeasonV5 .bb-v5-kpi span{
+  font-size:8px;
+}
+#bbSeasonV5 .bb-v5-kpi strong{
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* Section headings */
+#bbSeasonV5 .bb-v5-section-title{
+  margin:20px 0 10px;
+}
+#bbSeasonV5 .bb-v5-section-title b{
+  font-size:20px;
+}
+#bbSeasonV5 .bb-v5-section-title span{
+  font-size:8px;
+}
+
+/* Team statistical leaders */
+#bbSeasonV5 .bb-v5-teamleaders{
+  gap:9px;
+}
+#bbSeasonV5 .bb-v5-tile{
+  padding:14px;
+}
+#bbSeasonV5 .bb-v5-tile .lab{
+  font-size:8px;
+}
+#bbSeasonV5 .bb-v5-tile .row{
+  gap:9px;
+  margin-top:9px;
+}
+#bbSeasonV5 .bb-v5-tile img{
+  width:36px;height:36px;
+}
+#bbSeasonV5 .bb-v5-tile b{
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-tile strong{
+  margin-top:9px;
+  font-size:24px;
+}
+
+/* Player leader cards */
+#bbSeasonV5 .bb-v5-leader-head{
+  padding:12px 13px;
+}
+#bbSeasonV5 .bb-v5-leader-head b{
+  font-size:15px;
+}
+#bbSeasonV5 .bb-v5-leader-head span{
+  font-size:8px;
+}
+#bbSeasonV5 .bb-v5-leader-row{
+  grid-template-columns:28px minmax(0,1fr) auto;
+  gap:10px;
+  padding:11px 13px;
+}
+#bbSeasonV5 .bb-v5-leader-row .rank{
+  font-size:12px;
+}
+#bbSeasonV5 .bb-v5-leader-row .who b{
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-leader-row .who span{
+  font-size:8px;
+  margin-top:3px;
+}
+#bbSeasonV5 .bb-v5-leader-row .val strong{
+  font-size:18px;
+}
+#bbSeasonV5 .bb-v5-leader-row .val span{
+  font-size:7px;
+}
+
+/* Standings */
+#bbSeasonV5 .bb-v5-standings-group h3{
+  padding:12px 13px;
+  font-size:15px;
+}
+#bbSeasonV5 .bb-v5-standing-row{
+  grid-template-columns:34px minmax(0,1fr) auto auto;
+  gap:10px;
+  padding:11px 13px;
+}
+#bbSeasonV5 .bb-v5-standing-row img{
+  width:30px;height:30px;
+}
+#bbSeasonV5 .bb-v5-standing-row b{
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-standing-row span{
+  font-size:9px;
+}
+#bbSeasonV5 .bb-v5-standing-row strong{
+  font-size:14px;
+}
+
+/* Teams table */
+#bbSeasonV5 .bb-v5-filter input{
+  height:42px;
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-filter span{
+  font-size:9px;
+}
+#bbSeasonV5 .bb-v5-table th,
+#bbSeasonV5 .bb-v5-table td{
+  padding:11px 12px;
+  font-size:10px;
+}
+#bbSeasonV5 .bb-v5-teamcell{
+  gap:9px;
+}
+#bbSeasonV5 .bb-v5-teamcell img{
+  width:29px;height:29px;
+}
+#bbSeasonV5 .bb-v5-teamcell button{
+  font-size:10px;
+}
+
+/* Championship road */
+#bbSeasonV5 .bb-v5-game{
+  grid-template-columns:150px minmax(0,1fr) auto;
+  gap:12px;
+  padding:13px 14px;
+}
+#bbSeasonV5 .bb-v5-game .round{
+  font-size:9px;
+}
+#bbSeasonV5 .bb-v5-game .match{
+  gap:10px;
+}
+#bbSeasonV5 .bb-v5-game .match img{
+  width:34px;height:34px;
+}
+#bbSeasonV5 .bb-v5-game .match b{
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-game .score{
+  font-size:19px;
+}
+
+/* Season records */
+#bbSeasonV5 .bb-v5-record{
+  padding:14px;
+}
+#bbSeasonV5 .bb-v5-record .lab{
+  font-size:8px;
+}
+#bbSeasonV5 .bb-v5-record b{
+  margin-top:7px;
+  font-size:11px;
+}
+#bbSeasonV5 .bb-v5-record strong{
+  margin-top:6px;
+  font-size:22px;
+}
+
+/* Empty/error messages */
+#bbSeasonV5 .bb-v5-empty,
+#bbSeasonV5 .bb-v5-loading,
+#bbSeasonV5 .bb-v5-error{
+  font-size:11px;
+  line-height:1.55;
+}
+
+/* Phone: readable but not gigantic */
+@media(max-width:700px){
+  #bbSeasonV5 .bb-v5-content{padding:12px 10px 22px}
+  #bbSeasonV5 .bb-v5-title b{font-size:19px}
+  #bbSeasonV5 .bb-v5-title span{display:none}
+  #bbSeasonV5 .bb-v5-tab{font-size:7px;padding:0 10px}
+  #bbSeasonV5 .bb-v5-champ{
+    grid-template-columns:62px 1fr;
+    padding:14px;
+  }
+  #bbSeasonV5 .bb-v5-champ img{width:58px;height:58px}
+  #bbSeasonV5 .bb-v5-champ h2{font-size:26px}
+  #bbSeasonV5 .bb-v5-champ .record{
+    grid-column:1/-1;
+    text-align:left;
+  }
+  #bbSeasonV5 .bb-v5-teamleaders{
+    grid-template-columns:1fr 1fr;
+  }
+  #bbSeasonV5 .bb-v5-tile strong{font-size:20px}
+  #bbSeasonV5 .bb-v5-leaders{grid-template-columns:1fr}
+  #bbSeasonV5 .bb-v5-game{
+    grid-template-columns:1fr auto;
+  }
+  #bbSeasonV5 .bb-v5-game .round{
+    grid-column:1/-1;
+  }
+}
+</style>
+
+<script id="bb-v53-cleanup-script">
+(function(){
+  function cleanup(){
+    var old=document.getElementById('bbSeasonV4Launcher');
+    if(old) old.remove();
+
+    var discover=document.getElementById('bbDiscover');
+    if(discover) discover.remove();
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){
+      setTimeout(cleanup,0);
+    },{once:true});
+  }else{
+    setTimeout(cleanup,0);
+  }
+
+  /* Older scripts can insert these after DOM ready, so remove again if they reappear. */
+  var observer=new MutationObserver(function(){
+    var old=document.getElementById('bbSeasonV4Launcher');
+    if(old) old.remove();
+    var discover=document.getElementById('bbDiscover');
+    if(discover) discover.remove();
+  });
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
