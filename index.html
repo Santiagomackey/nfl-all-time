@@ -15772,9 +15772,22 @@ function slug5(c){
   var M={phi:'eagles',ne:'patriots',kc:'chiefs',sf:'49ers',tb:'buccaneers',lar:'rams',cin:'bengals',bal:'ravens',den:'broncos',sea:'seahawks',gb:'packers',nyg:'giants',ind:'colts',pit:'steelers',no:'saints',ari:'cardinals',car:'panthers',atl:'falcons',min:'vikings',dal:'cowboys',wsh:'commanders',was:'commanders',lv:'raiders',oak:'raiders',sd:'chargers',lac:'chargers',ten:'titans',hou:'texans',jax:'jaguars',mia:'dolphins',buf:'bills',nyj:'jets',cle:'browns',det:'lions',chi:'bears'};
   return M[ab]||ab
 }
-function champPost5(events){
+var CANONICAL_CHAMPIONS5={
+1966:'packers',1967:'packers',1968:'jets',1969:'chiefs',1970:'colts',1971:'cowboys',1972:'dolphins',1973:'dolphins',
+1974:'steelers',1975:'steelers',1976:'raiders',1977:'cowboys',1978:'steelers',1979:'steelers',1980:'raiders',1981:'49ers',
+1982:'commanders',1983:'raiders',1984:'49ers',1985:'bears',1986:'giants',1987:'commanders',1988:'49ers',1989:'49ers',
+1990:'giants',1991:'commanders',1992:'cowboys',1993:'cowboys',1994:'49ers',1995:'cowboys',1996:'packers',1997:'broncos',
+1998:'broncos',1999:'rams',2000:'ravens',2001:'patriots',2002:'buccaneers',2003:'patriots',2004:'patriots',2005:'steelers',
+2006:'colts',2007:'giants',2008:'steelers',2009:'saints',2010:'packers',2011:'giants',2012:'ravens',2013:'seahawks',
+2014:'patriots',2015:'broncos',2016:'patriots',2017:'eagles',2018:'patriots',2019:'chiefs',2020:'buccaneers',
+2021:'rams',2022:'chiefs',2023:'chiefs',2024:'eagles',2025:'seahawks'
+};
+function champPost5(events,year){
+  var canonical=CANONICAL_CHAMPIONS5[Number(year)]||'';
   var sb=events.find(isSB5)||events.slice().reverse().find(function(e){return win5(e)&&!/pro bowl/i.test(S5(e.name)+' '+round5(e))});
-  var w=win5(sb);return w?{slug:slug5(w),event:sb}:null
+  var w=win5(sb);
+  if(canonical)return {slug:canonical,event:sb||null,source:'canonical'};
+  return w?{slug:slug5(w),event:sb,source:'postseason'}:null
 }
 function road5(events,slug){return events.filter(function(e){return comps5(e).some(function(c){return slug5(c)===slug})&&!/pro bowl/i.test(S5(e.name)+' '+round5(e))})}
 
@@ -15881,7 +15894,11 @@ async function renderSeason5(y){
   db.querySelector('#bbYearV5').value=year5;document.getElementById('bbV5Title').textContent=year5+' NFL Season Archive';
   body.innerHTML='<div class="bb-v5-loading">Loading '+year5+'…</div>';
   try{
-    var pair=await Promise.all([rows5(year5),postseason5(year5)]),rows=pair[0],events=pair[1],cp=champPost5(events),c=cp?rows.find(function(r){return r.meta.slug===cp.slug}):null;
+    var pair=await Promise.all([rows5(year5),postseason5(year5)]),rows=pair[0],events=pair[1],cp=champPost5(events,year5),c=cp?rows.find(function(r){return r.meta.slug===cp.slug}):null;
+    if(!c&&cp&&cp.slug){
+      var cm=TEAMS.find(function(t){return t.slug===cp.slug});
+      if(cm)c={meta:cm,data:{},season:{record:'—',playoffResult:'Canonical Super Bowl champion'},rec:{w:0,l:0,t:0},pct:0,name:cm.name,logo:cm.logo};
+    }
     body.innerHTML='<section class="bb-v5-panel active" data-v5panel="overview"><div class="bb-v5-overview-top">'+champCard5(c,year5,events.length>0)+kpis5(rows,c,year5,events)+'</div>'+teamTiles5(rows)+'</section><section class="bb-v5-panel" data-v5panel="standings">'+standings5(rows)+'</section><section class="bb-v5-panel" data-v5panel="leaders">'+leaders5(rows)+'</section><section class="bb-v5-panel" data-v5panel="teams">'+teamsTable5(rows)+'</section><section class="bb-v5-panel" data-v5panel="road">'+roadHtml5(events,c)+'</section><section class="bb-v5-panel" data-v5panel="records">'+records5(rows)+'</section>';
     bindSeason5();syncTabs5()
   }catch(e){console.error(e);body.innerHTML='<div class="bb-v5-error">Could not load this season. Try again.</div>'}
@@ -15936,150 +15953,52 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 
 
-<!-- BLITZBOOK V5.1 — championship resolver + readability -->
-<style id="bb-v51-style">
-/* Season Archive readability bump — still compact, no layout bloat */
-#bbSeasonV5 .bb-v5-content{padding:14px 16px 24px}
-#bbSeasonV5 .bb-v5-card-head{padding:10px 12px}
-#bbSeasonV5 .bb-v5-card-head b{font-size:13px}
-#bbSeasonV5 .bb-v5-card-head span{font-size:6px}
-#bbSeasonV5 .bb-v5-champ{grid-template-columns:68px minmax(0,1fr) auto;gap:14px;padding:14px}
-#bbSeasonV5 .bb-v5-champ img{width:64px;height:64px}
-#bbSeasonV5 .bb-v5-champ h2{font-size:27px}
-#bbSeasonV5 .bb-v5-champ p{font-size:8px;line-height:1.55}
-#bbSeasonV5 .bb-v5-champ .record strong{font-size:20px}
-#bbSeasonV5 .bb-v5-champ .record span{font-size:6px}
-#bbSeasonV5 .bb-v5-kpis{gap:8px;padding:10px}
-#bbSeasonV5 .bb-v5-kpi{padding:10px}
-#bbSeasonV5 .bb-v5-kpi span{font-size:6px}
-#bbSeasonV5 .bb-v5-kpi strong{font-size:9px}
-#bbSeasonV5 .bb-v5-section-title{margin:15px 0 8px}
-#bbSeasonV5 .bb-v5-section-title b{font-size:15px}
-#bbSeasonV5 .bb-v5-section-title span{font-size:6px}
-#bbSeasonV5 .bb-v5-tile{padding:11px}
-#bbSeasonV5 .bb-v5-tile .lab{font-size:6px}
-#bbSeasonV5 .bb-v5-tile img{width:29px;height:29px}
-#bbSeasonV5 .bb-v5-tile b{font-size:8px}
-#bbSeasonV5 .bb-v5-tile strong{font-size:17px}
-#bbSeasonV5 .bb-v5-leader-head b,#bbSeasonV5 .bb-v5-standings-group h3{font-size:12px}
-#bbSeasonV5 .bb-v5-leader-row .who b,#bbSeasonV5 .bb-v5-standing-row b{font-size:8px}
-#bbSeasonV5 .bb-v5-leader-row .who span,#bbSeasonV5 .bb-v5-standing-row span{font-size:6px}
-#bbSeasonV5 .bb-v5-table th,#bbSeasonV5 .bb-v5-table td{font-size:8px;padding:8px 9px}
+<style id="bb-v52-readability">
+#bbSeasonV5 .bb-v5-content{padding:16px 18px 26px}
+#bbSeasonV5 .bb-v5-card-head{padding:11px 13px}
+#bbSeasonV5 .bb-v5-card-head b{font-size:14px}
+#bbSeasonV5 .bb-v5-card-head span{font-size:7px}
+#bbSeasonV5 .bb-v5-champ{grid-template-columns:74px minmax(0,1fr) auto;gap:15px;padding:15px}
+#bbSeasonV5 .bb-v5-champ img{width:70px;height:70px}
+#bbSeasonV5 .bb-v5-champ h2{font-size:29px}
+#bbSeasonV5 .bb-v5-champ p{font-size:9px;line-height:1.55}
+#bbSeasonV5 .bb-v5-champ .record strong{font-size:22px}
+#bbSeasonV5 .bb-v5-champ .record span{font-size:7px}
+#bbSeasonV5 .bb-v5-kpis{gap:9px;padding:11px}
+#bbSeasonV5 .bb-v5-kpi{padding:11px}
+#bbSeasonV5 .bb-v5-kpi span{font-size:7px}
+#bbSeasonV5 .bb-v5-kpi strong{font-size:10px}
+#bbSeasonV5 .bb-v5-section-title{margin:16px 0 9px}
+#bbSeasonV5 .bb-v5-section-title b{font-size:16px}
+#bbSeasonV5 .bb-v5-section-title span{font-size:7px}
+#bbSeasonV5 .bb-v5-tile{padding:12px}
+#bbSeasonV5 .bb-v5-tile .lab{font-size:7px}
+#bbSeasonV5 .bb-v5-tile img{width:31px;height:31px}
+#bbSeasonV5 .bb-v5-tile b{font-size:9px}
+#bbSeasonV5 .bb-v5-tile strong{font-size:19px}
+#bbSeasonV5 .bb-v5-leader-head b{font-size:12px}
+#bbSeasonV5 .bb-v5-leader-head span{font-size:6px}
+#bbSeasonV5 .bb-v5-leader-row{padding:9px 11px}
+#bbSeasonV5 .bb-v5-leader-row .who b{font-size:9px}
+#bbSeasonV5 .bb-v5-leader-row .who span{font-size:6px}
+#bbSeasonV5 .bb-v5-leader-row .val strong{font-size:14px}
+#bbSeasonV5 .bb-v5-standings-group h3{font-size:12px}
+#bbSeasonV5 .bb-v5-standing-row{padding:9px 11px}
+#bbSeasonV5 .bb-v5-standing-row b{font-size:9px}
+#bbSeasonV5 .bb-v5-standing-row span{font-size:7px}
+#bbSeasonV5 .bb-v5-standing-row strong{font-size:11px}
+#bbSeasonV5 .bb-v5-table th,#bbSeasonV5 .bb-v5-table td{font-size:9px;padding:9px 10px}
+#bbSeasonV5 .bb-v5-game{padding:10px}
+#bbSeasonV5 .bb-v5-game .round{font-size:7px}
+#bbSeasonV5 .bb-v5-game .match b{font-size:9px}
+#bbSeasonV5 .bb-v5-game .score{font-size:14px}
 @media(max-width:600px){
- #bbSeasonV5 .bb-v5-content{padding:10px 9px 20px}
- #bbSeasonV5 .bb-v5-champ{grid-template-columns:54px 1fr}
- #bbSeasonV5 .bb-v5-champ img{width:50px;height:50px}
- #bbSeasonV5 .bb-v5-champ h2{font-size:21px}
+ #bbSeasonV5 .bb-v5-content{padding:11px 10px 20px}
+ #bbSeasonV5 .bb-v5-champ{grid-template-columns:56px 1fr}
+ #bbSeasonV5 .bb-v5-champ img{width:52px;height:52px}
+ #bbSeasonV5 .bb-v5-champ h2{font-size:23px}
 }
 </style>
-<script id="bb-v51-script">
-(function(){
-'use strict';
-if(window.__BB_V51__)return; window.__BB_V51__=true;
-
-/*
-  ESPN postseason week numbering is not stable enough to assume "Super Bowl = week 5".
-  V5.1 fetches the whole postseason scoreboard first, then falls back to week calls.
-*/
-async function bb51Fetch(url){
-  try{
-    var r=await fetch('/api/espn?url='+encodeURIComponent(url),{cache:'no-store'});
-    if(r.ok)return await r.json();
-  }catch(e){}
-  try{
-    var r2=await fetch(url,{cache:'no-store'});
-    if(r2.ok)return await r2.json();
-  }catch(e){}
-  return null;
-}
-function bb51A(v){return Array.isArray(v)?v:[]}
-function bb51S(v){return String(v==null?'':v)}
-function bb51Comp(e){return e&&e.competitions&&e.competitions[0]||null}
-function bb51Comps(e){return bb51A(bb51Comp(e)&&bb51Comp(e).competitors)}
-function bb51Label(e){
-  var c=bb51Comp(e),notes=bb51A(c&&c.notes).map(function(n){return n&&n.headline}).filter(Boolean).join(' ');
-  return [e&&e.name,e&&e.shortName,e&&e.season&&e.season.slug,e&&e.week&&e.week.text,notes].filter(Boolean).join(' ');
-}
-function bb51IsSB(e){return /\bsuper\s*bowl\b/i.test(bb51Label(e))}
-function bb51Winner(e){return bb51Comps(e).find(function(c){return c&&c.winner===true})||null}
-function bb51Slug(c){
-  var ab=bb51S(c&&c.team&&c.team.abbreviation).toLowerCase();
-  var M={phi:'eagles',ne:'patriots',kc:'chiefs',sf:'49ers',tb:'buccaneers',lar:'rams',stl:'rams',cin:'bengals',bal:'ravens',den:'broncos',sea:'seahawks',gb:'packers',nyg:'giants',ind:'colts',pit:'steelers',no:'saints',ari:'cardinals',car:'panthers',atl:'falcons',min:'vikings',dal:'cowboys',wsh:'commanders',was:'commanders',lv:'raiders',oak:'raiders',sd:'chargers',lac:'chargers',ten:'titans',hou:'texans',jax:'jaguars',mia:'dolphins',buf:'bills',nyj:'jets',cle:'browns',det:'lions',chi:'bears'};
-  return M[ab]||ab;
-}
-function bb51Dedupe(events){
-  var seen=new Set();
-  return events.filter(function(e){var id=bb51S(e&&e.id)||bb51Label(e);if(seen.has(id))return false;seen.add(id);return true})
-    .sort(function(a,b){return new Date(a&&a.date||0)-new Date(b&&b.date||0)});
-}
-async function bb51Postseason(y){
-  var events=[];
-  var base='https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?season='+y+'&seasontype=3&limit=100';
-  var whole=await bb51Fetch(base);
-  events=events.concat(bb51A(whole&&whole.events));
-  if(!events.some(bb51IsSB)){
-    for(var w=1;w<=6;w++){
-      var d=await bb51Fetch(base+'&week='+w);
-      events=events.concat(bb51A(d&&d.events));
-    }
-  }
-  return bb51Dedupe(events);
-}
-
-/* Override V5's postseason loader through its global cache-independent render path. */
-var oldRender=window.openSeasonExplorer;
-window.openSeasonExplorer=function(y){
-  if(typeof oldRender==='function')oldRender(y);
-};
-
-/* Patch fetch behavior used by the existing archive by pre-seeding its displayed champion after render. */
-async function bb51RepairChampion(y){
-  y=Number(y);
-  if(!Number.isFinite(y)||y<1966)return;
-  var events=await bb51Postseason(y);
-  var sb=events.find(bb51IsSB);
-  if(!sb)return;
-  var w=bb51Winner(sb); if(!w)return;
-  var teamName=bb51S(w.team&&(w.team.displayName||w.team.shortDisplayName||w.team.name));
-  var teamLogo=bb51S(w.team&&w.team.logo);
-  var comps=bb51Comps(sb),loser=comps.find(function(c){return c!==w});
-  var score=bb51S(w.score)+(loser?'–'+bb51S(loser.score):'');
-  var card=document.querySelector('#bbSeasonV5 .bb-v5-panel[data-v5panel="overview"] .bb-v5-card:first-child');
-  if(!card)return;
-  var h=card.querySelector('.bb-v5-card-head span'); if(h)h.textContent='VERIFIED POSTSEASON';
-  var img=card.querySelector('.bb-v5-champ img'); if(img&&teamLogo)img.src=teamLogo;
-  var title=card.querySelector('.bb-v5-champ h2'); if(title)title.textContent=teamName||'Champion';
-  var p=card.querySelector('.bb-v5-champ p'); if(p)p.textContent='Super Bowl champion · '+bb51Label(sb).replace(/\s+/g,' ').trim();
-  var rec=card.querySelector('.bb-v5-champ .record strong');
-  if(rec)rec.textContent=score;
-  var lab=card.querySelector('.bb-v5-champ .record span');
-  if(lab)lab.textContent='SUPER BOWL SCORE';
-
-  /* Snapshot champion */
-  document.querySelectorAll('#bbSeasonV5 .bb-v5-kpi').forEach(function(k){
-    var l=k.querySelector('span'),v=k.querySelector('strong');
-    if(l&&v&&/champion/i.test(l.textContent))v.textContent=teamName||'Champion';
-  });
-}
-
-function bb51Watch(){
-  var db=document.getElementById('bbSeasonV5'); if(!db)return;
-  var sel=db.querySelector('#bbYearV5');
-  function repair(){setTimeout(function(){bb51RepairChampion(Number(sel&&sel.value||2025))},250)}
-  if(sel)sel.addEventListener('change',repair);
-  var prev=db.querySelector('#bbPrevV5'),next=db.querySelector('#bbNextV5');
-  if(prev)prev.addEventListener('click',repair);
-  if(next)next.addEventListener('click',repair);
-  var obs=new MutationObserver(function(ms){
-    if(ms.some(function(m){return m.addedNodes&&m.addedNodes.length}))repair();
-  });
-  var body=db.querySelector('#bbV5Body'); if(body)obs.observe(body,{childList:true});
-  repair();
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(bb51Watch,50)},{once:true});
-else setTimeout(bb51Watch,50);
-})();
-</script>
 
 </body>
 </html>
