@@ -16661,5 +16661,307 @@ if(document.readyState==='loading'){
 })();
 </script>
 
+\n<!-- BLITZBOOK V5.5 — mobile rebuild + reliable team live center -->
+<style id="bb-v55-mobile-style">
+/* ==========================================================
+   PHONE: authoritative final layer
+   The original touch CSS hides .team-card-front. Undo it.
+   ========================================================== */
+@media (max-width: 768px), (hover:none), (pointer:coarse) {
+  html,body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+  body{font-size:14px!important;-webkit-text-size-adjust:100%!important}
+  *{box-sizing:border-box!important}
+  .container{width:100%!important;max-width:100%!important;padding-left:12px!important;padding-right:12px!important}
+  .section{padding:25px 0!important}
+  .section-title{font-size:27px!important;line-height:1!important}
+  .section-subtitle{font-size:10px!important;line-height:1.5!important}
+
+  /* Header */
+  .topnav,.topnav-inner{min-height:58px!important;height:58px!important}
+  .topnav-inner{padding:0 11px!important;gap:7px!important}
+  .nav-links{display:none!important}
+  .mobile-menu-btn{display:flex!important;width:42px!important;height:42px!important;flex:0 0 42px!important}
+  .mobile-nav{max-height:calc(100dvh - 58px)!important;overflow-y:auto!important;padding:4px 11px 12px!important}
+  .mobile-nav-links{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}
+  .mobile-nav-link{min-height:43px!important}
+
+  /* Hero */
+  .hero{min-height:0!important;padding:24px 0 26px!important}
+  .hero h1{font-size:clamp(42px,13vw,58px)!important;line-height:.94!important;white-space:normal!important}
+  .hero-sub{font-size:11px!important;line-height:1.55!important;margin-bottom:18px!important}
+  .hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;width:100%!important}
+  .hero-btn{display:flex!important;width:100%!important;min-width:0!important;min-height:43px!important;padding:9px 7px!important;font-size:7px!important}
+
+  /* Filters: compact and touch-friendly */
+  #teams .filter-bar,#universe .franchise-universe-filter{
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:9px!important
+  }
+  #teams .filter-divider,#universe .filter-divider{display:none!important}
+  #teams .filter-search-wrap,#universe .filter-search-wrap{width:100%!important;min-width:0!important}
+  #teams .filter-group,#universe .filter-group{display:flex!important;align-items:center!important;gap:6px!important;min-width:0!important}
+  #teams .filter-btns,#universe .filter-btns{display:flex!important;gap:5px!important;overflow-x:auto!important;scrollbar-width:none!important}
+  #teams .filter-btns::-webkit-scrollbar,#universe .filter-btns::-webkit-scrollbar{display:none!important}
+  #teams .filter-btn,#universe .filter-btn{flex:0 0 auto!important;min-height:34px!important;padding:7px 9px!important}
+  #teams .sort-select,#universe .sort-select{width:100%!important;min-height:40px!important}
+
+  /* TEAM CARDS — ALWAYS SHOW THE REAL FRONT ON TOUCH */
+  #teams .team-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #teams .team-card{display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important;height:auto!important;min-height:174px!important;perspective:none!important}
+  #teams .team-card-inner{display:block!important;visibility:visible!important;opacity:1!important;height:174px!important;min-height:174px!important;transform:none!important;transition:transform .12s ease!important;transform-style:flat!important}
+  #teams .team-card:active .team-card-inner{transform:scale(.985)!important}
+  #teams .team-card-front{
+    display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;inset:auto!important;
+    width:100%!important;height:174px!important;min-height:174px!important;transform:none!important;backface-visibility:visible!important;
+    padding:12px!important;z-index:2!important
+  }
+  #teams .team-card-back{display:none!important;visibility:hidden!important;position:absolute!important;pointer-events:none!important}
+  #teams .team-logo{width:38px!important;height:38px!important;flex:0 0 38px!important}
+  #teams .team-logo img{display:block!important;visibility:visible!important;opacity:1!important;width:29px!important;height:29px!important;filter:none!important}
+  #teams .team-name{font-size:15px!important;line-height:1.05!important}
+  #teams .team-division{font-size:6px!important}
+  #teams .team-card-front-meta strong{font-size:11px!important}
+  #teams .team-card-front-meta span,#teams .team-card-front-meta em,#teams .team-card-front-hint{font-size:6px!important}
+
+  /* Universe */
+  #universe{display:block!important}
+  #universe .franchise-universe-shell{width:100%!important;min-width:0!important;overflow:hidden!important;border-radius:13px!important}
+  #universe .franchise-universe-tabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:5px!important;padding:0 8px 8px!important;scrollbar-width:none!important}
+  #universe .franchise-universe-tabs>*{flex:0 0 auto!important}
+  #universe .franchise-universe-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;padding:0 8px 8px!important}
+  #universe .franchise-universe-card,#universe .franchise-universe-card-wide{display:block!important;width:100%!important;min-width:0!important;grid-column:auto!important}
+  #universe .franchise-universe-table-wrap{width:100%!important;max-width:100%!important;max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important}
+  #universe .franchise-universe-table{min-width:940px!important;width:max-content!important}
+  #universe .franchise-compare-controls{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+
+  /* Division explorer */
+  #divisions .division-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+
+  /* Main Game Center */
+  #live .live-header{display:grid!important;grid-template-columns:1fr auto!important;gap:7px!important;padding:9px!important}
+  #live .live-tabs{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:5px!important;width:100%!important}
+  #live .live-games{max-height:none!important;overflow-y:visible!important}
+
+  /* Live Season Center: stack desktop columns, don't create nested vertical scroll */
+  #season2026 .season-center-heading{display:flex!important;flex-direction:column!important;gap:9px!important}
+  #season2026 .season-center-status{display:flex!important;flex-wrap:wrap!important;gap:5px!important}
+  #season2026 .season-2026-kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  #season2026 .season-2026-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  #season2026 .season-2026-grid>.season-2026-card{display:block!important;width:100%!important;min-width:0!important}
+  #season2026 .season-2026-standings-wrap,#season2026 .season-2026-schedule{max-height:none!important;overflow-y:visible!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+  #season2026 .season-2026-card-head{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important}
+  #season2026 .season-2026-schedule-tools{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;width:100%!important}
+  #season2026 .season-2026-search,#season2026 .season-2026-select{width:100%!important;min-height:40px!important}
+
+  /* Season Archive launcher */
+  #bbSeasonV5Launcher .bb-v5-season-launch{display:grid!important;grid-template-columns:1fr auto!important;gap:10px!important;min-height:70px!important;padding:12px!important}
+  #bbSeasonV5Launcher .bb-v5-season-copy b{font-size:18px!important}
+  #bbSeasonV5Launcher .bb-v5-season-copy span{font-size:7px!important}
+
+  /* Team route iframe occupies the phone cleanly */
+  body.team-route-active{overflow:hidden!important}
+  body.team-route-active #teamRouteView{position:fixed!important;inset:0!important;z-index:12000!important;width:100%!important;height:100dvh!important;overflow:hidden!important;background:#060b13!important}
+  body.team-route-active .team-route-frame-wrap{width:100%!important;height:100%!important;min-width:0!important;overflow:hidden!important}
+  body.team-route-active .legacy-team-frame{display:block!important;width:100%!important;height:100%!important;min-width:0!important;border:0!important}
+}
+
+@media(max-width:430px){
+  #teams .team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  #teams .team-card,#teams .team-card-inner,#teams .team-card-front{height:164px!important;min-height:164px!important}
+  #teams .team-card-front{padding:10px!important}
+  #teams .team-name{font-size:14px!important}
+  #divisions .division-grid{grid-template-columns:1fr!important}
+  .hero-actions{grid-template-columns:1fr 1fr!important}
+}
+</style>
+
+<script id="bb-v55-script">
+(function(){
+'use strict';
+if(window.__BB_V55__)return;window.__BB_V55__=true;
+
+var teamLiveTimer55=null;
+
+function proxyUrl55(raw){
+  try{
+    var u=new URL(String(raw),location.href);
+    var allowed=['site.api.espn.com','site.web.api.espn.com','sports.core.api.espn.com','cdn.espn.com'];
+    if(allowed.indexOf(u.hostname)!==-1)return '/api/espn?url='+encodeURIComponent(u.toString());
+  }catch(e){}
+  return raw;
+}
+
+function injectTeamFrameCss55(frame){
+  try{
+    var doc=frame.contentDocument;if(!doc||doc.getElementById('bb-team-phone-v55'))return;
+    var st=doc.createElement('style');st.id='bb-team-phone-v55';
+    st.textContent=`
+      html,body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important;-webkit-text-size-adjust:100%!important}
+      *{box-sizing:border-box!important}
+      body{font-size:14px!important}
+      img{max-width:100%!important;height:auto}
+      .container,.wrap,.shell,.page-shell,.content-shell{width:100%!important;max-width:100%!important;min-width:0!important;padding-left:12px!important;padding-right:12px!important}
+      table{max-width:none!important}
+      .table-wrap,.table-scroll,[class*=table-wrap],[class*=table-scroll]{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important}
+      @media(max-width:768px){
+        [class*=hero-grid],[class*=overview-grid],[class*=detail-grid],[class*=two-col],[class*=main-grid],[class*=content-grid]{grid-template-columns:1fr!important}
+        [class*=stat-grid],[class*=metric-grid],[class*=season-grid]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+        .panel,.card,section{min-width:0!important}
+        #liveCenter2026{width:100%!important;min-width:0!important}
+        #liveCenter2026 .live-grid,#liveCenter2026 [class*=grid]{grid-template-columns:1fr!important}
+        #liveCenter2026 .scoreboard,#liveCenter2026 [class*=scoreboard]{min-width:0!important;width:100%!important}
+        #liveCenter2026 .play-feed,#liveCenter2026 [class*=play-feed]{max-height:none!important;overflow-y:visible!important}
+      }
+    `;
+    (doc.head||doc.documentElement).appendChild(st);
+  }catch(e){console.warn('[Blitzbook] Team mobile CSS injection failed.',e)}
+}
+
+function installFetchProxy55(frame){
+  try{
+    var w=frame.contentWindow;if(!w||w.__BB_FETCH_PROXY55__)return;
+    w.__BB_FETCH_PROXY55__=true;
+    var nativeFetch=w.fetch.bind(w);
+    w.fetch=function(input,init){
+      var raw=typeof input==='string'?input:(input&&input.url)||String(input||'');
+      var proxied=proxyUrl55(raw);
+      return nativeFetch(proxied,init);
+    };
+  }catch(e){console.warn('[Blitzbook] Team ESPN proxy install failed.',e)}
+}
+
+function refreshTeamLive55(frame){
+  if(!frame)return;
+  try{
+    installFetchProxy55(frame);
+    injectTeamFrameCss55(frame);
+    var w=frame.contentWindow;
+    if(typeof w.refreshLiveCenter==='function'){
+      Promise.resolve(w.refreshLiveCenter()).catch(function(e){console.warn('[Blitzbook] Team Game Center refresh failed.',e)});
+    }
+    try{w.dispatchEvent(new CustomEvent('nfl-live-data-updated',{detail:window.NFL_LIVE_DATA||{}}))}catch(e){}
+    try{w.dispatchEvent(new CustomEvent('nfl-live-teams-updated',{detail:window.NFL_LIVE_DATA||{}}))}catch(e){}
+  }catch(e){console.warn('[Blitzbook] Team live bridge failed.',e)}
+}
+
+function bindFrame55(){
+  var frame=document.getElementById('legacyTeamFrame');
+  if(!frame)return;
+  if(frame.dataset.bb55Bound!=='1'){
+    frame.dataset.bb55Bound='1';
+    frame.addEventListener('load',function(){
+      setTimeout(function(){refreshTeamLive55(frame)},120);
+      setTimeout(function(){refreshTeamLive55(frame)},900);
+    });
+  }
+  refreshTeamLive55(frame);
+  if(teamLiveTimer55)clearInterval(teamLiveTimer55);
+  teamLiveTimer55=setInterval(function(){
+    if(document.hidden||!document.body.classList.contains('team-route-active'))return;
+    var current=document.getElementById('legacyTeamFrame');
+    if(current)refreshTeamLive55(current);
+  },20000);
+}
+
+function stopFrameTimer55(){
+  if(!document.body.classList.contains('team-route-active')&&teamLiveTimer55){clearInterval(teamLiveTimer55);teamLiveTimer55=null}
+}
+
+function enforceTeamCardFront55(){
+  if(!matchMedia('(max-width:768px), (hover:none), (pointer:coarse)').matches)return;
+  document.querySelectorAll('#teams .team-card-front').forEach(function(n){n.style.setProperty('display','flex','important');n.style.setProperty('visibility','visible','important');n.style.setProperty('opacity','1','important')});
+  document.querySelectorAll('#teams .team-card-back').forEach(function(n){n.style.setProperty('display','none','important')});
+  document.querySelectorAll('#teams .team-card-inner').forEach(function(n){n.style.setProperty('transform','none','important')});
+}
+
+function scan55(){
+  enforceTeamCardFront55();
+  if(document.body.classList.contains('team-route-active'))bindFrame55();else stopFrameTimer55();
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(scan55,0)},{once:true});else setTimeout(scan55,0);
+window.addEventListener('hashchange',function(){setTimeout(scan55,80)});
+window.addEventListener('resize',function(){setTimeout(enforceTeamCardFront55,50)});
+new MutationObserver(function(){scan55()}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+})();
+</script>
+
+
+<style id="bb-v56-editorial">
+:root{--bb-bg:#080b11;--bb-panel:#0c121b;--bb-text:#f4f1e9;--bb-muted:#9ba5b4;--bb-rule:rgba(255,255,255,.12);--bb-red:#c91632;--bb-gold:#b89758}
+body{background:radial-gradient(circle at 50% -10%,rgba(74,14,29,.16),transparent 34%),linear-gradient(180deg,#080911,#07090e)!important}
+.panel,.module,.dashboard-card,.universe-panel,.game-center-shell,.bb-v5-card,.bb-v5-tile,.bb-v5-kpi,.bb-v5-record{border-radius:4px!important;box-shadow:none!important}
+button,input,select,.filter-btn,.chip,.pill{border-radius:3px!important}
+.hero,.hero-section,#hero{position:relative;overflow:hidden;border-radius:0!important;border-left:0!important;border-right:0!important;min-height:430px}
+.hero:after,.hero-section:after,#hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--bb-red),var(--bb-gold),transparent);opacity:.65}
+.hero h1,.hero-title,#hero h1{font-size:clamp(58px,8vw,126px)!important;line-height:.84!important;letter-spacing:-.035em!important;text-transform:uppercase}
+.hero p,.hero-subtitle,#hero p{max-width:650px!important;font-size:clamp(15px,1.2vw,19px)!important;color:#b8c0cc!important}
+section h2,.section-title{font-size:clamp(31px,3.4vw,55px)!important;line-height:.95!important;letter-spacing:-.018em!important}
+.team-grid,.teams-grid,#teamGrid,#teamsGrid{gap:1px!important;background:var(--bb-rule);border:1px solid var(--bb-rule)}
+.team-card{min-height:210px!important;border:0!important;border-radius:0!important;background:#0c1119!important;box-shadow:none!important;transform:none!important}
+.team-card:hover{z-index:2;background:#111925!important;transform:translateY(-2px)!important}
+.team-card-front{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;backface-visibility:visible!important;transform:none!important;border-radius:0!important}
+.team-card h3,.team-card .team-name{font-size:20px!important;line-height:1.05!important}
+#universe,.universe-section,#franchiseUniverse{border-top:1px solid var(--bb-rule)!important;border-bottom:1px solid var(--bb-rule)!important;background:#090e16!important}
+#universe table,.universe-section table,#franchiseUniverse table{border-collapse:collapse!important}
+#universe td,.universe-section td,#franchiseUniverse td{font-size:13px!important;padding-top:12px!important;padding-bottom:12px!important}
+.live-season-center,.live-center,.game-center,#gameCenter{border-radius:3px!important;background:#09101a!important;box-shadow:none!important}
+.game-card,.match-card,.score-card{border-radius:2px!important;box-shadow:none!important}
+#bbSeasonV5Launcher{padding:34px 0!important}
+#bbSeasonV5Launcher .bb-v5-season-launch{min-height:160px!important;border-radius:3px!important;border:1px solid rgba(255,255,255,.13)!important;padding:26px 28px!important;background:linear-gradient(90deg,rgba(156,15,39,.19),transparent 34%),radial-gradient(circle at 85% 50%,rgba(184,151,88,.12),transparent 28%),#0a1019!important}
+#bbSeasonV5Launcher .bb-v5-season-copy b{font-size:clamp(28px,3vw,46px)!important;line-height:.95!important}
+#bbSeasonV5Launcher .bb-v5-season-copy span{font-size:12px!important;max-width:580px;line-height:1.5!important;text-transform:none!important}
+#bbSeasonV5Launcher .bb-v5-season-open{height:48px!important;border-radius:2px!important}
+#bbSeasonV5 .bb-v5-card{border-radius:3px!important;box-shadow:none!important}
+#bbSeasonV5 .bb-v5-champ{min-height:250px}
+#bbSeasonV5 .bb-v5-champ h2{font-size:clamp(38px,4.5vw,68px)!important;line-height:.9!important}
+#bbSeasonV5 .bb-v5-section-title b{font-size:clamp(22px,2vw,32px)!important}
+#bbSeasonV5 .bb-v5-tile{min-height:140px}
+#bbSeasonV5 .bb-v5-tile strong{font-size:31px!important}
+@media(max-width:700px){
+ body{overflow-x:hidden!important}
+ .hero,.hero-section,#hero{min-height:auto!important;padding:38px 20px 34px!important}
+ .hero h1,.hero-title,#hero h1{font-size:58px!important}
+ section,.home-section{padding-left:16px!important;padding-right:16px!important}
+ section h2,.section-title{font-size:34px!important}
+ .team-grid,.teams-grid,#teamGrid,#teamsGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:1px!important;width:100%!important;overflow:visible!important}
+ .team-card{display:block!important;width:100%!important;min-width:0!important;height:auto!important;min-height:176px!important;opacity:1!important;visibility:visible!important;perspective:none!important}
+ .team-card-front{display:flex!important;flex-direction:column!important;justify-content:flex-end!important;position:relative!important;inset:auto!important;min-height:176px!important;padding:16px!important;opacity:1!important;visibility:visible!important;transform:none!important}
+ .team-card-back{display:none!important}
+ .team-card img{width:58px!important;height:58px!important;object-fit:contain!important;margin:0 0 auto 0!important}
+ .team-card h3,.team-card .team-name{font-size:17px!important;white-space:normal!important}
+ #universe .grid,.universe-section .grid,#franchiseUniverse .grid,.universe-grid{display:block!important}
+ #universe table,.universe-section table,#franchiseUniverse table{min-width:760px!important}
+ #universe .table-wrap,.universe-section .table-wrap,#franchiseUniverse .table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+ .live-season-center,.live-center,.game-center,#gameCenter{display:block!important;width:100%!important;max-height:none!important;overflow:visible!important}
+ .live-season-center .grid,.live-center .grid,.game-center .grid,#gameCenter .grid{display:block!important}
+ #bbSeasonV5Launcher{padding:24px 16px!important}
+ #bbSeasonV5Launcher .bb-v5-season-launch{min-height:190px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:18px!important;padding:22px!important}
+ #bbSeasonV5Launcher .bb-v5-season-copy b{font-size:31px!important}
+ #bbSeasonV5Launcher .bb-v5-season-open{width:100%!important}
+ #bbSeasonV5 .bb-v5-tabs{overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch}
+ #bbSeasonV5 .bb-v5-overview-top{display:block!important}
+ #bbSeasonV5 .bb-v5-overview-top>*{width:100%!important;margin-bottom:10px!important}
+ #bbSeasonV5 .bb-v5-kpis,#bbSeasonV5 .bb-v5-teamleaders{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:390px){.team-grid,.teams-grid,#teamGrid,#teamsGrid{grid-template-columns:1fr!important}}
+</style>
+<script id="bb-v56-editorial-script">
+(function(){
+ if(window.__BB_V56__)return;window.__BB_V56__=true;
+ function cards(){
+  if(!matchMedia('(max-width:700px)').matches)return;
+  document.querySelectorAll('.team-card').forEach(function(c){
+   c.style.visibility='visible';c.style.opacity='1';c.style.transform='none';
+   var f=c.querySelector('.team-card-front'),b=c.querySelector('.team-card-back');
+   if(f){f.style.display='flex';f.style.visibility='visible';f.style.opacity='1';f.style.transform='none'}
+   if(b)b.style.display='none';
+  });
+ }
+ function run(){cards();new MutationObserver(function(){requestAnimationFrame(cards)}).observe(document.body,{subtree:true,childList:true})}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+ addEventListener('resize',cards,{passive:true});
+})();
+</script>
+
 </body>
 </html>
