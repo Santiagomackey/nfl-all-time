@@ -1,4 +1,5 @@
 import http from "node:http";
+import espn from "./api/espn.js";
 import fs from "node:fs";
 import path from "node:path";
 import url from "node:url";
@@ -34,14 +35,23 @@ function safePathFromRequest(requestUrl) {
   let pathname = decodeURIComponent(parsed.pathname);
   if (pathname === "/") pathname = "/index.html";
   const resolved = path.resolve(ROOT, `.${pathname}`);
-  if (!resolved.startsWith(ROOT)) {
+  if (resolved !== ROOT && !resolved.startsWith(ROOT + path.sep)) {
     return null;
   }
   return resolved;
 }
 
 const server = http.createServer((req, res) => {
-  const filePath = safePathFromRequest(req.url || "/");
+  const request = new URL(req.url || '/', 'http://localhost');
+  if (request.pathname === '/api/espn') {
+    req.query = Object.fromEntries(request.searchParams);
+    res.status = code => { res.statusCode = code; return res; };
+    res.json = body => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(body)); return res; };
+    return espn(req, res);
+  }
+  let filePath;
+  try { filePath = safePathFromRequest(req.url || "/"); }
+  catch { send(res,400,'Invalid path'); return; }
   if (!filePath) {
     send(res, 403, "Forbidden");
     return;

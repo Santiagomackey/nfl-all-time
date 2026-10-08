@@ -1,0 +1,37 @@
+/* Blitzbook — a restrained sports-reference treatment. */
+:root{--bg-0:#101111;--bg-1:#181a1a;--bg-2:#202323;--bg-3:#292d2c;--text-1:#f4f4ef;--text-2:#d0d2cc;--text-3:#a0a69e;--bb-rule:#383d39;--border: #333833;--border-md:#454b45;--radius-sm:2px;--radius-md:3px;--radius-lg:3px}
+body{background:#101111!important;color:#f4f4ef;font-family:Arial,Helvetica,sans-serif!important;line-height:1.5}
+body::before,body::after,.hero-glow,.hero-grid,.hero-particles{display:none!important}
+.topnav,header.topbar{background:#101111!important;backdrop-filter:none!important;border-bottom:1px solid #424640!important;box-shadow:none!important}
+h1,h2,h3,.section-title,.hero-title{letter-spacing:-.025em!important;text-shadow:none!important}
+p,.hero-subtitle,.hero-text,.section-subtitle{font-family:Arial,Helvetica,sans-serif!important;line-height:1.65!important;letter-spacing:0!important}
+.hero,.hero-section,#hero{background:#151817!important;border-bottom:1px solid #424640!important}
+.hero::before,.hero::after{display:none!important}
+.hero h1,.hero-title{max-width:1050px;line-height:1!important}
+.hero-badge,.badge,.chip,.summary-pill{border-radius:2px!important;box-shadow:none!important;background:#232723!important}
+.section-kicker,.hero-eyebrow{color:#c6cabf!important;letter-spacing:.14em!important}
+.panel,.mini-panel,.card,.game-card,.match-card,.score-card,.bb-v5-card,.bb-v5-tile,.stat-card,.extra-card,.compare-stat-card{border-radius:2px!important;box-shadow:none!important;background:#191c1a!important;background-image:none!important}
+
+
+
+
+#universe,.universe-section,#franchiseUniverse,.franchise-universe-shell,.live-season-center,.live-center,#gameCenter{background:#141715!important;box-shadow:none!important}
+#bbSeasonV5Launcher .bb-v5-season-launch{background:#1b211c!important;border-radius:2px!important;border:1px solid #424b40!important}
+.bb-v5-season-icon{border-radius:0!important;background:#d1d8bf!important;color:#152117!important}
+.bb-discover{background:transparent!important;border:1px solid #3b4239!important;border-radius:2px!important}
+button,.btn,.modal-link-btn{border-radius:2px!important;box-shadow:none!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #e4e9ce!important;outline-offset:4px!important}
+table{font-variant-numeric:tabular-nums;border-collapse:collapse}
+th{font-size:11px!important;letter-spacing:.07em!important;text-transform:uppercase}
+td{font-size:13px;line-height:1.4;border-bottom-color:#333a32!important}
+tbody tr:hover{background:#242c23!important}
+.stat-value,.score,.compare-value,td strong{font-variant-numeric:tabular-nums}
+.modal-content,.modal-panel,.modal-box,.blitz-game-dialog{background:#151916!important;border-radius:3px!important;border:1px solid #626c5d!important;box-shadow:0 12px 60px #0008!important}
+.nfl-highlights{border-top:1px solid #485142;margin:20px 0;padding:16px 0;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font:14px/1.5 Arial,sans-serif}
+.nfl-highlights a{display:inline-block;background:#d9e0ca;color:#182218;padding:10px 16px;font-weight:700;text-decoration:none}
+.nfl-highlights small{color:#aeb7a7;max-width:440px}
+@media(max-width:700px){.hero h1,.hero-title{font-size:clamp(40px,11vw,58px)!important}td,th{padding:10px 8px!important}.nfl-highlights{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+body.theme-light{background:#f7f8f5!important;color:#172018!important}
+body.theme-light .panel,body.theme-light .mini-panel,body.theme-light .card,body.theme-light .extra-card,body.theme-light .compare-stat-card,body.theme-light .modal-card{background:#fff!important;color:#172018!important;border-color:#c3cabb!important}
+body.theme-light .nfl-highlights small{color:#4c5945}

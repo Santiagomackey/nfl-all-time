@@ -15,7 +15,7 @@ if not exist "%NODE_EXE%" (
 )
 
 echo Running NFL All-Time app server in this window...
-echo Open http://127.0.0.1:8765/teams/NFLHOMEPAGE_fixed_grid.html after you see the server message.
+echo Open http://127.0.0.1:8765/index.html after you see the server message.
 echo.
 "%NODE_EXE%" serve_app.mjs
 
