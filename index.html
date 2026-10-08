@@ -5936,6 +5936,9 @@ html.preload-team-route #teamRouteView {
 @media(max-width:520px){.team-grid{grid-template-columns:1fr!important}}
 .team-route-view{background:#101a13!important}
 .team-route-view .team-route-shell{background:#101a13}
+/* Compact record lines in the homepage game center */
+#liveGames .game-team-record {font-size:10px;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:600px){#liveGames .live-game{gap:7px;padding:10px 7px}#liveGames .game-team{gap:5px}#liveGames .game-team-name{font-size:12px}}
 </style>
 </head>
 <body>
@@ -7597,6 +7600,19 @@ async function loadRenderedTeamPage(slug) {
   const normalized = normalizeTeamSlug(slug);
   if (!normalized) throw new Error('Unknown team route.');
   if (TEAM_PAGE_HTML_CACHE.has(normalized)) return TEAM_PAGE_HTML_CACHE.get(normalized);
+  // Use the supplied reference design for each franchise, not the generated fallback.
+  if (window.location.protocol !== 'file:') {
+    try {
+      const res = await fetch(`team-reference/${encodeURIComponent(normalized)}.html`, {cache:'default'});
+      if (res.ok) {
+        const referenceHtml = await res.text();
+        if (referenceHtml.includes('<html')) {
+          TEAM_PAGE_HTML_CACHE.set(normalized, referenceHtml);
+          return referenceHtml;
+        }
+      }
+    } catch (error) { console.warn('Reference team page unavailable:', normalized, error); }
+  }
 
   const teamMeta = TEAMS.find(team => team.slug === normalized);
   if (!teamMeta) throw new Error('Team rendered page metadata is missing.');
@@ -10933,7 +10949,7 @@ function renderGames() {
         <div class="game-team-logo"><img src="${g.away}" alt="${g.awayName} logo"></div>
         <div>
           <div class="game-team-name">${g.awayName}</div>
-          <div class="game-team-record">${g.awayRecord || ''}</div>
+          <div class="game-team-record">${escapeHtml(g.awayRecord || 'Record unavailable')} · ${blitzRankLabel(g.awaySlug)}<br>${escapeHtml(blitzRecordDetails(g.awaySlug))}</div>
         </div>
       </div>
       <div class="game-center">
@@ -10946,7 +10962,7 @@ function renderGames() {
         <div class="game-team-logo"><img src="${g.home}" alt="${g.homeName} logo"></div>
         <div>
           <div class="game-team-name">${g.homeName}</div>
-          <div class="game-team-record">${g.homeRecord || ''}</div>
+          <div class="game-team-record">${escapeHtml(g.homeRecord || 'Record unavailable')} · ${blitzRankLabel(g.homeSlug)}<br>${escapeHtml(blitzRecordDetails(g.homeSlug))}</div>
         </div>
       </div>
     </div>
@@ -12201,6 +12217,57 @@ function getSeason2026BoardTeams(filter) {
     });
 }
 
+// The league's division ordering is authoritative for tiebreaks.
+const BLITZ_OFFICIAL_DIVISION_RANKS = new Map();
+const BLITZ_OFFICIAL_RECORDS = new Map();
+async function refreshOfficialDivisionRanks() {
+  const url = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/standings?season=2026&seasontype=2';
+  try {
+    const response = await fetch(url, {cache:'no-store'});
+    if (!response.ok) throw new Error('Standings HTTP ' + response.status);
+    const payload = await response.json();
+    const groups = [];
+    const seen = new WeakSet();
+    const walk = node => {
+      if (!node || typeof node !== 'object' || seen.has(node)) return;
+      seen.add(node);
+      if (Array.isArray(node.entries) && node.entries.length === 4) groups.push(node);
+      Object.values(node).forEach(walk);
+    };
+    walk(payload);
+    const next = new Map();
+    const nextRecords = new Map();
+    for (const group of groups) group.entries.forEach((entry, i) => {
+      const slug = resolveLiveTeamSlug(entry.team || {});
+      if (slug && !next.has(slug)) {
+        next.set(slug, i + 1);
+        const stats = entry.stats || [];
+        const getStat = (...names) => {
+          const item = stats.find(s => names.includes(String(s.name || s.abbreviation || '').toLowerCase()));
+          return item ? (item.displayValue ?? item.value) : null;
+        };
+        nextRecords.set(slug, {pct:getStat('winpercent','pct','winpercentage'), home:getStat('homerecord','home'), away:getStat('roadrecord','awayrecord','road')});
+      }
+    });
+    if (next.size >= 28) {
+      BLITZ_OFFICIAL_DIVISION_RANKS.clear();
+      next.forEach((rank, slug) => BLITZ_OFFICIAL_DIVISION_RANKS.set(slug, rank));
+      BLITZ_OFFICIAL_RECORDS.clear();
+      nextRecords.forEach((value,slug) => BLITZ_OFFICIAL_RECORDS.set(slug,value));
+      if (season2026State.data) renderSeason2026Dashboard();
+      renderGames();
+    }
+  } catch (error) { console.warn('Official division ranks unavailable; no tiebreak rank will be inferred.', error); }
+}
+function blitzRecordDetails(slug) {
+  const r = BLITZ_OFFICIAL_RECORDS.get(slug);
+  if (!r) return '';
+  return [r.pct != null ? `${r.pct} PCT` : '',r.home ? `Home ${r.home}` : '',r.away ? `Away ${r.away}` : ''].filter(Boolean).join(' · ');
+}
+function blitzRankLabel(slug) {
+  const n = BLITZ_OFFICIAL_DIVISION_RANKS.get(slug);
+  return n ? `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'} in division` : 'Division rank unavailable';
+}
 function sortSeason2026Rows(rows) {
   return [...rows].sort((left, right) => {
     const pctDiff = Number(`0${right.pct}`) - Number(`0${left.pct}`);
@@ -12683,7 +12750,7 @@ function renderSeason2026SnapshotList(targetId, rows) {
 }
 
 function renderSeason2026MiniStanding(row, index, rankType = 'division') {
-  const rank = rankType === 'league'
+  const rank = rankType === 'division' && BLITZ_OFFICIAL_DIVISION_RANKS.has(row.slug) ? BLITZ_OFFICIAL_DIVISION_RANKS.get(row.slug) : rankType === 'league'
     ? (row.leagueRank || index + 1)
     : rankType === 'conference'
       ? (row.conferenceRank || index + 1)
@@ -12719,7 +12786,7 @@ function renderSeason2026DivisionStandings(rows) {
   return `
     <div class="season-2026-division-board">
       ${[...grouped.entries()].filter(([, groupRows]) => groupRows.length).map(([division, groupRows]) => {
-        const sorted = sortSeason2026Rows(groupRows);
+        const sorted = [...groupRows].sort((a,b) => (BLITZ_OFFICIAL_DIVISION_RANKS.get(a.slug) || 99) - (BLITZ_OFFICIAL_DIVISION_RANKS.get(b.slug) || 99) || sortSeason2026Rows([a,b]).indexOf(a) * 2 - 1);
         return `
           <div class="season-2026-division-card">
             <div class="season-2026-division-title">${escapeHtml(division.replace('AFC ', '').replace('NFC ', ''))}<span>${escapeHtml(division.slice(0, 3))}</span></div>
@@ -12903,6 +12970,7 @@ async function initSeason2026Dashboard() {
     renderSeason2026Dashboard();
     await refreshSeason2026LiveData();
     await refreshVerified2026Standings();
+    await refreshOfficialDivisionRanks();
   } catch (error) {
     console.error('Failed to initialize 2026 dashboard', error);
     const schedule = document.getElementById('season2026Schedule');
