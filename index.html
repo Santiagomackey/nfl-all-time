@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <script src="api-client.js"></script>
@@ -13852,7 +13852,7 @@ function ensureSearchTrigger(){
 function ensureHistoryTools(){
   if(byId('blitzbookHistoryTools'))return;
   if(typeof window.openSeasonExplorer==='function'){
-    try{window.openSeasonExplorer(2026);}catch(e){}
+    // The explorer is available from its own button; never launch it during homepage boot.
     return;
   }
   /* createHistoryTools is lexical in the enhancement IIFE, so wait for normal init. */
