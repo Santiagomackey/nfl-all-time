@@ -5974,6 +5974,18 @@ html.preload-team-route #teamRouteView {
 #liveGames .game-center:hover,#liveGames .game-center:focus-visible{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);outline:none}
 @media(max-width:620px){#liveGames .live-game{gap:3px!important;grid-template-columns:minmax(0,1fr) minmax(75px,auto) minmax(0,1fr)!important}#liveGames .game-team{padding:7px 4px!important}#liveGames .game-center{padding:7px 3px}}
 </style>
+<style id="blitz-balanced-team-alignment">
+#liveGames .live-game{grid-template-columns:minmax(0,1fr) minmax(90px,auto) minmax(0,1fr)!important;align-items:center!important}
+#liveGames .game-team.away{justify-content:flex-start!important;flex-direction:row!important;text-align:left!important;padding-left:10px!important;padding-right:10px!important}
+#liveGames .game-team.home{justify-content:flex-end!important;flex-direction:row-reverse!important;text-align:right!important;padding-left:10px!important;padding-right:10px!important}
+#liveGames .game-team.home>div:last-child{text-align:right!important}
+#liveGames .game-team.home .game-team-logo{margin-left:0!important;margin-right:0!important}
+#liveGames .game-center{cursor:default!important;border:0!important;background:transparent!important}
+#liveGames .game-center:hover,#liveGames .game-center:focus-visible{background:transparent!important;border:0!important;box-shadow:none!important}
+#liveGames .game-team[data-live-team]:hover,#liveGames .game-team[data-live-team]:focus-visible{background:rgba(255,255,255,.09)!important}
+#blitzSelectedGame{display:none!important}
+@media(max-width:620px){#liveGames .game-team.away,#liveGames .game-team.home{padding-left:4px!important;padding-right:4px!important}}
+</style>
 </head>
 <body>
 
@@ -9755,7 +9767,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
       ensureLegacyFrame2026Season(frame, teamData);
       installLegacyTeamClock(frame);
       installRouteBridge(frame.contentWindow, slug);
-      blitzShowSelectedGame(frame, slug);
+      // Team archive opens directly without an extra selected-game banner.
       frame.contentWindow?.scrollTo(0, 0);
     } catch (error) {
       console.warn('Could not reset iframe scroll position.', error);
@@ -10981,33 +10993,11 @@ function blitzRememberSelectedGame(game, slug) {
   try {sessionStorage.setItem('blitz-selected-game', JSON.stringify(selected));} catch (_) {}
 }
 function blitzNavigateToGameTeam(slug, game) {
-  blitzRememberSelectedGame(game, slug);
   routeToTeam(slug);
 }
 function blitzShowSelectedGame(frame, slug) {
-  let selected;
-  try {selected=JSON.parse(sessionStorage.getItem('blitz-selected-game') || 'null');} catch (_) {return;}
-  if (!selected || selected.slug !== slug || Date.now() - selected.timestamp > 15*60*1000) return;
-  try {sessionStorage.removeItem('blitz-selected-game');} catch (_) {}
-  const doc=frame.contentDocument;
-  if (!doc?.body) return;
-  doc.getElementById('blitzSelectedGame')?.remove();
-  const banner=doc.createElement('aside');
-  banner.id='blitzSelectedGame';
-  banner.style.cssText='position:relative;z-index:100;max-width:1200px;margin:12px auto;padding:14px 18px;background:#14202b;color:#f5f7fb;border:1px solid #596579;border-radius:10px;font:13px monospace;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between';
-  const label=doc.createElement('strong');
-  label.textContent=`SELECTED GAME · ${selected.away} ${selected.score} ${selected.home}`;
-  banner.appendChild(label);
-  const controls=doc.createElement('div');
-  controls.style.cssText='display:flex;gap:8px';
-  const stats=doc.createElement('button');
-  stats.textContent='VIEW GAME STATS';
-  stats.style.cssText='background:#f2f4f8;color:#101827;border:0;border-radius:5px;padding:9px 12px;cursor:pointer;font:bold 11px monospace';
-  stats.onclick=()=>openBlitzGameStats({id:selected.id,awayName:selected.away,homeName:selected.home,awaySlug:selected.awaySlug,homeSlug:selected.homeSlug,statusTxt:selected.status});
-  controls.appendChild(stats);
-  const close=doc.createElement('button');close.textContent='×';close.setAttribute('aria-label','Dismiss selected game');close.style.cssText='background:transparent;color:white;border:1px solid #64748b;border-radius:5px;padding:8px 12px;cursor:pointer';close.onclick=()=>banner.remove();controls.appendChild(close);
-  banner.appendChild(controls);
-  doc.body.insertBefore(banner,doc.body.firstChild);
+  // The user requested direct team navigation with no selected-game banner.
+  try { sessionStorage.removeItem('blitz-selected-game'); } catch (_) {}
 }
 function openBlitzGameStats(game) {
   let overlay = document.getElementById('blitzGameStatsOverlay');
@@ -11051,7 +11041,7 @@ function renderGames() {
           <div class="game-team-record">${escapeHtml(g.awayRecord || 'Record unavailable')} · ${blitzRankLabel(g.awaySlug)}<br>${escapeHtml(blitzRecordDetails(g.awaySlug))}</div>
         </div>
       </div>
-      <div class="game-center" role="button" tabindex="0" title="View game statistics" aria-label="View game statistics">
+      <div class="game-center" aria-label="Game score">
         <div class="game-score">${g.awayScore !== null && g.homeScore !== null ? `${g.awayScore} - ${g.homeScore}` : 'vs'}</div>
         <div class="game-status ${g.status}">${g.statusTxt}</div>
         <div class="game-channel">${g.channel}</div>
@@ -11078,20 +11068,13 @@ function renderGames() {
         const slug = teamEl.dataset.liveTeam;
         if (!slug) return;
         const game = games.find(item => String(item.id) === card.dataset.liveGameId);
-        if (game) blitzRememberSelectedGame(game, slug);
+        // Navigate directly to the team without a game banner.
         routeToTeam(slug);
       };
       teamEl.addEventListener('click', openTeam);
       teamEl.addEventListener('keydown', event => {if (event.key === 'Enter' || event.key === ' ') {event.preventDefault();openTeam(event);}});
     });
-    const scoreButton = card.querySelector('.game-center');
-    scoreButton?.addEventListener('click', toggleDetails);
-    scoreButton?.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        toggleDetails();
-      }
-    });
+
   });
 }
 
@@ -11110,7 +11093,7 @@ document.addEventListener('click', event => {
     if (slug) blitzNavigateToGameTeam(slug,game);
     return;
   }
-  openBlitzGameStats({id:game.id || game.eventId || game.espnId,awayName:game.awayTeam || game.awayShort,homeName:game.homeTeam || game.homeShort,awayScore:game.awayScore,homeScore:game.homeScore,awaySlug:game.awaySlug,homeSlug:game.homeSlug,statusTxt:game.statusLabel});
+  // Clicking the score does not open game statistics.
 });
 
 const SEASON_2026_DATA_FILES = assetCandidates('data/season-2026.json');
