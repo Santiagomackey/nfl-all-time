@@ -5948,6 +5948,19 @@ html.preload-team-route #teamRouteView {
 @keyframes blitz-logo-in{from{opacity:.48;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.team-logo-loading-inner img,.team-logo-loading-bar{animation:none}}
 </style>
+<style id="blitz-game-navigation-style">
+#liveGames .game-team[data-live-team], .season-2026-team[data-schedule-team] {cursor:pointer;border-radius:8px;padding:5px;transition:background .15s}
+#liveGames .game-team[data-live-team]:hover, .season-2026-team[data-schedule-team]:hover {background:rgba(255,255,255,.1)}
+#liveGames .live-game, .season-2026-matchup {cursor:pointer}
+.blitz-game-stats-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}
+.blitz-game-stats-panel{position:relative;width:min(860px,100%);max-height:85vh;overflow:auto;background:#101b2b;color:#f5f7fb;border:1px solid #46536a;border-radius:14px;padding:26px;font-family:'JetBrains Mono',monospace}
+.blitz-game-stats-panel h2{font-family:Oswald,sans-serif;font-size:28px;margin:0 40px 8px 0}.blitz-game-stats-panel p{color:#aebcd1;margin-bottom:18px}
+.blitz-stats-close{position:absolute;right:14px;top:12px;background:transparent;color:white;border:0;font-size:28px}
+.blitz-stats-links{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.blitz-stats-links button{padding:10px;border:1px solid #46536a;border-radius:6px;background:#233149;color:white}
+.blitz-stats-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.blitz-stats-columns h3{font-family:Oswald,sans-serif;font-size:19px;margin-bottom:10px}
+.blitz-stat-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #334155;padding:7px 0;font-size:11px}.blitz-stat-row strong{text-align:right}
+@media(max-width:600px){.blitz-stats-columns{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
@@ -10941,6 +10954,31 @@ function renderEmptyGames() {
   `;
 }
 
+function openBlitzGameStats(game) {
+  let overlay = document.getElementById('blitzGameStatsOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'blitzGameStatsOverlay';
+    overlay.className = 'blitz-game-stats-overlay';
+    overlay.innerHTML = '<section class="blitz-game-stats-panel" role="dialog" aria-modal="true" aria-label="Game statistics"><button class="blitz-stats-close" type="button" aria-label="Close">×</button><div id="blitzGameStatsBody"></div></section>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('.blitz-stats-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', e => {if (e.target === overlay) overlay.remove();});
+  }
+  const body = overlay.querySelector('#blitzGameStatsBody');
+  const id = String(game.id || '');
+  body.innerHTML = `<h2>${escapeHtml(game.awayName)} ${escapeHtml(game.awayScore ?? '')} – ${escapeHtml(game.homeScore ?? '')} ${escapeHtml(game.homeName)}</h2><p>${escapeHtml(game.statusTxt || '')}</p><div class="blitz-stats-links"><button type="button" data-stats-team="${escapeHtml(game.awaySlug || '')}">${escapeHtml(game.awayName)} archive</button><button type="button" data-stats-team="${escapeHtml(game.homeSlug || '')}">${escapeHtml(game.homeName)} archive</button></div><div id="blitzBoxscoreStats">Loading game statistics…</div>`;
+  body.querySelectorAll('[data-stats-team]').forEach(btn => btn.addEventListener('click', () => {const slug=btn.dataset.statsTeam;overlay.remove();if(slug)routeToTeam(slug);}));
+  if (!id) {body.querySelector('#blitzBoxscoreStats').textContent='Game statistics are unavailable.';return;}
+  fetchGameSummary(id).then(data => {
+    if (!overlay.isConnected) return;
+    const teams = data?.boxscore?.teams || [];
+    const target = body.querySelector('#blitzBoxscoreStats');
+    if (!teams.length) {target.textContent='No box score is available for this game yet.';return;}
+    target.innerHTML = `<div class="blitz-stats-columns">${teams.map(item => `<div><h3>${escapeHtml(item.team?.displayName || item.team?.abbreviation || 'Team')}</h3>${(item.statistics || []).map(stat => `<div class="blitz-stat-row"><span>${escapeHtml(stat.label || stat.name || '')}</span><strong>${escapeHtml(stat.displayValue ?? stat.value ?? '—')}</strong></div>`).join('')}</div>`).join('')}</div>`;
+  }).catch(() => {if(overlay.isConnected)body.querySelector('#blitzBoxscoreStats').textContent='Unable to load game statistics.';});
+}
+
 function renderGames() {
   const games = liveGamesCache[currentTab] || [];
   const el = document.getElementById('liveGames');
@@ -10951,7 +10989,7 @@ function renderGames() {
 
   el.innerHTML = games.map(g => `
     <div class="live-game" data-live-game-id="${escapeHtml(g.id || '')}" role="button" tabindex="0">
-      <div class="game-team away">
+      <div class="game-team away" data-live-team="${escapeHtml(g.awaySlug || '')}" title="Open team and this game" role="link" tabindex="0">
         <div class="game-team-logo"><img src="${g.away}" alt="${g.awayName} logo"></div>
         <div>
           <div class="game-team-name">${g.awayName}</div>
@@ -10964,7 +11002,7 @@ function renderGames() {
         <div class="game-channel">${g.channel}</div>
         <div class="game-channel live-game-details" hidden>${escapeHtml(formatLiveStatsLine(g))}</div>
       </div>
-      <div class="game-team home">
+      <div class="game-team home" data-live-team="${escapeHtml(g.homeSlug || '')}" title="Open team and this game" role="link" tabindex="0">
         <div class="game-team-logo"><img src="${g.home}" alt="${g.homeName} logo"></div>
         <div>
           <div class="game-team-name">${g.homeName}</div>
@@ -10976,9 +11014,21 @@ function renderGames() {
 
   el.querySelectorAll('.live-game').forEach(card => {
     const toggleDetails = () => {
-      const details = card.querySelector('.live-game-details');
-      if (details) details.hidden = !details.hidden;
+      const game = games.find(item => String(item.id) === card.dataset.liveGameId);
+      if (game) openBlitzGameStats(game);
     };
+    card.querySelectorAll('[data-live-team]').forEach(teamEl => {
+      const openTeam = event => {
+        event.stopPropagation();
+        const slug = teamEl.dataset.liveTeam;
+        if (!slug) return;
+        const game = games.find(item => String(item.id) === card.dataset.liveGameId);
+        if (game) sessionStorage.setItem('blitz-selected-game', JSON.stringify({id:game.id, away:game.awayName, home:game.homeName, awaySlug:game.awaySlug, homeSlug:game.homeSlug}));
+        routeToTeam(slug);
+      };
+      teamEl.addEventListener('click', openTeam);
+      teamEl.addEventListener('keydown', event => {if (event.key === 'Enter' || event.key === ' ') {event.preventDefault();openTeam(event);}});
+    });
     card.addEventListener('click', toggleDetails);
     card.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -10988,6 +11038,15 @@ function renderGames() {
     });
   });
 }
+
+document.addEventListener('click', event => {
+  const team = event.target.closest?.('[data-schedule-team]');
+  if (team) {event.stopPropagation(); const slug=team.dataset.scheduleTeam;if(slug)routeToTeam(slug);return;}
+  const row = event.target.closest?.('.season-2026-matchup');
+  if (!row) return;
+  const game = (season2026State.data?.schedule || []).find(g => String(g.id || g.eventId || g.espnId || '') === row.dataset.gameEvent && row.dataset.gameEvent);
+  if (game) openBlitzGameStats({id:game.id || game.eventId || game.espnId,awayName:game.awayTeam || game.awayShort,homeName:game.homeTeam || game.homeShort,awayScore:game.awayScore,homeScore:game.homeScore,awaySlug:game.awaySlug,homeSlug:game.homeSlug,statusTxt:game.statusLabel});
+});
 
 const SEASON_2026_DATA_FILES = assetCandidates('data/season-2026.json');
 const SEASON_2026_BROWSER_FILES = assetCandidates('data/browser/season-2026.js');
@@ -12276,6 +12335,9 @@ function blitzRankLabel(slug) {
 }
 function sortSeason2026Rows(rows) {
   return [...rows].sort((left, right) => {
+    const leftRank = BLITZ_OFFICIAL_DIVISION_RANKS.get(left.slug || left.teamSlug || resolveTeamSlug(left.team || ''));
+    const rightRank = BLITZ_OFFICIAL_DIVISION_RANKS.get(right.slug || right.teamSlug || resolveTeamSlug(right.team || ''));
+    if (leftRank && rightRank && leftRank !== rightRank) return leftRank - rightRank;
     const pctDiff = Number(`0${right.pct}`) - Number(`0${left.pct}`);
     if (pctDiff) return pctDiff;
     if ((right.wins || 0) !== (left.wins || 0)) return (right.wins || 0) - (left.wins || 0);
@@ -12545,17 +12607,17 @@ function renderSeason2026UnreleasedMatchups(games) {
               const context = getSeason2026MatchupContext(game);
               const accent = getTeamCardColor(homeTeam || awayTeam || {});
               return `
-            <div class="season-2026-matchup" data-status="${escapeHtml(game.status || 'upcoming')}" data-unreleased="true" style="--match-accent:${escapeHtml(accent)}" title="${escapeHtml(context.label)} game">
+            <div class="season-2026-matchup" data-game-event="${escapeHtml(game.id || game.eventId || game.espnId || '')}" data-status="${escapeHtml(game.status || 'upcoming')}" data-unreleased="true" style="--match-accent:${escapeHtml(accent)}" title="${escapeHtml(context.label)} game">
               <div class="season-2026-kick">
                 <strong>Date TBD</strong>
                 <span>Kickoff TBD</span>
               </div>
-              <div class="season-2026-team">
+              <div class="season-2026-team" data-schedule-team="${escapeHtml(game.awaySlug || '')}" role="link" tabindex="0">
                 <img src="${escapeHtml(getTeamLogoBySlug(game.awaySlug))}" alt="${escapeHtml(game.awayShort || game.awayTeam)} logo">
                 <div><strong>${escapeHtml(game.awayShort || game.awayTeam)}</strong><span>Away</span></div>
               </div>
               <div class="season-2026-vs">@</div>
-              <div class="season-2026-team">
+              <div class="season-2026-team" data-schedule-team="${escapeHtml(game.homeSlug || '')}" role="link" tabindex="0">
                 <img src="${escapeHtml(getTeamLogoBySlug(game.homeSlug))}" alt="${escapeHtml(game.homeShort || game.homeTeam)} logo">
                 <div><strong>${escapeHtml(game.homeShort || game.homeTeam)}</strong><span>Home</span></div>
               </div>
