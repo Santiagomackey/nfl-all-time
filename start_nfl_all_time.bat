@@ -19,6 +19,6 @@ echo Starting NFL All-Time app server on http://127.0.0.1:8765 ...
 start "NFL All-Time Server" cmd /k "cd /d \"%~dp0\" && \"%NODE_EXE%\" serve_app.mjs"
 
 timeout /t 4 >nul
-start "" "http://127.0.0.1:8765/teams/NFLHOMEPAGE_fixed_grid.html"
+start "" "http://127.0.0.1:8765/index.html"
 
 exit /b 0

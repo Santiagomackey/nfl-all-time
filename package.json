@@ -1,0 +1,7 @@
+{
+  "name": "blitzbook-nfl-archive",
+  "version": "5.7.0",
+  "private": true,
+  "scripts": {"start": "node serve_app.mjs", "test": "node --test tests/*.test.cjs"},
+  "engines": {"node": ">=20"}
+}

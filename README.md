@@ -1,3 +1,7 @@
+# Updated version
+
+See [UPDATE-NOTES.md](UPDATE-NOTES.md) for the 5.7 fixes, testing, video coverage, and run/deploy instructions. The main entry point is `index.html`.
+
 # NFL All-Time Team Generator
 
 This folder contains the standalone generation pipeline for the NFL all-time database pages built from the Ravens master template.
