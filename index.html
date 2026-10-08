@@ -9735,6 +9735,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
       ensureLegacyFrame2026Season(frame, teamData);
       installLegacyTeamClock(frame);
       installRouteBridge(frame.contentWindow, slug);
+      blitzShowSelectedGame(frame, slug);
       frame.contentWindow?.scrollTo(0, 0);
     } catch (error) {
       console.warn('Could not reset iframe scroll position.', error);
@@ -10954,6 +10955,40 @@ function renderEmptyGames() {
   `;
 }
 
+function blitzRememberSelectedGame(game, slug) {
+  const id = String(game.id || game.eventId || game.espnId || '');
+  const selected = {id, slug, away:game.awayName || game.awayTeam || '', home:game.homeName || game.homeTeam || '', awaySlug:game.awaySlug || '', homeSlug:game.homeSlug || '', status:game.statusTxt || game.statusLabel || '', score:`${game.awayScore ?? '–'} – ${game.homeScore ?? '–'}`, timestamp:Date.now()};
+  try {sessionStorage.setItem('blitz-selected-game', JSON.stringify(selected));} catch (_) {}
+}
+function blitzNavigateToGameTeam(slug, game) {
+  blitzRememberSelectedGame(game, slug);
+  routeToTeam(slug);
+}
+function blitzShowSelectedGame(frame, slug) {
+  let selected;
+  try {selected=JSON.parse(sessionStorage.getItem('blitz-selected-game') || 'null');} catch (_) {return;}
+  if (!selected || selected.slug !== slug || Date.now() - selected.timestamp > 15*60*1000) return;
+  try {sessionStorage.removeItem('blitz-selected-game');} catch (_) {}
+  const doc=frame.contentDocument;
+  if (!doc?.body) return;
+  doc.getElementById('blitzSelectedGame')?.remove();
+  const banner=doc.createElement('aside');
+  banner.id='blitzSelectedGame';
+  banner.style.cssText='position:relative;z-index:100;max-width:1200px;margin:12px auto;padding:14px 18px;background:#14202b;color:#f5f7fb;border:1px solid #596579;border-radius:10px;font:13px monospace;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between';
+  const label=doc.createElement('strong');
+  label.textContent=`SELECTED GAME · ${selected.away} ${selected.score} ${selected.home}`;
+  banner.appendChild(label);
+  const controls=doc.createElement('div');
+  controls.style.cssText='display:flex;gap:8px';
+  const stats=doc.createElement('button');
+  stats.textContent='VIEW GAME STATS';
+  stats.style.cssText='background:#f2f4f8;color:#101827;border:0;border-radius:5px;padding:9px 12px;cursor:pointer;font:bold 11px monospace';
+  stats.onclick=()=>openBlitzGameStats({id:selected.id,awayName:selected.away,homeName:selected.home,awaySlug:selected.awaySlug,homeSlug:selected.homeSlug,statusTxt:selected.status});
+  controls.appendChild(stats);
+  const close=doc.createElement('button');close.textContent='×';close.setAttribute('aria-label','Dismiss selected game');close.style.cssText='background:transparent;color:white;border:1px solid #64748b;border-radius:5px;padding:8px 12px;cursor:pointer';close.onclick=()=>banner.remove();controls.appendChild(close);
+  banner.appendChild(controls);
+  doc.body.insertBefore(banner,doc.body.firstChild);
+}
 function openBlitzGameStats(game) {
   let overlay = document.getElementById('blitzGameStatsOverlay');
   if (!overlay) {
@@ -10968,7 +11003,7 @@ function openBlitzGameStats(game) {
   const body = overlay.querySelector('#blitzGameStatsBody');
   const id = String(game.id || '');
   body.innerHTML = `<h2>${escapeHtml(game.awayName)} ${escapeHtml(game.awayScore ?? '')} – ${escapeHtml(game.homeScore ?? '')} ${escapeHtml(game.homeName)}</h2><p>${escapeHtml(game.statusTxt || '')}</p><div class="blitz-stats-links"><button type="button" data-stats-team="${escapeHtml(game.awaySlug || '')}">${escapeHtml(game.awayName)} archive</button><button type="button" data-stats-team="${escapeHtml(game.homeSlug || '')}">${escapeHtml(game.homeName)} archive</button></div><div id="blitzBoxscoreStats">Loading game statistics…</div>`;
-  body.querySelectorAll('[data-stats-team]').forEach(btn => btn.addEventListener('click', () => {const slug=btn.dataset.statsTeam;overlay.remove();if(slug)routeToTeam(slug);}));
+  body.querySelectorAll('[data-stats-team]').forEach(btn => btn.addEventListener('click', () => {const slug=btn.dataset.statsTeam;overlay.remove();if(slug)blitzNavigateToGameTeam(slug, game);}));
   if (!id) {body.querySelector('#blitzBoxscoreStats').textContent='Game statistics are unavailable.';return;}
   fetchGameSummary(id).then(data => {
     if (!overlay.isConnected) return;
@@ -11023,7 +11058,7 @@ function renderGames() {
         const slug = teamEl.dataset.liveTeam;
         if (!slug) return;
         const game = games.find(item => String(item.id) === card.dataset.liveGameId);
-        if (game) sessionStorage.setItem('blitz-selected-game', JSON.stringify({id:game.id, away:game.awayName, home:game.homeName, awaySlug:game.awaySlug, homeSlug:game.homeSlug}));
+        if (game) blitzRememberSelectedGame(game, slug);
         routeToTeam(slug);
       };
       teamEl.addEventListener('click', openTeam);
@@ -11040,12 +11075,21 @@ function renderGames() {
 }
 
 document.addEventListener('click', event => {
-  const team = event.target.closest?.('[data-schedule-team]');
-  if (team) {event.stopPropagation(); const slug=team.dataset.scheduleTeam;if(slug)routeToTeam(slug);return;}
   const row = event.target.closest?.('.season-2026-matchup');
   if (!row) return;
-  const game = (season2026State.data?.schedule || []).find(g => String(g.id || g.eventId || g.espnId || '') === row.dataset.gameEvent && row.dataset.gameEvent);
-  if (game) openBlitzGameStats({id:game.id || game.eventId || game.espnId,awayName:game.awayTeam || game.awayShort,homeName:game.homeTeam || game.homeShort,awayScore:game.awayScore,homeScore:game.homeScore,awaySlug:game.awaySlug,homeSlug:game.homeSlug,statusTxt:game.statusLabel});
+  const candidates=season2026State.data?.schedule || [];
+  const eventId=row.dataset.gameEvent;
+  const game=candidates.find(g => eventId && String(g.id || g.eventId || g.espnId || '') === eventId)
+    || candidates.find(g => g.awaySlug === row.dataset.awaySlug && g.homeSlug === row.dataset.homeSlug && String(g.displayDate || '') === String(row.querySelector('.season-2026-kick span')?.textContent || ''));
+  if (!game) return;
+  const teamNode=event.target.closest?.('.season-2026-team');
+  if (teamNode) {
+    const teams=[...row.querySelectorAll('.season-2026-team')];
+    const slug=teams.indexOf(teamNode)===0 ? game.awaySlug : game.homeSlug;
+    if (slug) blitzNavigateToGameTeam(slug,game);
+    return;
+  }
+  openBlitzGameStats({id:game.id || game.eventId || game.espnId,awayName:game.awayTeam || game.awayShort,homeName:game.homeTeam || game.homeShort,awayScore:game.awayScore,homeScore:game.homeScore,awaySlug:game.awaySlug,homeSlug:game.homeSlug,statusTxt:game.statusLabel});
 });
 
 const SEASON_2026_DATA_FILES = assetCandidates('data/season-2026.json');
@@ -12706,7 +12750,7 @@ function renderSeason2026Schedule() {
               ? game.network
               : (game.stadium && game.stadium !== 'TBD' ? game.stadium : 'Venue TBD');
             return `
-            <div class="season-2026-matchup" data-status="${escapeHtml(game.status || 'upcoming')}" data-placeholder="${game.isSchedulePlaceholder ? 'true' : 'false'}" style="--match-accent:${escapeHtml(rowAccent)}">
+            <div class="season-2026-matchup" data-status="${escapeHtml(game.status || 'upcoming')}" data-placeholder="${game.isSchedulePlaceholder ? 'true' : 'false'}" data-game-event="${escapeHtml(game.id || game.eventId || game.espnId || '')}" data-away-slug="${escapeHtml(game.awaySlug || '')}" data-home-slug="${escapeHtml(game.homeSlug || '')}" style="--match-accent:${escapeHtml(rowAccent)}">
               <div class="season-2026-kick">
                 <strong>${escapeHtml(slotLabel)}</strong>
                 <span>${escapeHtml(dateLabel)}</span>
