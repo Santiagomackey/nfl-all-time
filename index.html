@@ -5940,6 +5940,14 @@ html.preload-team-route #teamRouteView {
 #liveGames .game-team-record {font-size:10px;line-height:1.55;overflow-wrap:anywhere}
 @media(max-width:600px){#liveGames .live-game{gap:7px;padding:10px 7px}#liveGames .game-team{gap:5px}#liveGames .game-team-name{font-size:12px}}
 </style>
+<style id="blitz-team-logo-loader">
+.team-logo-loading{min-height:calc(100vh - 64px)!important;display:grid!important;place-items:center!important;background:transparent!important}
+.team-logo-loading-inner{display:flex;align-items:center;flex-direction:column;gap:24px}
+.team-logo-loading-inner img{width:116px;height:116px;object-fit:contain;animation:blitz-logo-in 1.3s ease-in-out infinite alternate;filter:drop-shadow(0 14px 26px rgba(0,0,0,.35))}
+.team-logo-loading-bar{display:block;width:70px;height:2px;background:linear-gradient(90deg,transparent,#b9c4d3,transparent);animation:blitz-logo-in 1.3s ease-in-out infinite alternate}
+@keyframes blitz-logo-in{from{opacity:.48;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.team-logo-loading-inner img,.team-logo-loading-bar{animation:none}}
+</style>
 </head>
 <body>
 
@@ -8842,18 +8850,16 @@ function renderTeamLoadingState(slug) {
   const view = getTeamRouteView();
   if (!view) return;
   const team = TEAMS.find(entry => entry.slug === slug);
+  const logo = team?.logo || `https://a.espncdn.com/i/teamlogos/nfl/500/${encodeURIComponent(team?.abbr || slug)}.png`;
   view.dataset.loadedSlug = slug;
   view.dataset.renderMode = 'loading';
   view.innerHTML = `
-    <section class="team-route-shell">
-      <div class="container">
-        <div class="team-route-error">
-          <strong>Loading ${escapeHtml(team?.name || slug)} database...</strong>
-          <p>Preparing the franchise page and 2026 season data.</p>
-        </div>
+    <section class="team-route-shell team-logo-loading" aria-label="Opening ${escapeHtml(team?.name || slug)} archive">
+      <div class="team-logo-loading-inner">
+        <img src="${escapeHtml(logo)}" alt="${escapeHtml(team?.name || slug)} logo" width="116" height="116" />
+        <span class="team-logo-loading-bar" aria-hidden="true"></span>
       </div>
-    </section>
-  `;
+    </section>`;
 }
 
 function renderTeamErrorState(slug, error) {
