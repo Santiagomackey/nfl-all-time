@@ -11057,11 +11057,11 @@ function openBlitzGameStats(game) {
 function blitzVerifiedRecord(slug, fallback) {
   const rows = window.__BLITZ_VERIFIED_2026_STANDINGS__;
   const item = Array.isArray(rows) && rows.find(row => row.slug === slug);
-  return item ? item.record : (fallback || 'Record unavailable');
+  return BLITZ_OFFICIAL_RECORDS.get(slug)?.record || (window.__BLITZ_2026_OFFICIAL_READY__ ? (item?.record || 'Record unavailable') : 'Updating record…');
 }
 function blitzRefreshRecordCards() {
   const rows = window.__BLITZ_VERIFIED_2026_STANDINGS__;
-  if (!Array.isArray(rows) || !rows.length) return;
+  if (!window.__BLITZ_2026_OFFICIAL_READY__ || !Array.isArray(rows) || !rows.length) return;
   document.querySelectorAll('#liveGames [data-live-team]').forEach(el => {
     const row = rows.find(r => r.slug === el.dataset.liveTeam);
     const record = el.querySelector('.game-team-record');
@@ -12401,7 +12401,12 @@ async function refreshOfficialDivisionRanks() {
           const item = stats.find(s => names.includes(String(s.name || s.abbreviation || '').toLowerCase()));
           return item ? (item.displayValue ?? item.value) : null;
         };
-        nextRecords.set(slug, {pct:getStat('winpercent','pct','winpercentage'), home:getStat('homerecord','home'), away:getStat('roadrecord','awayrecord','road')});
+        const wins = Number(getStat('wins','w'));
+        const losses = Number(getStat('losses','l'));
+        const tiesRaw = getStat('ties','t');
+        const ties = tiesRaw == null ? 0 : Number(tiesRaw);
+        const valid = Number.isInteger(wins) && Number.isInteger(losses) && Number.isInteger(ties) && wins >= 0 && losses >= 0 && ties >= 0 && wins + losses + ties <= 18;
+        nextRecords.set(slug, {pct:getStat('winpercent','pct','winpercentage'), home:getStat('homerecord','home'), away:getStat('roadrecord','awayrecord','road'), record:valid ? `${wins}-${losses}${ties ? '-'+ties : ''}` : null, wins, losses, ties});
       }
     });
     if (next.size >= 28) {
@@ -12409,6 +12414,14 @@ async function refreshOfficialDivisionRanks() {
       next.forEach((rank, slug) => BLITZ_OFFICIAL_DIVISION_RANKS.set(slug, rank));
       BLITZ_OFFICIAL_RECORDS.clear();
       nextRecords.forEach((value,slug) => BLITZ_OFFICIAL_RECORDS.set(slug,value));
+      // Standings are the authoritative source; partial scoreboard week requests are not.
+      const verified = [...nextRecords].filter(([,r]) => r.record != null);
+      if (verified.length >= 28) {
+        const old = new Map((window.__BLITZ_VERIFIED_2026_STANDINGS__ || []).map(r => [r.slug,r]));
+        window.__BLITZ_VERIFIED_2026_STANDINGS__ = verified.map(([slug,r]) => ({...(old.get(slug) || {}), slug, record:r.record, wins:r.wins, losses:r.losses, ties:r.ties, pct:String(r.pct ?? '')}));
+        window.__BLITZ_2026_OFFICIAL_READY__ = true;
+        blitzRefreshRecordCards();
+      }
       if (season2026State.data) renderSeason2026Dashboard();
       renderGames();
     }
@@ -13115,6 +13128,7 @@ async function refreshVerified2026Standings() {
     if (hs > as) {h.wins++;a.losses++;} else if (as > hs) {a.wins++;h.losses++;} else {h.ties++;a.ties++;}
   }
   const rows = [...records.values()].map(r => ({...r,record:`${r.wins}-${r.losses}${r.ties ? '-'+r.ties : ''}`,pct:((r.wins+r.ties/2)/Math.max(1,r.wins+r.losses+r.ties)).toFixed(3),pointDiff:r.pointsFor-r.pointsAgainst}));
+  if (window.__BLITZ_2026_OFFICIAL_READY__) return; // Never replace official records with an incomplete weekly scoreboard.
   window.__BLITZ_VERIFIED_2026_STANDINGS__ = rows;
   updateSeasonData(); renderSeason2026Dashboard();
   if (typeof renderGames === "function") renderGames();
@@ -13128,8 +13142,8 @@ async function initSeason2026Dashboard() {
     updateSeasonData();
     renderSeason2026Dashboard();
     await refreshSeason2026LiveData();
-    await refreshVerified2026Standings();
     await refreshOfficialDivisionRanks();
+    if (!window.__BLITZ_2026_OFFICIAL_READY__) await refreshVerified2026Standings();
   } catch (error) {
     console.error('Failed to initialize 2026 dashboard', error);
     const schedule = document.getElementById('season2026Schedule');
@@ -13250,7 +13264,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSeason2026Dashboard();
   setInterval(loadLiveGames, LIVE_REFRESH_MS);
   setInterval(refreshSeason2026LiveData, LIVE_REFRESH_MS);
-  setInterval(() => { if (season2026State.data) refreshVerified2026Standings().catch(console.warn); }, 120000);
+  setInterval(() => { refreshOfficialDivisionRanks().catch(console.warn); }, 120000);
   initFadeIns();
   initMobileNav();
   initExploreCards();
