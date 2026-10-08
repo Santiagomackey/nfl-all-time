@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -5961,6 +5961,19 @@ html.preload-team-route #teamRouteView {
 .blitz-stat-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #334155;padding:7px 0;font-size:11px}.blitz-stat-row strong{text-align:right}
 @media(max-width:600px){.blitz-stats-columns{grid-template-columns:1fr}}
 </style>
+<style id="blitz-team-loader-and-score-actions">
+#teamRouteView[data-render-mode="loading"]{background:radial-gradient(ellipse at 50% 38%,var(--loading-primary,#14283a) 0%,var(--loading-dark,#09111b) 68%)!important}
+#teamRouteView .team-logo-loading{background:transparent!important}
+#teamRouteView .team-logo-loading-bar{background:linear-gradient(90deg,var(--loading-primary,#14283a),var(--loading-secondary,#c5a55d))!important}
+#liveGames .live-game{grid-template-columns:minmax(0,1fr) minmax(105px,auto) minmax(0,1fr)!important;gap:12px!important;cursor:default!important}
+#liveGames .game-team{min-width:0;width:100%;box-sizing:border-box;justify-content:flex-start!important;padding:9px 12px!important;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:background .15s,border-color .15s}
+#liveGames .game-team.home{justify-content:flex-start!important;flex-direction:row-reverse!important;text-align:right!important}
+#liveGames .game-team:hover,#liveGames .game-team:focus-visible{background:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.24)!important;outline:none}
+#liveGames .game-team:focus-visible{box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+#liveGames .game-center{cursor:pointer;border:1px solid transparent;border-radius:8px;padding:9px 14px;transition:background .15s,border-color .15s}
+#liveGames .game-center:hover,#liveGames .game-center:focus-visible{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25);outline:none}
+@media(max-width:620px){#liveGames .live-game{gap:3px!important;grid-template-columns:minmax(0,1fr) minmax(75px,auto) minmax(0,1fr)!important}#liveGames .game-team{padding:7px 4px!important}#liveGames .game-center{padding:7px 3px}}
+</style>
 </head>
 <body>
 
@@ -8864,6 +8877,13 @@ function renderTeamLoadingState(slug) {
   if (!view) return;
   const team = TEAMS.find(entry => entry.slug === slug);
   const logo = team?.logo || `https://a.espncdn.com/i/teamlogos/nfl/500/${encodeURIComponent(team?.abbr || slug)}.png`;
+  const palette = (typeof TEAM_COMPACT_FALLBACK !== 'undefined' && TEAM_COMPACT_FALLBACK?.[slug]) || {};
+  const primary = /^#[0-9a-f]{3,8}$/i.test(palette.p || '') ? palette.p : '#14283a';
+  const secondary = /^#[0-9a-f]{3,8}$/i.test(palette.s || '') ? palette.s : '#c5a55d';
+  const dark = /^#[0-9a-f]{3,8}$/i.test(palette.d || '') ? palette.d : '#09111b';
+  view.style.setProperty('--loading-primary', primary);
+  view.style.setProperty('--loading-secondary', secondary);
+  view.style.setProperty('--loading-dark', dark);
   view.dataset.loadedSlug = slug;
   view.dataset.renderMode = 'loading';
   view.innerHTML = `
@@ -9744,7 +9764,7 @@ function renderLegacyTeamFrame(slug, html, teamData = null) {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, { once: true });
 
-  const bridgedHtml = legacyHtml;
+  const bridgedHtml = legacyHtml.replace('</head>', '<style>#loadingScreen,.loading-screen{display:none!important;visibility:hidden!important;pointer-events:none!important}</style></head>');
   frame.removeAttribute('src');
   frame.srcdoc = bridgedHtml;
   window.requestAnimationFrame(() => {
@@ -11023,7 +11043,7 @@ function renderGames() {
   }
 
   el.innerHTML = games.map(g => `
-    <div class="live-game" data-live-game-id="${escapeHtml(g.id || '')}" role="button" tabindex="0">
+    <div class="live-game" data-live-game-id="${escapeHtml(g.id || '')}">
       <div class="game-team away" data-live-team="${escapeHtml(g.awaySlug || '')}" title="Open team and this game" role="link" tabindex="0">
         <div class="game-team-logo"><img src="${g.away}" alt="${g.awayName} logo"></div>
         <div>
@@ -11031,7 +11051,7 @@ function renderGames() {
           <div class="game-team-record">${escapeHtml(g.awayRecord || 'Record unavailable')} · ${blitzRankLabel(g.awaySlug)}<br>${escapeHtml(blitzRecordDetails(g.awaySlug))}</div>
         </div>
       </div>
-      <div class="game-center">
+      <div class="game-center" role="button" tabindex="0" title="View game statistics" aria-label="View game statistics">
         <div class="game-score">${g.awayScore !== null && g.homeScore !== null ? `${g.awayScore} - ${g.homeScore}` : 'vs'}</div>
         <div class="game-status ${g.status}">${g.statusTxt}</div>
         <div class="game-channel">${g.channel}</div>
@@ -11064,8 +11084,9 @@ function renderGames() {
       teamEl.addEventListener('click', openTeam);
       teamEl.addEventListener('keydown', event => {if (event.key === 'Enter' || event.key === ' ') {event.preventDefault();openTeam(event);}});
     });
-    card.addEventListener('click', toggleDetails);
-    card.addEventListener('keydown', event => {
+    const scoreButton = card.querySelector('.game-center');
+    scoreButton?.addEventListener('click', toggleDetails);
+    scoreButton?.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         toggleDetails();
