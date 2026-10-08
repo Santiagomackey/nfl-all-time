@@ -6250,7 +6250,7 @@ html.preload-team-route #teamRouteView {
           <div class="season-2026-kicker">2026 Season</div>
           <div class="season-2026-title">Live Season Center</div>
           <div class="season-2026-subtitle">
-            Projected standings and the 2026 fixture board update as official feeds publish.
+            Current 2026 standings and the weekly fixture board update from completed games.
           </div>
         </div>
       </div>
@@ -6262,7 +6262,7 @@ html.preload-team-route #teamRouteView {
             <div class="season-2026-card">
               <div class="season-2026-card-head">
                 <div>
-                  <div class="season-2026-card-title">Projected Standings</div>
+                  <div class="season-2026-card-title">2026 Standings</div>
                   <div class="season-2026-card-note">Division, conference, and league views.</div>
                 </div>
                 <select class="season-2026-select season-2026-standings-mode" id="season2026StandingsView" aria-label="Choose 2026 standings view">
@@ -6525,9 +6525,9 @@ const TEAM_ASSET_ROOTS = window.location.protocol === 'file:'
         LOCAL_PROJECT_ROOT
       ])
   : uniqueAssetRoots([
+      makeAssetRoot('./'),
       makeAssetRoot('./nfl_all_time/'),
-      makeAssetRoot('../'),
-      makeAssetRoot('./')
+      makeAssetRoot('../')
     ]);
 const TEAM_ASSET_ROOT = TEAM_ASSET_ROOTS[0];
 const USE_BUNDLED_RENDERED_TEAM_PAGES = false;
@@ -10693,6 +10693,9 @@ function updateSeasonData() {
     match.network = game.channel || match.network;
   });
 
+  if (window.__BLITZ_VERIFIED_2026_STANDINGS__) { data.standings = window.__BLITZ_VERIFIED_2026_STANDINGS__; return; }
+  data.standings = []; // Never present partial or projected records as actual standings.
+  return;
   data.standings = Object.values(window.NFL_LIVE_DATA.teams || {}).map((team, index) => {
     const games = team.wins + team.losses + team.ties;
     const pct = games ? ((team.wins + team.ties * 0.5) / games).toFixed(3).replace(/^0/, '') : '.000';
@@ -12651,7 +12654,7 @@ function renderSeason2026SnapshotList(targetId, rows) {
   const el = document.getElementById(targetId);
   if (!el) return;
   if (!rows.length) {
-    el.innerHTML = `<div class="season-2026-week"><div class="season-2026-card-note">Projected standings will appear here.</div></div>`;
+    el.innerHTML = `<div class="season-2026-week"><div class="season-2026-card-note">Verified standings are temporarily unavailable.</div></div>`;
     return;
   }
   el.innerHTML = `
@@ -12724,7 +12727,7 @@ function renderSeason2026CompactStandings(targetId, view) {
   const rows = sortSeason2026Rows(season2026State.data?.standings || []);
   if (!el) return;
   if (!rows.length) {
-    el.innerHTML = `<div class="season-2026-week"><div class="season-2026-card-note">Projected standings will appear here.</div></div>`;
+    el.innerHTML = `<div class="season-2026-week"><div class="season-2026-card-note">Verified standings are temporarily unavailable.</div></div>`;
     return;
   }
   if (view === 'division') {
@@ -12838,6 +12841,50 @@ async function refreshSeason2026LiveData() {
   renderSeason2026Dashboard();
 }
 
+// Compute records only from final 2026 regular-season ESPN games. No projections.
+async function refreshVerified2026Standings() {
+  const season = season2026State.data;
+  if (!season) return;
+  const weeks = Array.from({length: 18}, (_, i) => i + 1);
+  const batches = await Promise.allSettled(weeks.map(async week => {
+    const path = `/api/espn?type=scoreboard&dates=2026&seasontype=2&week=${week}&limit=100`;
+    let response;
+    try { response = await fetch(path, {cache:'no-store'}); } catch (_) {}
+    if (!response?.ok) response = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=${week}&limit=100`, {cache:'no-store'});
+    if (!response.ok) throw new Error(`Week ${week}: ${response.status}`);
+    return response.json();
+  }));
+  const successful = batches.filter(result => result.status === 'fulfilled');
+  if (!successful.length) {
+    window.__BLITZ_VERIFIED_2026_STANDINGS__ = [];
+    updateSeasonData(); renderSeason2026Dashboard();
+    return;
+  }
+  const meta = new Map(TEAMS.map(t => [t.slug, t]));
+  const records = new Map(TEAMS.map(t => [t.slug, {slug:t.slug,team:t.name,shortName:t.short,conference:t.conf,division:`${t.conf} ${t.div}`,wins:0,losses:0,ties:0,pointsFor:0,pointsAgainst:0}]));
+  const seen = new Set();
+  for (const batch of successful) for (const event of (batch.value.events || [])) {
+    if (seen.has(String(event.id))) continue;
+    const competition = event.competitions?.[0];
+    const state = event.status?.type;
+    if (!competition || !(state?.completed || state?.state === 'post') || event.season?.type && Number(event.season.type) !== 2) continue;
+    const competitors = competition.competitors || [];
+    const home = competitors.find(c => c.homeAway === 'home');
+    const away = competitors.find(c => c.homeAway === 'away');
+    if (!home || !away) continue;
+    const slugFor = c => resolveLiveTeamSlug(c.team || {});
+    const h = records.get(slugFor(home)), a = records.get(slugFor(away));
+    const hs = Number(home.score), as = Number(away.score);
+    if (!h || !a || !Number.isFinite(hs) || !Number.isFinite(as)) continue;
+    seen.add(String(event.id));
+    h.pointsFor += hs; h.pointsAgainst += as; a.pointsFor += as; a.pointsAgainst += hs;
+    if (hs > as) {h.wins++;a.losses++;} else if (as > hs) {a.wins++;h.losses++;} else {h.ties++;a.ties++;}
+  }
+  const rows = [...records.values()].map(r => ({...r,record:`${r.wins}-${r.losses}${r.ties ? '-'+r.ties : ''}`,pct:((r.wins+r.ties/2)/Math.max(1,r.wins+r.losses+r.ties)).toFixed(3),pointDiff:r.pointsFor-r.pointsAgainst}));
+  window.__BLITZ_VERIFIED_2026_STANDINGS__ = rows;
+  updateSeasonData(); renderSeason2026Dashboard();
+}
+
 async function initSeason2026Dashboard() {
   const shell = document.getElementById('season2026');
   if (!shell) return;
@@ -12846,6 +12893,7 @@ async function initSeason2026Dashboard() {
     updateSeasonData();
     renderSeason2026Dashboard();
     await refreshSeason2026LiveData();
+    await refreshVerified2026Standings();
   } catch (error) {
     console.error('Failed to initialize 2026 dashboard', error);
     const schedule = document.getElementById('season2026Schedule');

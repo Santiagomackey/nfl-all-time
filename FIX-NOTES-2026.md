@@ -1,0 +1,1 @@
+2026 update: standings computed from completed ESPN regular-season scoreboards, weeks 1-18, with no projected fallback. Corrected relative team-data asset root priority. If ESPN is unavailable the page shows an unavailable state instead of fabricated records. Requires deployment with /api/espn route. Browser deployment and historical archive accuracy not independently verified.
