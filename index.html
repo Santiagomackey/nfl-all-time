@@ -9199,6 +9199,15 @@ function buildPortableLegacyTeamPage(teamData) {
   const founded = identity.seasonStartYear || identity.foundedYear || 'N/A';
   const foundedNumber = Number(founded);
   const seasonCount = Number.isFinite(foundedNumber) ? Math.max(1, 2026 - foundedNumber + 1) : seasons.length || 1;
+  // Derive the best completed season locally; do not depend on another page builder's scope.
+  const completedSeasons = seasons.filter(season => Number(season.year) < 2026 && /^\d+-\d+/.test(String(season.record || '')));
+  const bestArchivedSeason = completedSeasons.reduce((best, season) => {
+    const [w, l, t = 0] = String(season.record).split('-').map(Number);
+    const [bw, bl, bt = 0] = best ? String(best.record).split('-').map(Number) : [0, 0, 0];
+    const pct = w + l + t ? (w + t / 2) / (w + l + t) : -1;
+    const bestPct = bw + bl + bt ? (bw + bt / 2) / (bw + bl + bt) : -1;
+    return !best || pct > bestPct || (pct === bestPct && w > bw) ? season : best;
+  }, null);
   const record = latestSeason.record || '0-0';
   const winPct = stats.winPct == null ? 'N/A' : `${(Number(stats.winPct) * 100).toFixed(1)}%`;
   const totalGames = Number(stats.wins || 0) + Number(stats.losses || 0);
@@ -9255,7 +9264,7 @@ function buildPortableLegacyTeamPage(teamData) {
       <div class="stat"><span>Seasons</span><strong>${escapeHtml(seasonCount)}</strong><small>From ${escapeHtml(founded)} through 2026</small></div>
       <div class="stat"><span>Total Games</span><strong>${escapeHtml(totalGames || 'N/A')}</strong><small>Regular season + playoffs</small></div>
       <div class="stat"><span>Titles</span><strong>${formatNumber(stats.superBowls)}</strong><small>Super Bowl seasons in the archive</small></div>
-      <div class="stat"><span>Best Season</span><strong>${escapeHtml(bestArchivedSeason?.year || "N/A")}</strong><small>${escapeHtml(record)} regular season</small></div>
+      <div class="stat"><span>Best Season</span><strong>${escapeHtml(bestArchivedSeason?.year || "N/A")}</strong><small>${escapeHtml(bestArchivedSeason?.record || 'N/A')} regular season</small></div>
     </div>
   </section>
   <div class="toolbar">
