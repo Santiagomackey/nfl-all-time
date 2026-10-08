@@ -1,0 +1,33 @@
+team,file,seasons,games,issues
+San Francisco 49ers,49ers.json,80,1216,1946 season record mismatch; 1947 season record mismatch; 1948 season record mismatch; 1949 season record mismatch; 2026 placeholder record; requires live sync
+Chicago Bears,bears.json,106,1554,2026 placeholder record; requires live sync
+Cincinnati Bengals,bengals.json,58,947,2026 placeholder record; requires live sync
+Buffalo Bills,bills.json,66,1078,2026 placeholder record; requires live sync
+Denver Broncos,broncos.json,66,1079,2026 placeholder record; requires live sync
+Cleveland Browns,browns.json,80,1138,1946 season record mismatch; 1947 season record mismatch; 1948 season record mismatch; 1949 season record mismatch; 1996 season record mismatch; 1997 season record mismatch; 1998 season record mismatch; 2026 placeholder record; requires live sync
+Tampa Bay Buccaneers,buccaneers.json,50,835,2026 placeholder record; requires live sync
+Arizona Cardinals,cardinals.json,106,1493,2026 placeholder record; requires live sync
+Los Angeles Chargers,chargers.json,66,1067,2026 placeholder record; requires live sync
+Kansas City Chiefs,chiefs.json,66,1082,2026 placeholder record; requires live sync
+Indianapolis Colts,colts.json,73,1164,2026 placeholder record; requires live sync
+Washington Commanders,commanders.json,94,1398,2026 placeholder record; requires live sync
+Dallas Cowboys,cowboys.json,66,1099,2026 placeholder record; requires live sync
+Miami Dolphins,dolphins.json,60,993,2026 placeholder record; requires live sync
+Philadelphia Eagles,eagles.json,93,1338,2026 placeholder record; requires live sync
+Atlanta Falcons,falcons.json,60,974,2026 placeholder record; requires live sync
+New York Giants,giants.json,101,1506,2026 placeholder record; requires live sync
+Jacksonville Jaguars,jaguars.json,31,535,2026 placeholder record; requires live sync
+New York Jets,jets.json,66,1059,2026 placeholder record; requires live sync
+Detroit Lions,lions.json,96,1390,2026 placeholder record; requires live sync
+Green Bay Packers,packers.json,105,1551,2026 placeholder record; requires live sync
+Carolina Panthers,panthers.json,31,536,2026 placeholder record; requires live sync
+New England Patriots,patriots.json,66,1020,2026 placeholder record; requires live sync
+Las Vegas Raiders,raiders.json,66,1061,2026 placeholder record; requires live sync
+Los Angeles Rams,rams.json,89,1285,1943 season record mismatch; 2026 placeholder record; requires live sync
+Baltimore Ravens,ravens.json,30,502,2026 placeholder record; requires live sync
+New Orleans Saints,saints.json,59,959,2026 placeholder record; requires live sync
+Seattle Seahawks,seahawks.json,50,849,2026 placeholder record; requires live sync
+Pittsburgh Steelers,steelers.json,93,1388,1943 season record mismatch; 1944 season record mismatch; 2026 placeholder record; requires live sync
+Houston Texans,texans.json,24,422,2026 placeholder record; requires live sync
+Tennessee Titans,titans.json,66,1074,2026 placeholder record; requires live sync
+Minnesota Vikings,vikings.json,65,1073,2026 placeholder record; requires live sync

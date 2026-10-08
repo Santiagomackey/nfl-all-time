@@ -6279,11 +6279,11 @@ html.preload-team-route #teamRouteView {
               <div class="season-2026-card-head">
                 <div>
                   <div class="season-2026-card-title">2026 Schedule</div>
-                  <div class="season-2026-card-note">Grouped by day. Search any team to isolate its games.</div>
+                  <div class="season-2026-card-note">Grouped by week. Search any team to isolate its games.</div>
                 </div>
                 <div class="season-2026-schedule-tools">
                   <input class="season-2026-search" id="season2026TeamSearch" type="search" placeholder="Search team schedule..." aria-label="Search 2026 schedule by team">
-                  <select class="season-2026-select" id="season2026WeekFilter" aria-label="Filter 2026 schedule by day"></select>
+                  <select class="season-2026-select" id="season2026WeekFilter" aria-label="Filter 2026 schedule by week"></select>
                 </div>
               </div>
               <div class="season-2026-schedule" id="season2026Schedule"></div>
@@ -8978,9 +8978,17 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
   const city = identity.city || '';
   const founded = identity.seasonStartYear || identity.foundedYear || 'N/A';
   const foundedNumber = Number(founded);
-  const seasonCount = Number.isFinite(foundedNumber) ? Math.max(1, 2026 - foundedNumber + 1) : seasons.length || 1;
+  const seasonCount = seasons.length || (Number.isFinite(foundedNumber) ? Math.max(1, 2026 - foundedNumber + 1) : 0);
   const totalGames = Number(stats.wins || 0) + Number(stats.losses || 0);
-  const record = latestSeason.record || '0-0';
+  const completedSeasons = seasons.filter(season => Number(season.year) < 2026 && /^\d+-\d+/.test(String(season.record || '')));
+  const bestArchivedSeason = completedSeasons.reduce((best, season) => {
+    const [w, l, t = 0] = String(season.record).split('-').map(Number);
+    const [bw, bl, bt = 0] = best ? String(best.record).split('-').map(Number) : [0, 0, 0];
+    const pct = (w + l + t) ? (w + t / 2) / (w + l + t) : -1;
+    const bpct = (bw + bl + bt) ? (bw + bt / 2) / (bw + bl + bt) : -1;
+    return !best || pct > bpct || (pct === bpct && w > bw) ? season : best;
+  }, null);
+  const record = bestArchivedSeason?.record || 'N/A';
   const summary = identity.branding?.heroText || teamData?.franchiseSummary?.intro || `This site is a fan-built database documenting every ${fullName} game through 2026.`;
   const archiveLine = `${shortName} archive - all-time franchise database`;
 
@@ -9017,7 +9025,7 @@ function buildPortableLegacyTeamPageLegacyUnused(teamData) {
         <p class="summary">${escapeHtml(summary)}</p>
       </div>
       <div class="kpis">
-        <div class="card"><div class="label">Seasons</div><div class="value">${escapeHtml(seasonCount)}</div><div class="note">From ${escapeHtml(founded)} through 2026</div></div>
+        <div class="card"><div class="label">Seasons</div><div class="value">${escapeHtml(seasonCount)}</div><div class="note">${escapeHtml(seasons.length ? Math.min(...seasons.map(s => Number(s.year)).filter(Number.isFinite)) : founded)}–${escapeHtml(seasons.length ? Math.max(...seasons.map(s => Number(s.year)).filter(Number.isFinite)) : "N/A")}</div></div>
         <div class="card"><div class="label">Total Games</div><div class="value">${escapeHtml(totalGames || 'N/A')}</div><div class="note">Regular season + playoffs</div></div>
         <div class="card"><div class="label">Titles</div><div class="value">${formatNumber(stats.superBowls)}</div><div class="note">Super Bowl seasons in the archive</div></div>
         <div class="card"><div class="label">Best Season</div><div class="value">${escapeHtml(latestSeason.year || '2026')}</div><div class="note">${escapeHtml(record)} current database entry</div></div>
@@ -9239,7 +9247,7 @@ function buildPortableLegacyTeamPage(teamData) {
   </header>
   <section class="hero">
     <div>
-      <div class="kicker">${escapeHtml(shortName)} archive - football template source</div>
+      <div class="kicker">${escapeHtml(shortName)} archive - historical game database</div>
       <div class="hero-title">${escapeHtml(fullName)}<br>All-Time Database</div>
       <p class="copy">${escapeHtml(summary)}</p>
     </div>
@@ -9247,7 +9255,7 @@ function buildPortableLegacyTeamPage(teamData) {
       <div class="stat"><span>Seasons</span><strong>${escapeHtml(seasonCount)}</strong><small>From ${escapeHtml(founded)} through 2026</small></div>
       <div class="stat"><span>Total Games</span><strong>${escapeHtml(totalGames || 'N/A')}</strong><small>Regular season + playoffs</small></div>
       <div class="stat"><span>Titles</span><strong>${formatNumber(stats.superBowls)}</strong><small>Super Bowl seasons in the archive</small></div>
-      <div class="stat"><span>Best Season</span><strong>2026</strong><small>${escapeHtml(record)} season profile</small></div>
+      <div class="stat"><span>Best Season</span><strong>${escapeHtml(bestArchivedSeason?.year || "N/A")}</strong><small>${escapeHtml(record)} regular season</small></div>
     </div>
   </section>
   <div class="toolbar">
@@ -12235,20 +12243,12 @@ function getSeason2026WeekOptions(schedule) {
 }
 
 function getSeason2026DayOptions(schedule) {
-  const seen = new Map();
+  const weeks = new Map();
   schedule.forEach(game => {
-    const label = game.day && game.day !== 'TBD' ? game.day : 'Day TBD';
-    const value = normalizeSeason2026Key(label) || 'day-tbd';
-    if (!seen.has(value)) seen.set(value, { value, label });
+    const n = Number(game.weekNumber || String(game.week || '').match(/\d+/)?.[0]);
+    if (Number.isInteger(n) && n > 0) weeks.set(`week-${n}`, {value:`week-${n}`, label:`Week ${n}`, order:n});
   });
-  return [...seen.values()].sort((left, right) => {
-    if (left.label === 'Day TBD') return 1;
-    if (right.label === 'Day TBD') return -1;
-    const leftDay = getSeason2026DayNumber(left.label);
-    const rightDay = getSeason2026DayNumber(right.label);
-    if (Number.isFinite(leftDay) && Number.isFinite(rightDay)) return leftDay - rightDay;
-    return left.label.localeCompare(right.label);
-  });
+  return [...weeks.values()].sort((a,b) => a.order-b.order);
 }
 
 function renderSeason2026Kpis(data) {
@@ -12273,8 +12273,9 @@ function getSeason2026FilteredSchedule() {
   const schedule = getSeason2026DisplaySchedule();
   const search = normalizeTeamRouteKey(season2026State.teamSearch);
   return schedule.filter(game => {
-    const dayKey = normalizeSeason2026Key(game.day && game.day !== 'TBD' ? game.day : 'Day TBD') || 'day-tbd';
-    if (season2026State.weekFilter !== 'all' && dayKey !== season2026State.weekFilter) return false;
+    const n = Number(game.weekNumber || String(game.week || '').match(/\d+/)?.[0]);
+    const weekKey = `week-${n}`;
+    if (season2026State.weekFilter !== 'all' && weekKey !== season2026State.weekFilter) return false;
     if (!search) return true;
     const teamText = [
       game.awayTeam,
@@ -12500,7 +12501,7 @@ function renderSeason2026Schedule() {
   if (!el || !select) return;
 
   const options = getSeason2026DayOptions(schedule);
-  const allLabel = 'All days';
+  const allLabel = 'All weeks';
   const hasAllOption = options.some(option => option.value === 'all');
   select.innerHTML = `${hasAllOption ? '' : `<option value="all">${escapeHtml(allLabel)}</option>`}${options.map(option => `
     <option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>
@@ -12513,7 +12514,7 @@ function renderSeason2026Schedule() {
 
   const filtered = getSeason2026FilteredSchedule();
   if (!filtered.length) {
-    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this day or team search yet.</div>`;
+    el.innerHTML = `<div class="season-2026-empty">No 2026 matchups match this week or team search yet.</div>`;
     return;
   }
 
